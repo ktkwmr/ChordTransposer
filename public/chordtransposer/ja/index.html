@@ -1015,6 +1015,7 @@
       const previewDlg = document.getElementById("previewDlg");
       const previewFrame = document.getElementById("previewFrame");
       const printArea = document.getElementById("printArea");
+      const printPageStyle = document.head.appendChild(document.createElement("style"));   // 印刷時の紙の向き
       const appEl = document.querySelector(".app");
       // タブ表示（スマホ縦・タブレット縦）。CSS の @media と同じ条件
       const tabMq = window.matchMedia("(max-width: 600px), (max-width: 900px) and (min-height: 521px)");
@@ -1541,7 +1542,8 @@
         document.documentElement.style.setProperty("--editor-size", fontSizeEl.value + "px");
       }
 
-      // 印刷するときの紙の大きさ（CSS px）。A4 とレターのどちらにも収まるよう、余白 10mm を除いた小さい方の幅・高さ
+      // 印刷するときの紙の大きさ（CSS px、縦向き。横向きは幅と高さを入れ替える）。
+      // A4 とレターのどちらにも収まるよう、余白 10mm を除いた小さい方の幅・高さ
       const PRINT_W = 718;
       const PRINT_H = 980;
 
@@ -1567,7 +1569,7 @@
           "#print{position:absolute;left:-99999px;top:0;visibility:hidden;}",
           "@page{margin:10mm;}",
           "@media print{#vp{display:none;}#print{position:static;visibility:visible;}}",
-          "</style></head><body><div id=\"vp\"><div id=\"sizer\"><div id=\"page\"><div class=\"grid\" id=\"grid\"></div></div></div></div><div id=\"print\"></div>",
+          "</style><style id=\"pageSize\"></style></head><body><div id=\"vp\"><div id=\"sizer\"><div id=\"page\"><div class=\"grid\" id=\"grid\"></div></div></div></div><div id=\"print\"></div>",
           "<script>",
           "const lines = " + JSON.stringify(text.split("\n").map(function (l) { return l.trim() ? l : ""; }).join("\n").replace(/\n{3,}/g, "\n\n").replace(/^\n+|\n+$/g, "").split("\n")) + ";",
           "const PRINT_W=" + PRINT_W + ", PRINT_H=" + PRINT_H + ", MAX_SCALE=5;",
@@ -1682,18 +1684,25 @@
           "vp.addEventListener('touchend', endPinch);",
           "vp.addEventListener('touchcancel', endPinch);",
           "document.addEventListener('gesturestart', function(e){ e.preventDefault(); });",   // iOS: ページ全体の拡大を止める
-          // 印刷用: 紙の大きさで段組みし直す（親ページから呼ぶ。Ctrl+P などで印刷したときも使う）
+          // 印刷用: いま画面に表示している段組みをそのまま写し、紙に収まるよう拡大・縮小する。
+          // 画面が横長なら横向き、縦長なら縦向きの紙にする（親ページから呼ぶ。Ctrl+P などで印刷したときも使う）
           "window.buildPrint=function(){",
-          "  printBox.innerHTML='';",
-          "  const paper=document.createElement('div');",   // 縮小したときも 1 ページの大きさに収める枠
-          "  paper.style.cssText='width:'+PRINT_W+'px;height:'+PRINT_H+'px;overflow:hidden;';",
-          "  const g=document.createElement('div');",
-          "  g.className='grid';",
+          "  const w=Math.max(grid.clientWidth, grid.scrollWidth), h=Math.max(grid.clientHeight, grid.scrollHeight);",   // 横スクロールで組んだときは全体の幅
+          "  const landscape=w>h;",
+          "  const pw=landscape?PRINT_H:PRINT_W, ph=landscape?PRINT_W:PRINT_H;",
+          "  const f=Math.min(pw/w, ph/h);",
+          "  const g=grid.cloneNode(true);",
+          "  g.removeAttribute('id');",
+          "  g.style.width=w+'px'; g.style.height=h+'px'; g.style.overflow='hidden';",
+          "  g.style.transformOrigin='0 0'; g.style.transform='scale('+f+')';",
+          "  const paper=document.createElement('div');",   // 拡大・縮小した後の大きさの枠（余分なページが出ないように）
+          "  paper.style.cssText='width:'+Math.floor(w*f)+'px;height:'+Math.floor(h*f)+'px;overflow:hidden;';",
           "  paper.appendChild(g);",
+          "  printBox.innerHTML='';",
           "  printBox.appendChild(paper);",
-          "  const z=fitLayout(g, function(z){ g.style.width=PRINT_W*z+'px'; g.style.height=PRINT_H*z+'px'; });",
-          "  if(z>1){ g.style.transformOrigin='0 0'; g.style.transform='scale('+(1/z)+')'; }",
-          "  return printBox.innerHTML;",
+          "  const pageCss='@page{size:'+(landscape?'landscape':'portrait')+';}';",
+          "  document.getElementById('pageSize').textContent=pageCss;",
+          "  return { html: printBox.innerHTML, pageCss: pageCss };",
           "};",
           "window.addEventListener('beforeprint', window.buildPrint);",
           "window.addEventListener('resize', fit);",
@@ -1713,12 +1722,15 @@
       }
 
       // プレビューの内容を印刷する。iOS Safari は iframe の print() でも親ページ全体を印刷するため、
-      // 紙の大きさで組んだ段組みを親ページの #printArea に写して、それだけを印刷する
+      // 画面に表示している段組み（紙に合わせて拡大・縮小したもの）を親ページの #printArea に写して、それだけを印刷する。
+      // 紙の向き（@page size）も画面の向きに合わせる
       // （印刷後もプレビューを閉じるまでは残す。iOS では印刷画面の表示前に afterprint が来ることがあるため）
       function printPreview() {
         const win = previewFrame.contentWindow;
         if (!win || typeof win.buildPrint !== "function") return;
-        printArea.innerHTML = win.buildPrint();
+        const out = win.buildPrint();
+        printArea.innerHTML = out.html;
+        printPageStyle.textContent = out.pageCss;
         document.documentElement.classList.add("pv-print");
         window.print();
       }
@@ -1726,6 +1738,7 @@
       function endPrintPreview() {
         document.documentElement.classList.remove("pv-print");
         printArea.innerHTML = "";
+        printPageStyle.textContent = "";
       }
 
       // タブ表示では、プレビュー・保存の対象は選択中のタブ（入力 / 出力）
