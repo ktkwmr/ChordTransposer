@@ -794,7 +794,7 @@
     <div class="help-body">
       <ul class="help-list" data-i18n-html="privacy.body"><li><b>ファイルは端末の外に出ません</b> – 開いたコード譜や入力した内容は、ブラウザ内だけで処理されます。サーバーに送信されることはありません。アカウント登録・Cookie・広告・アクセス解析もありません。</li>
 <li><b>CDN から読み込むライブラリ</b> – PDF や画像を開いたときだけ、PDF.js・Tesseract.js と OCR 用の言語データを jsDelivr（cdn.jsdelivr.net）から読み込みます。一般的な Web サイトと同様に、jsDelivr には IP アドレスやブラウザの情報が送られますが、ファイルの内容は送られません。</li>
-<li><b>ブラウザに保存するデータ</b> – オフラインで使えるよう、アプリ本体と OCR 用の言語データをブラウザ内に保存します。ブラウザの設定でこのサイトのデータを削除すると消えます。</li>
+<li><b>ブラウザに保存するデータ</b> – オフラインで使えるよう、アプリ本体と OCR 用の言語データをブラウザ内に保存します。次に開いたときに続きから使えるよう、編集中のコード譜と設定も保存します。ブラウザの設定でこのサイトのデータを削除すると消えます。</li>
 <li><b>サーバーのログ</b> – このサイトは Cloudflare で配信しています。運用とセキュリティのため、標準的なアクセスログ（IP アドレス、日時、アクセスしたページなど）が記録されます。</li>
 <li><b>お問い合わせ</b> – ご質問やご意見は <a href="https://github.com/ktkwmr/ChordTransposer/issues" target="_blank" rel="noopener">GitHub Issues</a> へどうぞ。</li></ul>
     </div>
@@ -863,7 +863,7 @@
           "menu.privacy": "Privacy",
           "menu.about": "About",
           "help.body": "<li><b>Open a file</b> – Tap the folder button and choose a chord chart (text, PDF, or image). Text files and text-based PDFs work best. Text from images or scanned PDFs may not be read correctly.</li>\n        <li><b>Or enter chords</b> – Paste or type a chord chart in the Input area. Output updates as you edit.</li>\n        <li><b>Transpose</b> – Choose the key shift. Chords in Output are converted.</li>\n        <li><b>#/♭</b> – Switch between # and b.</li>\n        <li><b>Size</b> – Change the text size.</li>\n        <li><b>Preview</b> – See the whole input or output at once. On phones and tablets, pinch to zoom and tap the printer button to print (on iPhone and iPad, choose Print in the share menu).</li>\n        <li><b>Save</b> – Save the input or output as a text file.</li>",
-          "privacy.body": "<li><b>Your files stay on your device</b> – Chord charts you open or type are processed only in your browser. They are never uploaded to a server. This app has no accounts, cookies, ads, or analytics.</li>\n        <li><b>Libraries from a CDN</b> – When you open a PDF or an image, the PDF.js and Tesseract.js libraries and OCR language data are downloaded from jsDelivr (cdn.jsdelivr.net). As with any website, jsDelivr receives your IP address and browser information. Your file is not sent.</li>\n        <li><b>Data saved in your browser</b> – To work offline, the app and the OCR language data are saved in your browser's storage. You can delete them by clearing this site's data in your browser settings.</li>\n        <li><b>Server logs</b> – This site is hosted on Cloudflare. Standard access logs (such as IP address, time, and the requested page) are kept for operation and security.</li>\n        <li><b>Contact</b> – Questions and feedback: <a href=\"https://github.com/ktkwmr/ChordTransposer/issues\" target=\"_blank\" rel=\"noopener\">GitHub Issues</a>.</li>",
+          "privacy.body": "<li><b>Your files stay on your device</b> – Chord charts you open or type are processed only in your browser. They are never uploaded to a server. This app has no accounts, cookies, ads, or analytics.</li>\n        <li><b>Libraries from a CDN</b> – When you open a PDF or an image, the PDF.js and Tesseract.js libraries and OCR language data are downloaded from jsDelivr (cdn.jsdelivr.net). As with any website, jsDelivr receives your IP address and browser information. Your file is not sent.</li>\n        <li><b>Data saved in your browser</b> – To work offline, the app and the OCR language data are saved in your browser's storage. The chord chart you were working on and your settings are also saved there, so you can pick up where you left off next time. You can delete them by clearing this site's data in your browser settings.</li>\n        <li><b>Server logs</b> – This site is hosted on Cloudflare. Standard access logs (such as IP address, time, and the requested page) are kept for operation and security.</li>\n        <li><b>Contact</b> – Questions and feedback: <a href=\"https://github.com/ktkwmr/ChordTransposer/issues\" target=\"_blank\" rel=\"noopener\">GitHub Issues</a>.</li>",
           "about.license": "© 2026 ktkwmr · Licensed under the <a href=\"https://github.com/ktkwmr/ChordTransposer/blob/main/LICENSE\" target=\"_blank\" rel=\"noopener\">MIT License</a>",
           "working": "Working…",
           "loading": "Loading…",
@@ -917,7 +917,7 @@
           "menu.privacy": "プライバシー",
           "menu.about": "このアプリについて",
           "help.body": "<li><b>ファイルを開く</b> – フォルダのボタンをタップして、コード譜（テキスト・PDF・画像）を選びます。テキストファイルとテキスト形式の PDF が最も正確です。画像やスキャンした PDF は、正しく読み取れない場合があります。</li>\n<li><b>コードを入力する</b> – 入力欄にコード譜を貼り付けるか、直接入力します。編集すると出力がすぐに更新されます。</li>\n<li><b>移調</b> – 移調する幅を選ぶと、出力のコードが変換されます。</li>\n<li><b>#/♭</b> – # と b の表記を切り替えます。</li>\n<li><b>文字サイズ</b> – 文字の大きさを変えます。</li>\n<li><b>プレビュー</b> – 入力または出力の全体をまとめて表示します。スマホ・タブレットでは、ピンチで拡大・縮小でき、プリンターのボタンで印刷できます（iPhone・iPad では、表示される共有メニューで「プリント」を選びます）。</li>\n<li><b>保存</b> – 入力または出力をテキストファイルに保存します。</li>",
-          "privacy.body": "<li><b>ファイルは端末の外に出ません</b> – 開いたコード譜や入力した内容は、ブラウザ内だけで処理されます。サーバーに送信されることはありません。アカウント登録・Cookie・広告・アクセス解析もありません。</li>\n<li><b>CDN から読み込むライブラリ</b> – PDF や画像を開いたときだけ、PDF.js・Tesseract.js と OCR 用の言語データを jsDelivr（cdn.jsdelivr.net）から読み込みます。一般的な Web サイトと同様に、jsDelivr には IP アドレスやブラウザの情報が送られますが、ファイルの内容は送られません。</li>\n<li><b>ブラウザに保存するデータ</b> – オフラインで使えるよう、アプリ本体と OCR 用の言語データをブラウザ内に保存します。ブラウザの設定でこのサイトのデータを削除すると消えます。</li>\n<li><b>サーバーのログ</b> – このサイトは Cloudflare で配信しています。運用とセキュリティのため、標準的なアクセスログ（IP アドレス、日時、アクセスしたページなど）が記録されます。</li>\n<li><b>お問い合わせ</b> – ご質問やご意見は <a href=\"https://github.com/ktkwmr/ChordTransposer/issues\" target=\"_blank\" rel=\"noopener\">GitHub Issues</a> へどうぞ。</li>",
+          "privacy.body": "<li><b>ファイルは端末の外に出ません</b> – 開いたコード譜や入力した内容は、ブラウザ内だけで処理されます。サーバーに送信されることはありません。アカウント登録・Cookie・広告・アクセス解析もありません。</li>\n<li><b>CDN から読み込むライブラリ</b> – PDF や画像を開いたときだけ、PDF.js・Tesseract.js と OCR 用の言語データを jsDelivr（cdn.jsdelivr.net）から読み込みます。一般的な Web サイトと同様に、jsDelivr には IP アドレスやブラウザの情報が送られますが、ファイルの内容は送られません。</li>\n<li><b>ブラウザに保存するデータ</b> – オフラインで使えるよう、アプリ本体と OCR 用の言語データをブラウザ内に保存します。次に開いたときに続きから使えるよう、編集中のコード譜と設定も保存します。ブラウザの設定でこのサイトのデータを削除すると消えます。</li>\n<li><b>サーバーのログ</b> – このサイトは Cloudflare で配信しています。運用とセキュリティのため、標準的なアクセスログ（IP アドレス、日時、アクセスしたページなど）が記録されます。</li>\n<li><b>お問い合わせ</b> – ご質問やご意見は <a href=\"https://github.com/ktkwmr/ChordTransposer/issues\" target=\"_blank\" rel=\"noopener\">GitHub Issues</a> へどうぞ。</li>",
           "about.license": "© 2026 ktkwmr · <a href=\"https://github.com/ktkwmr/ChordTransposer/blob/main/LICENSE\" target=\"_blank\" rel=\"noopener\">MIT ライセンス</a>で公開しています",
           "working": "処理中…",
           "loading": "読み込み中…",
@@ -1053,6 +1053,50 @@
         if (i === 0) opt.selected = true;
         semitoneEl.appendChild(opt);
       }
+
+      // 入力欄・移調・#/b・文字サイズ・ファイル名・表示中のタブをブラウザに保存し、次に開いたときに復元する
+      const STATE_KEY = "chord-transposer-state";
+      let saveTimer = 0;
+
+      function setSelectValue(sel, value) {
+        if (typeof value !== "string") return;
+        if (Array.prototype.some.call(sel.options, function (o) { return o.value === value; })) sel.value = value;
+      }
+
+      function loadState() {
+        let state;
+        try { state = JSON.parse(localStorage.getItem(STATE_KEY) || "null"); } catch (e) { return; }
+        if (!state || typeof state !== "object") return;
+        if (typeof state.input === "string") inputEl.value = state.input;
+        setSelectValue(semitoneEl, state.semitones);
+        setSelectValue(accidentalEl, state.accidental);
+        setSelectValue(fontSizeEl, state.fontSize);
+        if (typeof state.fileName === "string") sourceFileName = state.fileName;
+        if (state.view === "in" || state.view === "out") appEl.setAttribute("data-view", state.view);
+      }
+
+      function saveState() {
+        clearTimeout(saveTimer);
+        saveTimer = 0;
+        try {
+          localStorage.setItem(STATE_KEY, JSON.stringify({
+            input: inputEl.value,
+            semitones: semitoneEl.value,
+            accidental: accidentalEl.value,
+            fontSize: fontSizeEl.value,
+            fileName: sourceFileName,
+            view: appEl.getAttribute("data-view")
+          }));
+        } catch (e) {}
+      }
+
+      // 入力中は少し待ってからまとめて保存する
+      function saveStateSoon() {
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(saveState, 400);
+      }
+
+      loadState();
 
       function extOf(name) {
         const m = String(name || "").toLowerCase().match(/\.([a-z0-9]+)$/);
@@ -1842,6 +1886,15 @@
         previewWin.focus();
       }
 
+      // 読み込んだ曲は移調なし（0）から始める。前回の半音数が残って、ずれたキーのまま保存・印刷しないように
+      function showLoadedText(text) {
+        inputEl.value = text;
+        semitoneEl.value = "0";
+        syncCtlValues();
+        render();
+        saveState();
+      }
+
       async function ingestFile(file, handle) {
         if (!file) return;
         sourceFileHandle = handle || null;
@@ -1849,20 +1902,17 @@
         try {
           if (isPdfFile(file)) {
             const text = await extractChartFromPdf(file);
-            inputEl.value = text;
-            render();
+            showLoadedText(text);
             return;
           }
           if (isImageFile(file)) {
             const text = await extractChartFromImage(file);
-            inputEl.value = text;
-            render();
+            showLoadedText(text);
             return;
           }
           if (isTextFile(file)) {
             const text = await file.text();
-            inputEl.value = text;
-            render();
+            showLoadedText(text);
             return;
           }
           showError(t("err.unsupportedTitle"), t("err.unsupportedBody", { name: file.name || t("none") }));
@@ -1971,6 +2021,7 @@
         viewTabs.forEach(function (tab) {
           tab.setAttribute("aria-selected", String(tab.dataset.view === view));
         });
+        saveStateSoon();
       }
 
       viewTabs.forEach(function (tab) {
@@ -1995,6 +2046,13 @@
       }
 
       inputEl.addEventListener("input", render);
+      inputEl.addEventListener("input", saveStateSoon);
+      [semitoneEl, accidentalEl, fontSizeEl].forEach(function (sel) { sel.addEventListener("change", saveState); });
+      // 閉じる・別のアプリに切り替える直前に、待っている保存を済ませる
+      window.addEventListener("pagehide", function () { if (saveTimer) saveState(); });
+      document.addEventListener("visibilitychange", function () {
+        if (document.visibilityState === "hidden" && saveTimer) saveState();
+      });
       semitoneEl.addEventListener("change", onTransposeSettingChange);
       accidentalEl.addEventListener("change", onTransposeSettingChange);
       fontSizeEl.addEventListener("change", applyFontSize);
