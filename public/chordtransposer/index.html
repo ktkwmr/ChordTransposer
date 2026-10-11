@@ -441,7 +441,9 @@
     /* タッチ端末向けのプレビュー（画面全体に重ねて表示） */
     dialog.preview {
       width: 100%;
+      /* .app と同じく実際の表示領域の高さにする（アドレスバーがあるとき 100% だとはみ出してスクロールが必要になる。特に横向き） */
       height: 100%;
+      height: var(--app-h, 100dvh);
       max-width: none;
       max-height: none;
       margin: 0;
@@ -484,7 +486,8 @@
       width: 100%;
       border: 0;
       background: var(--out-bg);
-      padding-bottom: var(--pb);
+      /* 横向き時のノッチ / ホームバーに掛からないように */
+      padding: 0 env(safe-area-inset-right, 0px) var(--pb) env(safe-area-inset-left, 0px);
     }
 
     /* プレビューの印刷: プレビュー画面の内容（#printArea）だけを印刷する */
@@ -537,6 +540,10 @@
       main { gap: 10px; padding-top: 10px; padding-bottom: calc(10px + var(--pb)); }
       .panel-head { height: 36px; }
       .panel-actions button { width: 32px; height: 28px; }
+      /* プレビュー: 上のボタンの帯を低くして、内容の表示領域を広く取る */
+      .pv-bar { height: 44px; gap: 6px; }
+      .pv-bar button { width: 36px; height: 36px; }
+      .pv-bar .btn-ico { width: 20px; height: 20px; }
       textarea { padding-top: 10px; padding-bottom: 10px; }
     }
 
