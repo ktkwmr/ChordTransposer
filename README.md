@@ -12,8 +12,8 @@ A web app that transposes chord charts. Paste a chord chart or open a text, PDF,
   半音単位の転調と、`#` / `b` 表記の切り替え
 - **Open files**: text, text-based PDFs, and images or scanned PDFs (OCR, Japanese and English)
   テキスト、PDF、画像・スキャン PDF（OCR、日本語・英語）の読み込み
-- **Preview and save** the transposed chart
-  変換結果のプレビューと保存
+- **Preview and save** the input or the transposed chart. On phones and tablets, the preview can be pinch-zoomed and printed
+  入力・変換結果のプレビューと保存。スマホ・タブレットではプレビューをピンチで拡大・縮小でき、印刷もできる
 - **Installable PWA** that also works offline after the first visit
   ホーム画面に追加でき、一度開けばオフラインでも動作
 - **English / Japanese UI**, chosen automatically from your browser language. `/chordtransposer/ja/` is always Japanese, and `?lang=en` / `?lang=ja` overrides both

@@ -324,18 +324,18 @@
       align-items: center;
       gap: 12px;
       height: 40px;
-      padding: 0 16px;
+      padding: 0 6px 0 16px;
       border-bottom: 1px solid var(--line);
       font-size: 13px;
       font-weight: 700;
       transition: box-shadow 0.15s;
     }
-    .panel.out .panel-head { border-bottom-color: var(--out-line); padding-right: 6px; }
+    .panel.out .panel-head { border-bottom-color: var(--out-line); }
 
-    /* プレビュー / 保存（出力の見出しの右端） */
-    .out-actions { display: flex; gap: 6px; }
+    /* プレビュー / 保存（入力・出力それぞれの見出しの右端。タブ表示では選択中のタブが対象） */
+    .panel-actions { display: flex; gap: 6px; }
     /* プレビュー（全画面）・保存（ダウンロード）はアイコンのみ（名前は aria-label / title） */
-    .out-actions button { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 30px; padding: 0; }
+    .panel-actions button { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 30px; padding: 0; }
     .btn-ico { display: block; flex: none; width: 18px; height: 18px; }
 
 
@@ -455,23 +455,29 @@
     }
     dialog.preview[open] { display: flex; flex-direction: column; }
     dialog.preview::backdrop { background: #000; }
+    /* 右上に 印刷 と 閉じる（×）だけを置く（どちらも印刷されない） */
     .pv-bar {
       flex: none;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
-      height: 52px;
+      gap: 8px;
+      height: 56px;
       padding: env(safe-area-inset-top, 0px) var(--pr) 0 var(--pl);
-      border-bottom: 1px solid var(--out-line);
-      font-size: 13px;
-      font-weight: 700;
       box-sizing: content-box;
     }
     .pv-bar button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      padding: 0;
       color: var(--out-ink);
       background: transparent;
-      border-color: #525252;
+      border-color: var(--line-strong);
     }
+    .pv-bar .btn-ico { width: 22px; height: 22px; }
     .pv-bar button:active { background: var(--line); }
     .pv-bar button:focus-visible { outline-color: var(--out-ink); }
     #previewFrame {
@@ -483,14 +489,27 @@
       padding-bottom: var(--pb);
     }
 
+    /* プレビューの印刷: プレビュー画面の内容（#printArea）だけを印刷する */
+    #printArea { display: none; }
+    @page { margin: 10mm; }
+    @media print {
+      html.pv-print, html.pv-print body { height: auto; overflow: visible; background: #fff; }
+      html.pv-print body > *:not(#printArea) { display: none !important; }
+      html.pv-print #printArea { display: block; }
+      #printArea .grid { display: grid; overflow: hidden; }
+      #printArea .col { min-width: 0; min-height: 0; overflow: hidden; padding: 0 14px 0 10px; border-right: 1px solid #e5e5e5; }
+      #printArea .col:last-child { border-right: 0; }
+      #printArea pre { margin: 0; width: max-content; font-family: var(--mono); white-space: pre; color: #000; line-height: 1.45; }
+    }
+
     /* ---------- Touch devices ---------- */
     @media (pointer: coarse) {
       :root { --ctl-h: 44px; }
       select { font-size: 16px; }   /* iOS Safari のフォーカス時ズーム防止 */
       button { font-size: 14px; }
       .panel-head { height: 48px; }
-      .out-actions button { width: 40px; height: 38px; }
-      .out-actions .btn-ico { width: 20px; height: 20px; }
+      .panel-actions button { width: 40px; height: 38px; }
+      .panel-actions .btn-ico { width: 20px; height: 20px; }
       html, body { overflow: hidden; }   /* ページ全体はスクロールさせない */
       .app { position: fixed; inset: 0; height: auto; }   /* 実際の表示領域に合わせる */
     }
@@ -519,7 +538,7 @@
       .group { gap: 6px 12px; }
       main { gap: 10px; padding-top: 10px; padding-bottom: calc(10px + var(--pb)); }
       .panel-head { height: 36px; }
-      .out-actions button { width: 32px; height: 28px; }
+      .panel-actions button { width: 32px; height: 28px; }
       textarea { padding-top: 10px; padding-bottom: 10px; }
     }
 
@@ -585,9 +604,9 @@
         border-color: transparent;
         box-shadow: var(--paper-shadow);
       }
-      .out-actions { grid-area: 1 / 2; display: flex; gap: 8px; }
-      .out-actions button { width: 44px; height: 44px; }
-      .out-actions .btn-ico { width: 22px; height: 22px; }
+      .panel.out .panel-actions { grid-area: 1 / 2; display: flex; gap: 8px; }
+      .panel-actions button { width: 44px; height: 44px; }
+      .panel-actions .btn-ico { width: 22px; height: 22px; }
       .app[data-view="in"] #output,
       .app[data-view="out"] .panel:not(.out) { display: none; }
     }
@@ -718,13 +737,17 @@
       <section class="panel">
         <div class="panel-head">
           <span data-i18n="input">入力</span>
+          <div class="panel-actions">
+            <button class="ghost" id="previewInBtn" type="button" aria-label="プレビュー" title="プレビュー" data-i18n-attr="aria-label:preview;title:preview"><svg class="btn-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5M4 4l5.5 5.5M20 4l-5.5 5.5M4 20l5.5-5.5M20 20l-5.5-5.5"/></svg></button>
+            <button class="ghost" id="saveInBtn" type="button" aria-label="保存" title="保存" data-i18n-attr="aria-label:save;title:save"><svg class="btn-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v11M7.5 10l4.5 4.5 4.5-4.5M4 16.5V19a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 20 19v-2.5"/></svg></button>
+          </div>
         </div>
         <textarea id="input" spellcheck="false" wrap="off" placeholder="ファイルを開くか、ここにコード譜を入力" data-i18n-attr="placeholder:input.placeholder"></textarea>
       </section>
       <section class="panel out">
         <div class="panel-head">
           <span data-i18n="output">出力</span>
-          <div class="out-actions">
+          <div class="panel-actions">
             <button class="ghost" id="previewBtn" type="button" aria-label="プレビュー" title="プレビュー" data-i18n-attr="aria-label:preview;title:preview"><svg class="btn-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5M4 4l5.5 5.5M20 4l-5.5 5.5M4 20l5.5-5.5M20 20l-5.5-5.5"/></svg></button>
             <button class="ghost" id="saveBtn" type="button" aria-label="保存" title="保存" data-i18n-attr="aria-label:save;title:save"><svg class="btn-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v11M7.5 10l4.5 4.5 4.5-4.5M4 16.5V19a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 20 19v-2.5"/></svg></button>
           </div>
@@ -751,8 +774,8 @@
 <li><b>移調</b> – 移調する幅を選ぶと、出力のコードが変換されます。</li>
 <li><b>#/♭</b> – # と b の表記を切り替えます。</li>
 <li><b>文字サイズ</b> – 文字の大きさを変えます。</li>
-<li><b>プレビュー</b> – 結果全体をまとめて表示します。</li>
-<li><b>保存</b> – 結果を保存します。</li></ol>
+<li><b>プレビュー</b> – 入力または出力の全体をまとめて表示します。スマホ・タブレットでは、ピンチで拡大・縮小でき、プリンターのボタンで印刷できます。</li>
+<li><b>保存</b> – 入力または出力をテキストファイルに保存します。</li></ol>
     </div>
     <div class="dlg-actions">
       <button class="primary" id="helpClose" type="button" data-i18n="close">閉じる</button>
@@ -790,11 +813,13 @@
 
   <dialog class="preview" id="previewDlg" aria-label="プレビュー" data-i18n-attr="aria-label:preview">
     <div class="pv-bar">
-      <span data-i18n="preview">プレビュー</span>
-      <button class="ghost" id="previewClose" type="button" data-i18n="close">閉じる</button>
+      <button class="ghost" id="previewPrint" type="button" aria-label="印刷" title="印刷" data-i18n-attr="aria-label:print;title:print"><svg class="btn-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9V3.5h10V9M7 17H5a1.5 1.5 0 0 1-1.5-1.5v-5A1.5 1.5 0 0 1 5 9h14a1.5 1.5 0 0 1 1.5 1.5v5A1.5 1.5 0 0 1 19 17h-2"/><path d="M7 13.5h10v7H7z"/></svg></button>
+      <button class="ghost" id="previewClose" type="button" aria-label="閉じる" title="閉じる" data-i18n-attr="aria-label:close;title:close"><svg class="btn-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
     <iframe id="previewFrame" title="プレビュー" data-i18n-attr="title:preview"></iframe>
   </dialog>
+
+  <div id="printArea" lang="ja" aria-hidden="true"></div>
 
   <dialog class="loading" id="loadDlg">
     <div id="loadLabel">Working…</div>
@@ -818,6 +843,7 @@
           "aria.size": "Text size",
           "preview": "Preview",
           "save": "Save",
+          "print": "Print",
           "settings": "Settings",
           "input": "Input",
           "output": "Output",
@@ -829,7 +855,7 @@
           "menu.help": "How to use",
           "menu.privacy": "Privacy",
           "menu.about": "About",
-          "help.body": "<li><b>Open a file</b> – Tap the folder button and choose a chord chart (text, PDF, or image). Text files and text-based PDFs work best. Text from images or scanned PDFs may not be read correctly.</li>\n        <li><b>Or enter chords</b> – Paste or type a chord chart in the Input area. Output updates as you edit.</li>\n        <li><b>Transpose</b> – Choose the key shift. Chords in Output are converted.</li>\n        <li><b>#/♭</b> – Switch between # and b.</li>\n        <li><b>Size</b> – Change the text size.</li>\n        <li><b>Preview</b> – See the whole result at once.</li>\n        <li><b>Save</b> – Save the result.</li>",
+          "help.body": "<li><b>Open a file</b> – Tap the folder button and choose a chord chart (text, PDF, or image). Text files and text-based PDFs work best. Text from images or scanned PDFs may not be read correctly.</li>\n        <li><b>Or enter chords</b> – Paste or type a chord chart in the Input area. Output updates as you edit.</li>\n        <li><b>Transpose</b> – Choose the key shift. Chords in Output are converted.</li>\n        <li><b>#/♭</b> – Switch between # and b.</li>\n        <li><b>Size</b> – Change the text size.</li>\n        <li><b>Preview</b> – See the whole input or output at once. On phones and tablets, pinch to zoom and tap the printer button to print.</li>\n        <li><b>Save</b> – Save the input or output as a text file.</li>",
           "privacy.body": "<li><b>Your files stay on your device</b> – Chord charts you open or type are processed only in your browser. They are never uploaded to a server. This app has no accounts, cookies, ads, or analytics.</li>\n        <li><b>Libraries from a CDN</b> – When you open a PDF or an image, the PDF.js and Tesseract.js libraries and OCR language data are downloaded from jsDelivr (cdn.jsdelivr.net). As with any website, jsDelivr receives your IP address and browser information. Your file is not sent.</li>\n        <li><b>Data saved in your browser</b> – To work offline, the app and the OCR language data are saved in your browser's storage. You can delete them by clearing this site's data in your browser settings.</li>\n        <li><b>Server logs</b> – This site is hosted on Cloudflare. Standard access logs (such as IP address, time, and the requested page) are kept for operation and security.</li>\n        <li><b>Contact</b> – Questions and feedback: <a href=\"https://github.com/ktkwmr/ChordTransposer/issues\" target=\"_blank\" rel=\"noopener\">GitHub Issues</a>.</li>",
           "about.license": "© 2026 ktkwmr · Licensed under the <a href=\"https://github.com/ktkwmr/ChordTransposer/blob/main/LICENSE\" target=\"_blank\" rel=\"noopener\">MIT License</a>",
           "working": "Working…",
@@ -845,6 +871,7 @@
           "err.image": "Could not display image.",
           "err.emptyTitle": "Nothing to preview",
           "err.emptyBody": "Output is empty. Enter a chord chart first.",
+          "err.emptyInBody": "Input is empty. Open a file or enter a chord chart first.",
           "err.popupTitle": "Can't open preview",
           "err.popupBody": "Pop-up blocked. Please allow pop-ups for this page.",
           "err.unsupportedTitle": "Unsupported file",
@@ -869,6 +896,7 @@
           "aria.size": "文字サイズ",
           "preview": "プレビュー",
           "save": "保存",
+          "print": "印刷",
           "settings": "設定",
           "input": "入力",
           "output": "出力",
@@ -880,7 +908,7 @@
           "menu.help": "使い方",
           "menu.privacy": "プライバシー",
           "menu.about": "このアプリについて",
-          "help.body": "<li><b>ファイルを開く</b> – フォルダのボタンをタップして、コード譜（テキスト・PDF・画像）を選びます。テキストファイルとテキスト形式の PDF が最も正確です。画像やスキャンした PDF は、正しく読み取れない場合があります。</li>\n<li><b>コードを入力する</b> – 入力欄にコード譜を貼り付けるか、直接入力します。編集すると出力がすぐに更新されます。</li>\n<li><b>移調</b> – 移調する幅を選ぶと、出力のコードが変換されます。</li>\n<li><b>#/♭</b> – # と b の表記を切り替えます。</li>\n<li><b>文字サイズ</b> – 文字の大きさを変えます。</li>\n<li><b>プレビュー</b> – 結果全体をまとめて表示します。</li>\n<li><b>保存</b> – 結果を保存します。</li>",
+          "help.body": "<li><b>ファイルを開く</b> – フォルダのボタンをタップして、コード譜（テキスト・PDF・画像）を選びます。テキストファイルとテキスト形式の PDF が最も正確です。画像やスキャンした PDF は、正しく読み取れない場合があります。</li>\n<li><b>コードを入力する</b> – 入力欄にコード譜を貼り付けるか、直接入力します。編集すると出力がすぐに更新されます。</li>\n<li><b>移調</b> – 移調する幅を選ぶと、出力のコードが変換されます。</li>\n<li><b>#/♭</b> – # と b の表記を切り替えます。</li>\n<li><b>文字サイズ</b> – 文字の大きさを変えます。</li>\n<li><b>プレビュー</b> – 入力または出力の全体をまとめて表示します。スマホ・タブレットでは、ピンチで拡大・縮小でき、プリンターのボタンで印刷できます。</li>\n<li><b>保存</b> – 入力または出力をテキストファイルに保存します。</li>",
           "privacy.body": "<li><b>ファイルは端末の外に出ません</b> – 開いたコード譜や入力した内容は、ブラウザ内だけで処理されます。サーバーに送信されることはありません。アカウント登録・Cookie・広告・アクセス解析もありません。</li>\n<li><b>CDN から読み込むライブラリ</b> – PDF や画像を開いたときだけ、PDF.js・Tesseract.js と OCR 用の言語データを jsDelivr（cdn.jsdelivr.net）から読み込みます。一般的な Web サイトと同様に、jsDelivr には IP アドレスやブラウザの情報が送られますが、ファイルの内容は送られません。</li>\n<li><b>ブラウザに保存するデータ</b> – オフラインで使えるよう、アプリ本体と OCR 用の言語データをブラウザ内に保存します。ブラウザの設定でこのサイトのデータを削除すると消えます。</li>\n<li><b>サーバーのログ</b> – このサイトは Cloudflare で配信しています。運用とセキュリティのため、標準的なアクセスログ（IP アドレス、日時、アクセスしたページなど）が記録されます。</li>\n<li><b>お問い合わせ</b> – ご質問やご意見は <a href=\"https://github.com/ktkwmr/ChordTransposer/issues\" target=\"_blank\" rel=\"noopener\">GitHub Issues</a> へどうぞ。</li>",
           "about.license": "© 2026 ktkwmr · <a href=\"https://github.com/ktkwmr/ChordTransposer/blob/main/LICENSE\" target=\"_blank\" rel=\"noopener\">MIT ライセンス</a>で公開しています",
           "working": "処理中…",
@@ -896,6 +924,7 @@
           "err.image": "画像を表示できませんでした。",
           "err.emptyTitle": "プレビューする内容がありません",
           "err.emptyBody": "出力が空です。先にコード譜を入力してください。",
+          "err.emptyInBody": "入力が空です。ファイルを開くか、コード譜を入力してください。",
           "err.popupTitle": "プレビューを開けません",
           "err.popupBody": "ポップアップがブロックされました。このページのポップアップを許可してください。",
           "err.unsupportedTitle": "対応していないファイルです",
@@ -978,6 +1007,7 @@
       const loadDlg = document.getElementById("loadDlg");
       const previewDlg = document.getElementById("previewDlg");
       const previewFrame = document.getElementById("previewFrame");
+      const printArea = document.getElementById("printArea");
       const appEl = document.querySelector(".app");
       // タブ表示（スマホ縦・タブレット縦）。CSS の @media と同じ条件
       const tabMq = window.matchMedia("(max-width: 600px), (max-width: 900px) and (min-height: 521px)");
@@ -1504,6 +1534,10 @@
         document.documentElement.style.setProperty("--editor-size", fontSizeEl.value + "px");
       }
 
+      // 印刷するときの紙の大きさ（CSS px）。A4 とレターのどちらにも収まるよう、余白 10mm を除いた小さい方の幅・高さ
+      const PRINT_W = 718;
+      const PRINT_H = 980;
+
       function buildPreviewHtml(text) {
         const html = [
           "<!DOCTYPE html>",
@@ -1513,16 +1547,25 @@
           "<style>",
           "*,*:before,*:after{box-sizing:border-box;}",
           "html,body{margin:0;height:100%;background:#fff;-webkit-text-size-adjust:100%;text-size-adjust:100%;}",
-          "body{padding:10px 8px;}",
-          "#grid{display:grid;width:100%;height:100%;overflow:hidden;-webkit-overflow-scrolling:touch;}",
+          // #vp: 拡大したときにスクロールする枠 / #sizer: 拡大後の大きさ / #page: 拡大前の大きさで並べ、transform で拡大する
+          "#vp{position:fixed;inset:0;overflow:auto;overscroll-behavior:none;touch-action:pan-x pan-y;-webkit-overflow-scrolling:touch;}",
+          "#sizer{position:relative;overflow:hidden;}",
+          "#page{position:absolute;left:0;top:0;padding:10px 8px;transform-origin:0 0;}",
+          ".grid{display:grid;width:100%;height:100%;overflow:hidden;-webkit-overflow-scrolling:touch;}",
           ".col{min-width:0;min-height:0;overflow:hidden;padding:0 14px 0 10px;border-right:1px solid #e5e5e5;}",
           ".col:last-child{border-right:0;}",
           "::selection{background:#000;color:#fff;}",
           ".col pre{margin:0;width:max-content;font-family:Cascadia Mono,Consolas,MS Gothic,monospace;white-space:pre;color:#000;line-height:1.45;}",
-          "</style></head><body><div id=\"grid\"></div>",
+          // 印刷用の段組み（画面外で組み、印刷時だけ表示する）
+          "#print{position:absolute;left:-99999px;top:0;visibility:hidden;}",
+          "@page{margin:10mm;}",
+          "@media print{#vp{display:none;}#print{position:static;visibility:visible;}}",
+          "</style></head><body><div id=\"vp\"><div id=\"sizer\"><div id=\"page\"><div class=\"grid\" id=\"grid\"></div></div></div></div><div id=\"print\"></div>",
           "<script>",
           "const lines = " + JSON.stringify(text.split("\n").map(function (l) { return l.trim() ? l : ""; }).join("\n").replace(/\n{3,}/g, "\n\n").replace(/^\n+|\n+$/g, "").split("\n")) + ";",
-          "const grid = document.getElementById('grid');",
+          "const PRINT_W=" + PRINT_W + ", PRINT_H=" + PRINT_H + ", MAX_SCALE=5;",
+          "const vp=document.getElementById('vp'), sizer=document.getElementById('sizer'), page=document.getElementById('page');",
+          "const grid=document.getElementById('grid'), printBox=document.getElementById('print');",
           "function lineHeight(size){",
           "  const probe=document.createElement('pre');",
           "  probe.style.cssText='position:absolute;left:-9999px;margin:0;visibility:hidden;font-size:'+size+'px;line-height:1.45;font-family:Cascadia Mono,Consolas,MS Gothic,monospace;white-space:pre;';",
@@ -1532,10 +1575,10 @@
           "  probe.remove();",
           "  return Math.max(h, size*1.45);",
           "}",
-          "function paint(size, per){",
+          "function paint(g, size, per){",
           "  const cols=Math.max(1, Math.ceil(lines.length/per));",
-          "  grid.style.gridTemplateColumns='repeat('+cols+', minmax(0,1fr))';",
-          "  grid.innerHTML='';",
+          "  g.style.gridTemplateColumns='repeat('+cols+', minmax(0,1fr))';",
+          "  g.innerHTML='';",
           "  for(let c=0;c<cols;c++){",
           "    const col=document.createElement('div');",
           "    col.className='col';",
@@ -1543,44 +1586,91 @@
           "    pre.style.fontSize=size+'px';",
           "    pre.textContent=lines.slice(c*per,(c+1)*per).join('\\n');",
           "    col.appendChild(pre);",
-          "    grid.appendChild(col);",
+          "    g.appendChild(col);",
           "  }",
           "}",
-          "function heightCut(){",
-          "  return Array.prototype.some.call(grid.querySelectorAll('.col'), function(col){",
+          "function heightCut(g){",
+          "  return Array.prototype.some.call(g.querySelectorAll('.col'), function(col){",
           "    const pre=col.querySelector('pre');",
           "    return pre.getBoundingClientRect().bottom > col.getBoundingClientRect().bottom - 2;",
           "  });",
           "}",
-          "function widthCut(){",
-          "  return Array.prototype.some.call(grid.querySelectorAll('.col'), function(col){",
+          "function widthCut(g){",
+          "  return Array.prototype.some.call(g.querySelectorAll('.col'), function(col){",
           "    const pre=col.querySelector('pre');",
           "    const cs=getComputedStyle(col);",
           "    const avail=col.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight);",
           "    return pre.getBoundingClientRect().width>avail-2;",
           "  });",
           "}",
-          "function layout(){",
-          "  const h=grid.clientHeight;",
-          "  if(h<20||grid.clientWidth<20) return;",
+          "function layout(g){",
+          "  g.style.overflowX='';",
+          "  const h=g.clientHeight;",
+          "  if(h<20||g.clientWidth<20) return;",
           "  for(let size=36; size>=6; size--){",
           "    const lh=lineHeight(size);",
           "    let per=Math.max(1, Math.floor((h - lh*0.35)/lh));",
-          "    paint(size, per);",
-          "    while(heightCut() && per>1){ per--; paint(size, per); }",
-          "    if(!heightCut() && !widthCut()) return;",
+          "    paint(g, size, per);",
+          "    while(heightCut(g) && per>1){ per--; paint(g, size, per); }",
+          "    if(!heightCut(g) && !widthCut(g)) return;",
           "  }",
           "  const size=8;",
           "  const lh=lineHeight(size);",
           "  let per=Math.max(1, Math.floor((h - lh*0.35)/lh));",
-          "  paint(size, per);",
-          "  while(heightCut() && per>1){ per--; paint(size, per); }",
-          "  grid.style.overflowX='auto';",
-          "  grid.style.gridTemplateColumns='repeat('+grid.children.length+', max-content)';",
-          "  Array.prototype.forEach.call(grid.querySelectorAll('.col'), function(c){ c.style.overflow='visible'; });",
+          "  paint(g, size, per);",
+          "  while(heightCut(g) && per>1){ per--; paint(g, size, per); }",
+          "  g.style.overflowX='auto';",
+          "  g.style.gridTemplateColumns='repeat('+g.children.length+', max-content)';",
+          "  Array.prototype.forEach.call(g.querySelectorAll('.col'), function(c){ c.style.overflow='visible'; });",
           "}",
-          "window.addEventListener('resize', layout);",
-          "requestAnimationFrame(function(){ requestAnimationFrame(layout); });",
+          // ピンチで拡大・縮小（1〜5 倍）。拡大中は 1 本指でスクロールして移動する
+          "let scale=1, baseW=0, baseH=0, pinch=null;",
+          "function applyScale(){",
+          "  sizer.style.width=baseW*scale+'px';",
+          "  sizer.style.height=baseH*scale+'px';",
+          "  page.style.transform='scale('+scale+')';",
+          "}",
+          "function fit(){",
+          "  scale=1;",
+          "  sizer.style.width=sizer.style.height='0';",
+          "  baseW=vp.clientWidth; baseH=vp.clientHeight;",
+          "  page.style.width=baseW+'px'; page.style.height=baseH+'px';",
+          "  applyScale();",
+          "  layout(grid);",
+          "}",
+          "function dist(a,b){ return Math.hypot(a.clientX-b.clientX, a.clientY-b.clientY); }",
+          "function mid(a,b){ return { x:(a.clientX+b.clientX)/2, y:(a.clientY+b.clientY)/2 }; }",
+          "vp.addEventListener('touchstart', function(e){",
+          "  if(e.touches.length!==2) return;",
+          "  const a=e.touches[0], b=e.touches[1], m=mid(a,b);",
+          "  pinch={ d:Math.max(1, dist(a,b)), s:scale, x:(vp.scrollLeft+m.x)/scale, y:(vp.scrollTop+m.y)/scale };",
+          "}, { passive:true });",
+          "vp.addEventListener('touchmove', function(e){",
+          "  if(!pinch||e.touches.length<2) return;",
+          "  e.preventDefault();",
+          "  const a=e.touches[0], b=e.touches[1], m=mid(a,b);",
+          "  scale=Math.min(MAX_SCALE, Math.max(1, pinch.s*dist(a,b)/pinch.d));",
+          "  applyScale();",
+          "  vp.scrollLeft=pinch.x*scale-m.x;",   // 指の間の位置を動かさずに拡大する
+          "  vp.scrollTop=pinch.y*scale-m.y;",
+          "}, { passive:false });",
+          "function endPinch(e){ if(e.touches.length<2) pinch=null; }",
+          "vp.addEventListener('touchend', endPinch);",
+          "vp.addEventListener('touchcancel', endPinch);",
+          "document.addEventListener('gesturestart', function(e){ e.preventDefault(); });",   // iOS: ページ全体の拡大を止める
+          // 印刷用: 紙の大きさで段組みし直す（親ページから呼ぶ。Ctrl+P などで印刷したときも使う）
+          "window.buildPrint=function(){",
+          "  printBox.innerHTML='';",
+          "  const g=document.createElement('div');",
+          "  g.className='grid';",
+          "  g.style.width=PRINT_W+'px'; g.style.height=PRINT_H+'px';",
+          "  printBox.appendChild(g);",
+          "  layout(g);",
+          "  return printBox.innerHTML;",
+          "};",
+          "window.addEventListener('beforeprint', window.buildPrint);",
+          "window.addEventListener('resize', fit);",
+          "requestAnimationFrame(function(){ requestAnimationFrame(fit); });",
           "<" + "/script></body></html>"
         ].join("");
         return html;
@@ -1595,10 +1685,31 @@
         if (previewDlg.open) previewDlg.close();
       }
 
-      function openPreview() {
-        const text = outputEl.value;
+      // プレビューの内容を印刷する。iOS Safari は iframe の print() でも親ページ全体を印刷するため、
+      // 紙の大きさで組んだ段組みを親ページの #printArea に写して、それだけを印刷する
+      // （印刷後もプレビューを閉じるまでは残す。iOS では印刷画面の表示前に afterprint が来ることがあるため）
+      function printPreview() {
+        const win = previewFrame.contentWindow;
+        if (!win || typeof win.buildPrint !== "function") return;
+        printArea.innerHTML = win.buildPrint();
+        document.documentElement.classList.add("pv-print");
+        window.print();
+      }
+
+      function endPrintPreview() {
+        document.documentElement.classList.remove("pv-print");
+        printArea.innerHTML = "";
+      }
+
+      // タブ表示では、プレビュー・保存の対象は選択中のタブ（入力 / 出力）
+      function targetView(view) {
+        return tabMq.matches ? appEl.getAttribute("data-view") : view;
+      }
+
+      function openPreview(view) {
+        const text = view === "in" ? inputEl.value : outputEl.value;
         if (!text.trim()) {
-          showError(t("err.emptyTitle"), t("err.emptyBody"));
+          showError(t("err.emptyTitle"), t(view === "in" ? "err.emptyInBody" : "err.emptyBody"));
           return;
         }
         const html = buildPreviewHtml(text);
@@ -1696,12 +1807,16 @@
         setTimeout(function () { URL.revokeObjectURL(url); }, 10000);
       }
 
-      async function saveOutput() {
-        const n = Number(semitoneEl.value);
-        const tag = (n >= 0 ? "+" : "") + n;
-        let suggested = "transposed" + tag + ".txt";
-        if (sourceFileName) {
-          suggested = sourceFileName.replace(/\.[^.]+$/, "") + "_transposed" + tag + ".txt";
+      async function saveText(view) {
+        const text = view === "in" ? inputEl.value : outputEl.value;
+        const base = sourceFileName ? sourceFileName.replace(/\.[^.]+$/, "") : "";
+        let suggested;
+        if (view === "in") {
+          suggested = (base || "chords") + ".txt";
+        } else {
+          const n = Number(semitoneEl.value);
+          const tag = (n >= 0 ? "+" : "") + n;
+          suggested = base ? base + "_transposed" + tag + ".txt" : "transposed" + tag + ".txt";
         }
 
         // Windows の Edge / Chrome など: 保存先を選んで保存
@@ -1714,7 +1829,7 @@
             if (sourceFileHandle) opts.startIn = sourceFileHandle;
             const handle = await window.showSaveFilePicker(opts);
             const writable = await handle.createWritable();
-            await writable.write(outputEl.value);
+            await writable.write(text);
             await writable.close();
           } catch (err) {
             if (err && err.name === "AbortError") return;
@@ -1726,7 +1841,7 @@
         // iPhone / iPad: 共有メニュー（「ファイルに保存」を選べる）
         try {
           if (isIOS() && navigator.share && navigator.canShare) {
-            const file = new File([outputEl.value], suggested, { type: "text/plain" });
+            const file = new File([text], suggested, { type: "text/plain" });
             if (navigator.canShare({ files: [file] })) {
               await navigator.share({ files: [file] });
               return;
@@ -1738,7 +1853,7 @@
 
         // Android Chrome など: ダウンロードとして保存
         try {
-          downloadText(suggested, outputEl.value);
+          downloadText(suggested, text);
         } catch (err) {
           showError(t("err.save"), err && err.message ? err.message : String(err));
         }
@@ -1780,11 +1895,15 @@
       accidentalEl.addEventListener("change", onTransposeSettingChange);
       fontSizeEl.addEventListener("change", applyFontSize);
       document.getElementById("openBtn").addEventListener("click", openFile);
-      document.getElementById("saveBtn").addEventListener("click", saveOutput);
-      document.getElementById("previewBtn").addEventListener("click", openPreview);
+      document.getElementById("saveBtn").addEventListener("click", function () { saveText(targetView("out")); });
+      document.getElementById("previewBtn").addEventListener("click", function () { openPreview(targetView("out")); });
+      document.getElementById("saveInBtn").addEventListener("click", function () { saveText("in"); });
+      document.getElementById("previewInBtn").addEventListener("click", function () { openPreview("in"); });
       document.getElementById("previewClose").addEventListener("click", closePreviewOverlay);
+      document.getElementById("previewPrint").addEventListener("click", printPreview);
       previewDlg.addEventListener("close", function () {
         previewFrame.srcdoc = "";
+        endPrintPreview();
       });
       document.getElementById("msgOk").addEventListener("click", function () {
         msgDlg.close();
