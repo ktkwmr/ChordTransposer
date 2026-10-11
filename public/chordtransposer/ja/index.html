@@ -1886,6 +1886,15 @@
         previewWin.focus();
       }
 
+      // 読み込んだ曲は移調なし（0）から始める。前回の半音数が残って、ずれたキーのまま保存・印刷しないように
+      function showLoadedText(text) {
+        inputEl.value = text;
+        semitoneEl.value = "0";
+        syncCtlValues();
+        render();
+        saveState();
+      }
+
       async function ingestFile(file, handle) {
         if (!file) return;
         sourceFileHandle = handle || null;
@@ -1893,23 +1902,17 @@
         try {
           if (isPdfFile(file)) {
             const text = await extractChartFromPdf(file);
-            inputEl.value = text;
-            render();
-            saveState();
+            showLoadedText(text);
             return;
           }
           if (isImageFile(file)) {
             const text = await extractChartFromImage(file);
-            inputEl.value = text;
-            render();
-            saveState();
+            showLoadedText(text);
             return;
           }
           if (isTextFile(file)) {
             const text = await file.text();
-            inputEl.value = text;
-            render();
-            saveState();
+            showLoadedText(text);
             return;
           }
           showError(t("err.unsupportedTitle"), t("err.unsupportedBody", { name: file.name || t("none") }));
