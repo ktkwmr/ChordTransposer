@@ -2,8 +2,8 @@
   "name": "chordtransposer",
   "compatibility_date": "2026-10-01",
   "observability": { "enabled": true },
-  // Regenerates public/chordtransposer/ja/index.html from index.html before deploy / dev
-  "build": { "command": "node scripts/build-ja.mjs" },
+  // Regenerates ja/index.html, the guide pages, and sitemap.xml before deploy / dev
+  "build": { "command": "node scripts/build-ja.mjs && node scripts/build-pages.mjs" },
   // Required by `wrangler preview`, which Workers Builds runs for non-production branches
   "previews": {},
   "assets": {
