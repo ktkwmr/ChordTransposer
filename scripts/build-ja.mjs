@@ -41,7 +41,9 @@ const LD_DESCRIPTION = "コード譜をブラウザで転調（移調）でき�
 const escapeAttr = (s) => s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 const escapeText = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
 
-const src = await readFile(SRC, "utf8");
+// Windows checkouts may have CRLF line endings (Git's core.autocrlf); the patterns below expect LF
+const toLf = (s) => s.replace(/\r\n/g, "\n");
+const src = toLf(await readFile(SRC, "utf8"));
 const headEnd = src.indexOf("</head>");
 if (headEnd < 0) throw new Error("</head> not found in index.html");
 // <head> only: the scripts in <body> also contain tags like <title>
@@ -116,7 +118,7 @@ html = html.replace(/^<!DOCTYPE html>\n/, "<!DOCTYPE html>\n<!-- Generated from 
 
 // ---------- write ----------
 let current = null;
-try { current = await readFile(OUT, "utf8"); } catch {}
+try { current = toLf(await readFile(OUT, "utf8")); } catch {}
 if (current === html) {
   console.log("ja/index.html is up to date.");
 } else if (CHECK) {

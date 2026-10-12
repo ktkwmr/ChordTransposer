@@ -109,7 +109,8 @@ ${urlEntries}
 let stale = 0;
 for (const [file, content] of outputs) {
   let current = null;
-  try { current = await readFile(file, "utf8"); } catch {}
+  // Ignore CRLF line endings in a Windows checkout (Git's core.autocrlf); the output is written with LF
+  try { current = (await readFile(file, "utf8")).replace(/\r\n/g, "\n"); } catch {}
   if (current === content) continue;
   stale++;
   const rel = file.slice(PUBLIC.length - "public/".length);
