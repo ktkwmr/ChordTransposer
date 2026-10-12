@@ -46,4 +46,4 @@ export function shortestShift(from, to) {
   return d;
 }
 
-export const signed = (n) => (n > 0 ? "+" + n : n < 0 ? "−" + -n : "0");
+export const signed = (n) => (n > 0 ? "+" + n : n < 0 ? "-" + -n : "0");

@@ -96,6 +96,7 @@
     .pair figcaption, figure.shot figcaption, .table-wrap + .cap { color: var(--subtle); font-size: 13px; }
     figure { margin: 0 0 24px; }
     figure.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    figure.shot a { display: block; }
     figure.shot.phone img { max-width: 320px; }
     figure.shot figcaption { margin-top: 6px; }
     .note { margin: 0 0 20px; padding: 12px 16px; border-left: 3px solid var(--ink); background: var(--fill); border-radius: 0 var(--radius) var(--radius) 0; }
@@ -105,6 +106,15 @@
     .toc ol { margin: 0; padding-left: 1.4em; }
 
     .table-wrap { margin: 0 0 8px; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    /* Wide tables: shadows at the edges show that the table scrolls sideways */
+    .table-wrap.wide {
+      background:
+        linear-gradient(to right, var(--paper) 30%, rgba(255,255,255,0)) left / 40px 100% no-repeat local,
+        linear-gradient(to left, var(--paper) 30%, rgba(255,255,255,0)) right / 40px 100% no-repeat local,
+        radial-gradient(farthest-side at 0 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) left / 14px 100% no-repeat scroll,
+        radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) right / 14px 100% no-repeat scroll;
+    }
+    .scroll-hint { display: none; margin: 0 0 6px; color: var(--subtle); font-size: 13px; }
     .table-wrap + .cap { margin: 0 0 24px; }
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
     th, td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: center; white-space: nowrap; }
@@ -112,9 +122,13 @@
     thead th { background: var(--fill); font-weight: 600; }
     tbody th { text-align: left; font-weight: 600; background: var(--paper); position: sticky; left: 0; }
     td.chord, td.num { font-family: var(--mono); }
-    td.dim { color: #a3a3a3; }
+    td.dim { color: var(--muted); background: var(--fill); }
     td.hit { background: var(--ink); color: var(--paper); font-weight: 700; }
     table.text td, table.text th { white-space: normal; text-align: left; }
+    td code, th code { white-space: nowrap; }
+    table.text tbody th { white-space: nowrap; }
+    th.group { font-weight: 400; color: var(--muted); font-size: 13px; }
+    .table-wrap.wide tbody th { background: var(--paper); }
 
     dl.faq dt { margin: 28px 0 6px; font-weight: 700; font-size: 17px; }
     dl.faq dd { margin: 0; }
@@ -134,6 +148,15 @@
     .site-foot .meta { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; }
 
     @media (max-width: 600px) {
+      .scroll-hint { display: block; }
+      /* Two-column and text tables become stacked cards on phones */
+      table.stack, table.stack tbody, table.stack tr, table.stack th, table.stack td { display: block; width: auto; }
+      table.stack thead { display: none; }
+      table.stack tr { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+      table.stack tr:last-child { border-bottom: 0; }
+      table.stack th, table.stack td { padding: 2px 0; border: 0; text-align: left; white-space: normal; position: static; background: none; }
+      table.stack td:empty { display: none; }
+      table.stack td[data-label]::before { content: attr(data-label) " "; color: var(--subtle); font-family: var(--sans); }
       main { padding-top: 28px; }
       h1 { font-size: 25px; }
       h2 { font-size: 20px; }
@@ -158,74 +181,74 @@
   <main>
     <article>
       <h1># と ♭ の使い分け：コード譜はシャープとフラットどちらで書く？</h1>
-      <p class="lead">ピアノでは C# と Db は同じ黒鍵です。それでもコード譜では、どちらかの書き方のほうが読みやすいのがふつうです。その選び方を説明します。</p>
-      
-      <nav class="toc" aria-label="目次"><b>目次</b><ol>
-        <li><a href="#same">同じ音に 2 つの名前</a></li>
-        <li><a href="#rule">基本はキーに合わせる</a></li>
-        <li><a href="#keys">シャープ系のキーとフラット系のキー</a></li>
-        <li><a href="#outside">キーの外のコード</a></li>
-        <li><a href="#app">Chord Transposer の #/♭ 設定</a></li>
-      </ol></nav>
-      
-      <h2 id="same">同じ音に 2 つの名前</h2>
-      <p>1 オクターブには 12 の音がありますが、音名のアルファベットは A〜G の 7 つしかありません。そのため、間にある 5 つの音には C#/Db、D#/Eb、F#/Gb、G#/Ab、A#/Bb と 2 つずつ名前があります。同じ高さの音の別名を<b>異名同音</b>（エンハーモニック）といいます。</p>
-      <p>ギターでもキーボードでも弾き方は同じなので、どちらも「間違い」ではありません。ただ、キーに合った書き方をすると譜面が読みやすくなり、コード同士の関係もわかりやすくなります。</p>
-      <div class="note"><p>テキストのコード譜では、シャープ（♯）を <code>#</code>、フラット（♭）を小文字の <code>b</code> で書くのが一般的です。Chord Transposer はどちらの書き方も読み取り、<code>#</code> と <code>b</code> で出力します。</p></div>
-      
-      <h2 id="rule">基本はキーに合わせる</h2>
-      <p>メジャースケールでは、A〜G の各アルファベットを 1 回ずつ使います。キー F の音階は F・G・A・<b>Bb</b>・C・D・E です。A# と書くと A を 2 回使って B を飛ばすことになるので、キー F の IV のコードは A# ではなく <b>Bb</b> と書きます。</p>
-      <div class="pair">
-        <figure><pre><code>F    Bb   C7   F</code></pre><figcaption>キー F：自然に読める</figcaption></figure>
-        <figure><pre><code>F    A#   C7   F</code></pre><figcaption>同じ音だが読みにくい</figcaption></figure>
-      </div>
-      <p>つまり、<b>シャープ系のキー</b>なら黒鍵のコードは # で、<b>フラット系のキー</b>なら b で書きます。</p>
-      
-      <h2 id="keys">シャープ系のキーとフラット系のキー</h2>
-      <p>それぞれのキー（とその平行調）は、シャープかフラットのどちらか一方だけを使います。</p>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th scope="col">調号の数</th><th scope="col">シャープ系（メジャー / マイナー）</th><th scope="col">フラット系（メジャー / マイナー）</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">0</th><td class="chord" colspan="2">C / Am</td></tr>
-            <tr><th scope="row">1</th><td class="chord">G / Em</td><td class="chord">F / Dm</td></tr>
-            <tr><th scope="row">2</th><td class="chord">D / Bm</td><td class="chord">Bb / Gm</td></tr>
-            <tr><th scope="row">3</th><td class="chord">A / F#m</td><td class="chord">Eb / Cm</td></tr>
-            <tr><th scope="row">4</th><td class="chord">E / C#m</td><td class="chord">Ab / Fm</td></tr>
-            <tr><th scope="row">5</th><td class="chord">B / G#m</td><td class="chord">Db / Bbm</td></tr>
-            <tr><th scope="row">6</th><td class="chord">F# / D#m</td><td class="chord">Gb / Ebm</td></tr>
-            <tr><th scope="row">7</th><td class="chord">C# / A#m</td><td class="chord">Cb / Abm</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="cap">調号が 6 つと 7 つのキーには同じ音の別名があります（F# = Gb、C# = Db、Cb = B）。コード譜では F#（または Gb）、Db、B がよく使われます。</p>
-      <p>覚え方：<b>F と、名前に b が付くキー</b>がフラット系です。C 以外の残りのキーはシャープ系です。</p>
-      
-      <h2 id="outside">キーの外のコード</h2>
-      <p>曲にはキーの外のコードもよく出てきます。よく使われる書き方の習慣は次のとおりです。</p>
-      <ul>
-        <li><b>同主調（マイナー）からの借用和音</b>はフラットで書きます。キー C なら、C マイナーから借りるコードは A#・G#・D# ではなく <code>Bb</code>・<code>Ab</code>・<code>Eb</code>・<code>Fm</code> です。</li>
-        <li><b>上がっていく進行</b>はシャープで書くことが多いです：<code>C  C#dim  Dm</code></li>
-        <li><b>下がっていく進行</b>はフラットで書くことが多いです：<code>D  Db  C</code>、ベースラインなら <code>C  C/B  C/Bb  F/A</code></li>
-      </ul>
-      <p>迷ったら、アルファベットが順番に動いて見える書き方を選びましょう。</p>
-      
-      <h2 id="app">Chord Transposer の #/♭ 設定</h2>
-      <p>アプリには、移調したコードの書き方を決める 3 つの選択肢があります。</p>
-      <div class="table-wrap">
-        <table class="text">
-          <thead><tr><th scope="col">設定</th><th scope="col">動作</th><th scope="col"><code>F Bb C7 Dm</code> を +3</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">オリジナル</th><td>b で書かれたコードはフラットのまま。それ以外のコードは、黒鍵の音になったとき # で書きます。</td><td class="chord">G# Db D#7 Fm</td></tr>
-            <tr><th scope="row"># を優先</th><td>黒鍵の音はすべて # で書きます。</td><td class="chord">G# C# D#7 Fm</td></tr>
-            <tr><th scope="row">b を優先</th><td>黒鍵の音はすべて b で書きます。</td><td class="chord">Ab Db Eb7 Fm</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="cap">この例はキー F からキー Ab（フラット系）への移調なので、「b を優先」が適切な書き方になります。「オリジナル」では、元が Bb だったコードは Db になりますが、# も b も付いていなかったコードは G#・D#7 になります。</p>
-      <p><b>選び方：</b>上の表で移調先のキーを探します。フラット系なら「<b>b を優先</b>」、シャープ系なら「<b># を優先</b>」を選びます。そのあと、キーの外のコードを確認して、必要なら手で直してください。</p>
-      <p><b>移調</b>が 0 のときは、「# を優先」「b を優先」は # や b の付いたコードだけを書き換えます。# と b が混ざったコード譜をそろえるのに使えます（例：<code>Db</code> → <code>C#</code>）。</p>
-      <p>関連記事：<a href="../key-chart/">キー別のコード表</a>では、すべてのコードを各キーの音階に合わせて表記しています。</p>
+<p class="lead">ピアノでは C# と Db は同じ黒鍵です。それでもコード譜では、どちらかの書き方のほうが読みやすいのがふつうです。その選び方を説明します。</p>
+
+<nav class="toc" aria-label="目次"><b>目次</b><ol>
+  <li><a href="#same">同じ音に 2 つの名前</a></li>
+  <li><a href="#rule">基本はキーに合わせる</a></li>
+  <li><a href="#keys">シャープ系のキーとフラット系のキー</a></li>
+  <li><a href="#outside">キーの外のコード</a></li>
+  <li><a href="#app">Chord Transposer の #/♭ 設定</a></li>
+</ol></nav>
+
+<h2 id="same">同じ音に 2 つの名前</h2>
+<p>1 オクターブには 12 の音がありますが、音名のアルファベットは A〜G の 7 つしかありません。そのため、間にある 5 つの音には C#/Db、D#/Eb、F#/Gb、G#/Ab、A#/Bb と 2 つずつ名前があります。同じ高さの音の別名を<b>異名同音</b>（エンハーモニック）といいます。</p>
+<p>ギターでもキーボードでも弾き方は同じなので、どちらも「間違い」ではありません。ただ、キーに合った書き方をすると譜面が読みやすくなり、コード同士の関係もわかりやすくなります。</p>
+<div class="note"><p>テキストのコード譜では、シャープ（♯）を <code>#</code>、フラット（♭）を小文字の <code>b</code> で書くのが一般的です。Chord Transposer はどちらの書き方も読み取り、<code>#</code> と <code>b</code> で出力します。</p></div>
+
+<h2 id="rule">基本はキーに合わせる</h2>
+<p>メジャースケールでは、A〜G の各アルファベットを 1 回ずつ使います。キー F の音階は F・G・A・<b>Bb</b>・C・D・E です。A# と書くと A を 2 回使って B を飛ばすことになるので、キー F の IV のコードは A# ではなく <b>Bb</b> と書きます。</p>
+<div class="pair">
+  <figure><pre><code>F    Bb   C7   F</code></pre><figcaption>キー F：自然に読める</figcaption></figure>
+  <figure><pre><code>F    A#   C7   F</code></pre><figcaption>同じ音だが読みにくい</figcaption></figure>
+</div>
+<p>つまり、<b>シャープ系のキー</b>なら黒鍵のコードは # で、<b>フラット系のキー</b>なら b で書きます。</p>
+
+<h2 id="keys">シャープ系のキーとフラット系のキー</h2>
+<p>それぞれのキー（とその平行調）は、シャープかフラットのどちらか一方だけを使います。</p>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th scope="col">調号の数</th><th scope="col">シャープ系（メジャー / マイナー）</th><th scope="col">フラット系（メジャー / マイナー）</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">0</th><td class="chord" colspan="2">C / Am</td></tr>
+      <tr><th scope="row">1</th><td class="chord">G / Em</td><td class="chord">F / Dm</td></tr>
+      <tr><th scope="row">2</th><td class="chord">D / Bm</td><td class="chord">Bb / Gm</td></tr>
+      <tr><th scope="row">3</th><td class="chord">A / F#m</td><td class="chord">Eb / Cm</td></tr>
+      <tr><th scope="row">4</th><td class="chord">E / C#m</td><td class="chord">Ab / Fm</td></tr>
+      <tr><th scope="row">5</th><td class="chord">B / G#m</td><td class="chord">Db / Bbm</td></tr>
+      <tr><th scope="row">6</th><td class="chord">F# / D#m</td><td class="chord">Gb / Ebm</td></tr>
+      <tr><th scope="row">7</th><td class="chord">C# / A#m</td><td class="chord">Cb / Abm</td></tr>
+    </tbody>
+  </table>
+</div>
+<p class="cap">調号が 6 つと 7 つのキーには同じ音の別名があります（F# = Gb、C# = Db、Cb = B）。コード譜では F#（または Gb）、Db、B がよく使われます。</p>
+<p>覚え方：<b>F と、名前に b が付くキー</b>がフラット系です。C 以外の残りのキーはシャープ系です。</p>
+
+<h2 id="outside">キーの外のコード</h2>
+<p>曲にはキーの外のコードもよく出てきます。よく使われる書き方の習慣は次のとおりです。</p>
+<ul>
+  <li><b>同主調（マイナー）からの借用和音</b>はフラットで書きます。キー C なら、C マイナーから借りるコードは A#・G#・D# ではなく <code>Bb</code>・<code>Ab</code>・<code>Eb</code>・<code>Fm</code> です。</li>
+  <li><b>上がっていく進行</b>はシャープで書くことが多いです：<code>C  C#dim  Dm</code></li>
+  <li><b>下がっていく進行</b>はフラットで書くことが多いです：<code>D  Db  C</code>、ベースラインなら <code>C  C/B  C/Bb  F/A</code></li>
+</ul>
+<p>迷ったら、アルファベットが順番に動いて見える書き方を選びましょう。</p>
+
+<h2 id="app">Chord Transposer の #/♭ 設定</h2>
+<p>アプリには、移調したコードの書き方を決める 3 つの選択肢があります。</p>
+<div class="table-wrap">
+  <table class="text stack">
+    <thead><tr><th scope="col">設定</th><th scope="col"><code>F Bb C7 Dm</code> を +3 した結果</th><th scope="col">ルール</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">オリジナル</th><td class="chord" data-label="結果：">G# Db D#7 Fm</td><td data-label="ルール：">元の書き方に合わせます。b で書かれたコードは b のまま（Bb → Db）、# も b もないコードは # になります（F → G#）。</td></tr>
+      <tr><th scope="row"># を優先</th><td class="chord" data-label="結果：">G# C# D#7 Fm</td><td data-label="ルール：">いつも # で書きます。</td></tr>
+      <tr><th scope="row">b を優先</th><td class="chord" data-label="結果：">Ab Db Eb7 Fm</td><td data-label="ルール：">いつも b で書きます。</td></tr>
+    </tbody>
+  </table>
+</div>
+<p class="cap">この例はキー F からキー Ab（フラット系）への移調なので、「b を優先」が適切な書き方になります。</p>
+<p><b>選び方：</b>移調先のキーを<a href="#keys">シャープ系・フラット系のキーの表</a>で探します。フラット系なら「<b>b を優先</b>」、シャープ系なら「<b># を優先</b>」を選びます。そのあと、キーの外のコードを確認して、必要なら手で直してください。</p>
+<p><b>移調</b>が 0 のときは、「# を優先」「b を優先」は # や b の付いたコードだけを書き換えます。# と b が混ざったコード譜をそろえるのに使えます（例：<code>Db</code> → <code>C#</code>）。</p>
+<p>関連記事：<a href="../key-chart/">キー別のコード表</a>では、すべてのコードを各キーの音階に合わせて表記しています。</p>
     </article>
     <aside class="cta">
       <h2>さっそくコード譜を移調する</h2>

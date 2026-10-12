@@ -100,7 +100,7 @@
         "name": "カポを付けて弾くためのコード譜にするには？",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "マイナスのカポのフレット数だけ移調します。カポ 2 なら −2 を選ぶと、出力に押さえる形のコードが表示されます。キーごとのカポの位置はカポ位置の早見表をご覧ください。"
+          "text": "移調を「-（カポのフレット数）」にします。カポ 2 なら -2 を選ぶと、出力に押さえる形（フォーム）のコードが表示されます。キーごとのカポの位置はカポ位置の早見表をご覧ください。"
         }
       },
       {
@@ -207,6 +207,7 @@
     .pair figcaption, figure.shot figcaption, .table-wrap + .cap { color: var(--subtle); font-size: 13px; }
     figure { margin: 0 0 24px; }
     figure.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    figure.shot a { display: block; }
     figure.shot.phone img { max-width: 320px; }
     figure.shot figcaption { margin-top: 6px; }
     .note { margin: 0 0 20px; padding: 12px 16px; border-left: 3px solid var(--ink); background: var(--fill); border-radius: 0 var(--radius) var(--radius) 0; }
@@ -216,6 +217,15 @@
     .toc ol { margin: 0; padding-left: 1.4em; }
 
     .table-wrap { margin: 0 0 8px; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    /* Wide tables: shadows at the edges show that the table scrolls sideways */
+    .table-wrap.wide {
+      background:
+        linear-gradient(to right, var(--paper) 30%, rgba(255,255,255,0)) left / 40px 100% no-repeat local,
+        linear-gradient(to left, var(--paper) 30%, rgba(255,255,255,0)) right / 40px 100% no-repeat local,
+        radial-gradient(farthest-side at 0 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) left / 14px 100% no-repeat scroll,
+        radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) right / 14px 100% no-repeat scroll;
+    }
+    .scroll-hint { display: none; margin: 0 0 6px; color: var(--subtle); font-size: 13px; }
     .table-wrap + .cap { margin: 0 0 24px; }
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
     th, td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: center; white-space: nowrap; }
@@ -223,9 +233,13 @@
     thead th { background: var(--fill); font-weight: 600; }
     tbody th { text-align: left; font-weight: 600; background: var(--paper); position: sticky; left: 0; }
     td.chord, td.num { font-family: var(--mono); }
-    td.dim { color: #a3a3a3; }
+    td.dim { color: var(--muted); background: var(--fill); }
     td.hit { background: var(--ink); color: var(--paper); font-weight: 700; }
     table.text td, table.text th { white-space: normal; text-align: left; }
+    td code, th code { white-space: nowrap; }
+    table.text tbody th { white-space: nowrap; }
+    th.group { font-weight: 400; color: var(--muted); font-size: 13px; }
+    .table-wrap.wide tbody th { background: var(--paper); }
 
     dl.faq dt { margin: 28px 0 6px; font-weight: 700; font-size: 17px; }
     dl.faq dd { margin: 0; }
@@ -245,6 +259,15 @@
     .site-foot .meta { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; }
 
     @media (max-width: 600px) {
+      .scroll-hint { display: block; }
+      /* Two-column and text tables become stacked cards on phones */
+      table.stack, table.stack tbody, table.stack tr, table.stack th, table.stack td { display: block; width: auto; }
+      table.stack thead { display: none; }
+      table.stack tr { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+      table.stack tr:last-child { border-bottom: 0; }
+      table.stack th, table.stack td { padding: 2px 0; border: 0; text-align: left; white-space: normal; position: static; background: none; }
+      table.stack td:empty { display: none; }
+      table.stack td[data-label]::before { content: attr(data-label) " "; color: var(--subtle); font-family: var(--sans); }
       main { padding-top: 28px; }
       h1 { font-size: 25px; }
       h2 { font-size: 20px; }
@@ -269,41 +292,41 @@
   <main>
     <article>
       <h1>よくある質問</h1>
-      <p class="lead">よくある質問への短い回答です。詳しい手順は<a href="../guide/">使い方ガイド</a>をご覧ください。</p>
-      <dl class="faq">
-        <dt>無料で使えますか？</dt>
-        <dd>はい。無料で、登録やアカウントも不要です。</dd>
-        <dt>ファイルはサーバーに送られますか？</dt>
-        <dd>いいえ。開いたコード譜や入力した内容はブラウザの中だけで処理され、端末の外に出ることはありません。PDF や画像を開いたときは読み取り用のライブラリを CDN からダウンロードしますが、ファイルの内容は送られません。</dd>
-        <dt>どんなファイルを開けますか？</dt>
-        <dd>テキストファイル（.cho・.crd などの ChordPro ファイルを含む）、PDF、PNG・JPEG などの画像です。文字情報のある PDF はそのまま読み込み、スキャンしたページや画像は OCR（日本語・英語）で読み取ります。PDF は先頭から 20 ページまで読み込みます。詳しくは<a href="../guide/#files">ファイルを開く</a>をご覧ください。</dd>
-        <dt>写真やスキャンした PDF の読み取り結果が間違っています。</dt>
-        <dd>OCR は文字を読み違えることがあります。斜めから撮った写真、暗い写真、解像度の低い画像では特に起こりやすくなります。間違いは入力欄で直接直してください。出力にすぐ反映されます。精度を上げるには<a href="../guide/#ocr">写真やスキャンした PDF を読み取るコツ</a>をご覧ください。手書きのコード譜はほとんど認識できません。</dd>
-        <dt>一部のコードが移調されません。</dt>
-        <dd>書き換えるのは、コードらしく見える文字だけです。英語の歌詞の中の大文字 1 文字（"A man walked in" の "A" など）はわざと書き換えず、特殊な表記は認識できないことがあります。ChordPro のディレクティブ（<code>{key: G}</code> など）も書き換えません。入力欄で直すか、手で書き換えてください。</dd>
-        <dt>コードと歌詞の位置がずれます。</dt>
-        <dd>コード譜の位置がそろうのは、すべての文字が同じ幅の等幅フォントで表示したときだけです。Word などに貼り付けるときは、MS ゴシックや Courier New などの等幅フォントを選んでください。日本語の全角文字は、半角 2 文字分の幅になります。</dd>
-        <dt>Bb のはずが A# と表示されます。</dt>
-        <dd>どちらも同じ音です。フラット系のキー（F・Bb・Eb・Ab・Db・Gb）なら <b>#/♭</b> を「<b>b を優先</b>」に、シャープ系のキーなら「<b># を優先</b>」にしてください。詳しくは<a href="../sharps-and-flats/"># と ♭ の使い分け</a>をご覧ください。</dd>
-        <dt>何半音移調すればいいですか？</dt>
-        <dd>元のキーから新しいキーまでの半音を数えるか、<a href="../key-chart/#shift">キーからキーへの半音数の表</a>で調べてください。歌に合わせるなら、まず 1〜2 半音から試しましょう。カラオケのキー設定の「+2」は、アプリの +2 と同じです。</dd>
-        <dt>カポを付けて弾くためのコード譜にするには？</dt>
-        <dd>マイナスのカポのフレット数だけ移調します。カポ 2 なら −2 を選ぶと、出力に押さえる形のコードが表示されます。キーごとのカポの位置は<a href="../capo-chart/">カポ位置の早見表</a>をご覧ください。</dd>
-        <dt>マイナーキーの曲や、途中で転調する曲も移調できますか？</dt>
-        <dd>はい。すべてのコードが同じ半音数だけ動くので、マイナーキーでも、曲の途中の転調でも、コード同士の関係はそのまま保たれます。</dd>
-        <dt>ドイツ式の H 表記に対応していますか？</dt>
-        <dd>はい。H は B（Hm は Bm）として読み取ります。移調したコードは B で書きます。</dd>
-        <dt>iPhone や Android でも使えますか？</dt>
-        <dd>はい。スマホ・タブレット・パソコンのブラウザで使えます。スマホでは入力と出力がタブで切り替わります。ホーム画面に追加することもできます（<a href="../guide/#offline">ホーム画面に追加する</a>を参照）。</dd>
-        <dt>オフラインでも使えますか？</dt>
-        <dd>はい。一度開けば、インターネットに接続していなくてもアプリを開いて移調できます。PDF や画像を開くときは、初回だけ読み取り用のライブラリをダウンロードするため接続が必要です。</dd>
-        <dt>結果を印刷するには？</dt>
-        <dd>プレビューを開きます。パソコンでは、プレビューのウィンドウでブラウザの印刷機能（Ctrl+P、Mac では ⌘P）を使います。スマホ・タブレットではプリンターのボタンをタップし、iPhone・iPad では共有メニューで「プリント」を選びます。詳しくは<a href="../guide/#preview">プレビュー・印刷・保存</a>をご覧ください。</dd>
-        <dt>コード譜は保存されますか？</dt>
-        <dd>編集中のコード譜と設定は、次に開いたときに続きから使えるようブラウザに保存されます。どこにも送信されません。手元に残したいときはテキストファイルに保存してください。保存されたデータを消すには、ブラウザの設定でこのサイトのデータを削除します。</dd>
-        <dt>不具合の報告や要望はどこに送ればいいですか？</dt>
-        <dd><a href="https://github.com/ktkwmr/ChordTransposer/issues" rel="noopener">GitHub の Issues</a> にお寄せください。変換結果がおかしいときは、短いテキストの例を添えていただけると助かります。</dd>
-      </dl>
+<p class="lead">よくある質問への短い回答です。詳しい手順は<a href="../guide/">使い方ガイド</a>をご覧ください。</p>
+<dl class="faq">
+  <dt>無料で使えますか？</dt>
+  <dd>はい。無料で、登録やアカウントも不要です。</dd>
+  <dt>ファイルはサーバーに送られますか？</dt>
+  <dd>いいえ。開いたコード譜や入力した内容はブラウザの中だけで処理され、端末の外に出ることはありません。PDF や画像を開いたときは読み取り用のライブラリを CDN からダウンロードしますが、ファイルの内容は送られません。</dd>
+  <dt>どんなファイルを開けますか？</dt>
+  <dd>テキストファイル（.cho・.crd などの ChordPro ファイルを含む）、PDF、PNG・JPEG などの画像です。文字情報のある PDF はそのまま読み込み、スキャンしたページや画像は OCR（日本語・英語）で読み取ります。PDF は先頭から 20 ページまで読み込みます。詳しくは<a href="../guide/#files">ファイルを開く</a>をご覧ください。</dd>
+  <dt>写真やスキャンした PDF の読み取り結果が間違っています。</dt>
+  <dd>OCR は文字を読み違えることがあります。斜めから撮った写真、暗い写真、解像度の低い画像では特に起こりやすくなります。間違いは入力欄で直接直してください。出力にすぐ反映されます。精度を上げるには<a href="../guide/#ocr">写真やスキャンした PDF を読み取るコツ</a>をご覧ください。手書きのコード譜はほとんど認識できません。</dd>
+  <dt>一部のコードが移調されません。</dt>
+  <dd>書き換えるのは、コードらしく見える文字だけです。英語の歌詞の中の大文字 1 文字（"A man walked in" の "A" など）はわざと書き換えず、特殊な表記は認識できないことがあります。ChordPro のディレクティブ（<code>{key: G}</code> など）も書き換えません。入力欄で直すか、手で書き換えてください。</dd>
+  <dt>コードと歌詞の位置がずれます。</dt>
+  <dd>コード譜の位置がそろうのは、すべての文字が同じ幅の等幅フォントで表示したときだけです。Word などに貼り付けるときは、MS ゴシックや Courier New などの等幅フォントを選んでください。日本語の全角文字は、半角 2 文字分の幅になります。</dd>
+  <dt>Bb のはずが A# と表示されます。</dt>
+  <dd>どちらも同じ音です。フラット系のキー（F・Bb・Eb・Ab・Db・Gb）なら <b>#/♭</b> を「<b>b を優先</b>」に、シャープ系のキーなら「<b># を優先</b>」にしてください。詳しくは<a href="../sharps-and-flats/"># と ♭ の使い分け</a>をご覧ください。</dd>
+  <dt>何半音移調すればいいですか？</dt>
+  <dd>元のキーから新しいキーまでの半音を数えるか、<a href="../key-chart/#shift">キーからキーへの半音数の表</a>で調べてください。歌に合わせるなら、まず 1〜2 半音から試しましょう。カラオケのキー設定の「+2」は、アプリの +2 と同じです。</dd>
+  <dt>カポを付けて弾くためのコード譜にするには？</dt>
+  <dd>移調を「-（カポのフレット数）」にします。カポ 2 なら -2 を選ぶと、出力に押さえる形（フォーム）のコードが表示されます。キーごとのカポの位置は<a href="../capo-chart/">カポ位置の早見表</a>をご覧ください。</dd>
+  <dt>マイナーキーの曲や、途中で転調する曲も移調できますか？</dt>
+  <dd>はい。すべてのコードが同じ半音数だけ動くので、マイナーキーでも、曲の途中の転調でも、コード同士の関係はそのまま保たれます。</dd>
+  <dt>ドイツ式の H 表記に対応していますか？</dt>
+  <dd>はい。H は B（Hm は Bm）として読み取ります。移調したコードは B で書きます。</dd>
+  <dt>iPhone や Android でも使えますか？</dt>
+  <dd>はい。スマホ・タブレット・パソコンのブラウザで使えます。スマホでは入力と出力がタブで切り替わります。ホーム画面に追加することもできます（<a href="../guide/#offline">ホーム画面に追加する</a>を参照）。</dd>
+  <dt>オフラインでも使えますか？</dt>
+  <dd>はい。一度開けば、インターネットに接続していなくてもアプリを開いて移調できます。PDF や画像を開くときは、初回だけ読み取り用のライブラリをダウンロードするため接続が必要です。</dd>
+  <dt>結果を印刷するには？</dt>
+  <dd>プレビューを開きます。パソコンでは、プレビューのウィンドウでブラウザの印刷機能（Ctrl+P、Mac では ⌘P）を使います。スマホ・タブレットではプリンターのボタンをタップし、iPhone・iPad では共有メニューで「プリント」を選びます。詳しくは<a href="../guide/#preview">プレビュー・印刷・保存</a>をご覧ください。</dd>
+  <dt>コード譜は保存されますか？</dt>
+  <dd>編集中のコード譜と設定は、次に開いたときに続きから使えるようブラウザに保存されます。どこにも送信されません。手元に残したいときはテキストファイルに保存してください。保存されたデータを消すには、ブラウザの設定でこのサイトのデータを削除します。</dd>
+  <dt>不具合の報告や要望はどこに送ればいいですか？</dt>
+  <dd><a href="https://github.com/ktkwmr/ChordTransposer/issues" rel="noopener">GitHub の Issues</a> にお寄せください。変換結果がおかしいときは、短いテキストの例を添えていただけると助かります。</dd>
+</dl>
     </article>
     <aside class="cta">
       <h2>さっそくコード譜を移調する</h2>

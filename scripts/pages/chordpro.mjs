@@ -43,19 +43,19 @@ That saved a [Em]wretch like [D]me</code></pre><figcaption>ChordPro</figcaption>
 <h2 id="directives">Common directives</h2>
 <p>Directives add information such as the song title or mark sections of the song. Many have a short form.</p>
 <div class="table-wrap">
-  <table class="text">
+  <table class="text stack">
     <thead><tr><th scope="col">Directive</th><th scope="col">Short form</th><th scope="col">Meaning</th></tr></thead>
     <tbody>
-      <tr><th scope="row"><code>{title: …}</code></th><td><code>{t: …}</code></td><td>Song title</td></tr>
-      <tr><th scope="row"><code>{subtitle: …}</code></th><td><code>{st: …}</code></td><td>Subtitle, often the artist</td></tr>
-      <tr><th scope="row"><code>{artist: …}</code></th><td></td><td>Performer or composer</td></tr>
-      <tr><th scope="row"><code>{key: G}</code></th><td></td><td>Key of the song</td></tr>
-      <tr><th scope="row"><code>{capo: 2}</code></th><td></td><td>Capo fret</td></tr>
-      <tr><th scope="row"><code>{tempo: 90}</code></th><td></td><td>Tempo in beats per minute</td></tr>
-      <tr><th scope="row"><code>{comment: …}</code></th><td><code>{c: …}</code></td><td>A note shown with the song, such as "Slowly"</td></tr>
-      <tr><th scope="row"><code>{start_of_chorus}</code> … <code>{end_of_chorus}</code></th><td><code>{soc}</code> … <code>{eoc}</code></td><td>Marks the chorus</td></tr>
-      <tr><th scope="row"><code>{start_of_verse}</code> … <code>{end_of_verse}</code></th><td><code>{sov}</code> … <code>{eov}</code></td><td>Marks a verse</td></tr>
-      <tr><th scope="row"><code>{start_of_tab}</code> … <code>{end_of_tab}</code></th><td><code>{sot}</code> … <code>{eot}</code></td><td>Guitar tablature, shown as is in a fixed-width font</td></tr>
+      <tr><th scope="row"><code>{title: …}</code></th><td data-label="Short form:"><code>{t: …}</code></td><td data-label="Meaning:">Song title</td></tr>
+      <tr><th scope="row"><code>{subtitle: …}</code></th><td data-label="Short form:"><code>{st: …}</code></td><td data-label="Meaning:">Subtitle, often the artist</td></tr>
+      <tr><th scope="row"><code>{artist: …}</code></th><td></td><td data-label="Meaning:">Performer or composer</td></tr>
+      <tr><th scope="row"><code>{key: G}</code></th><td></td><td data-label="Meaning:">Key of the song</td></tr>
+      <tr><th scope="row"><code>{capo: 2}</code></th><td></td><td data-label="Meaning:">Capo fret</td></tr>
+      <tr><th scope="row"><code>{tempo: 90}</code></th><td></td><td data-label="Meaning:">Tempo in beats per minute</td></tr>
+      <tr><th scope="row"><code>{comment: …}</code></th><td data-label="Short form:"><code>{c: …}</code></td><td data-label="Meaning:">A note shown with the song, such as "Slowly"</td></tr>
+      <tr><th scope="row"><code>{start_of_chorus}</code> … <code>{end_of_chorus}</code></th><td data-label="Short form:"><code>{soc}</code> … <code>{eoc}</code></td><td data-label="Meaning:">Marks the chorus</td></tr>
+      <tr><th scope="row"><code>{start_of_verse}</code> … <code>{end_of_verse}</code></th><td data-label="Short form:"><code>{sov}</code> … <code>{eov}</code></td><td data-label="Meaning:">Marks a verse</td></tr>
+      <tr><th scope="row"><code>{start_of_tab}</code> … <code>{end_of_tab}</code></th><td data-label="Short form:"><code>{sot}</code> … <code>{eot}</code></td><td data-label="Meaning:">Guitar tablature, shown as is in a fixed-width font</td></tr>
     </tbody>
   </table>
 </div>
@@ -135,19 +135,19 @@ F            C   G7
 <h2 id="directives">よく使うディレクティブ</h2>
 <p>ディレクティブで曲名などの情報を加えたり、曲のセクションを区切ったりします。多くは短い書き方もできます。</p>
 <div class="table-wrap">
-  <table class="text">
+  <table class="text stack">
     <thead><tr><th scope="col">ディレクティブ</th><th scope="col">短縮形</th><th scope="col">意味</th></tr></thead>
     <tbody>
-      <tr><th scope="row"><code>{title: …}</code></th><td><code>{t: …}</code></td><td>曲名</td></tr>
-      <tr><th scope="row"><code>{subtitle: …}</code></th><td><code>{st: …}</code></td><td>サブタイトル（アーティスト名を書くことも多い）</td></tr>
-      <tr><th scope="row"><code>{artist: …}</code></th><td></td><td>アーティスト・作曲者</td></tr>
-      <tr><th scope="row"><code>{key: G}</code></th><td></td><td>曲のキー</td></tr>
-      <tr><th scope="row"><code>{capo: 2}</code></th><td></td><td>カポの位置</td></tr>
-      <tr><th scope="row"><code>{tempo: 90}</code></th><td></td><td>テンポ（BPM）</td></tr>
-      <tr><th scope="row"><code>{comment: …}</code></th><td><code>{c: …}</code></td><td>曲と一緒に表示するメモ（「ゆっくり」など）</td></tr>
-      <tr><th scope="row"><code>{start_of_chorus}</code> … <code>{end_of_chorus}</code></th><td><code>{soc}</code> … <code>{eoc}</code></td><td>サビ（コーラス）の範囲</td></tr>
-      <tr><th scope="row"><code>{start_of_verse}</code> … <code>{end_of_verse}</code></th><td><code>{sov}</code> … <code>{eov}</code></td><td>A メロなど（バース）の範囲</td></tr>
-      <tr><th scope="row"><code>{start_of_tab}</code> … <code>{end_of_tab}</code></th><td><code>{sot}</code> … <code>{eot}</code></td><td>TAB 譜。等幅フォントでそのまま表示</td></tr>
+      <tr><th scope="row"><code>{title: …}</code></th><td data-label="短縮形："><code>{t: …}</code></td><td data-label="意味：">曲名</td></tr>
+      <tr><th scope="row"><code>{subtitle: …}</code></th><td data-label="短縮形："><code>{st: …}</code></td><td data-label="意味：">サブタイトル（アーティスト名を書くことも多い）</td></tr>
+      <tr><th scope="row"><code>{artist: …}</code></th><td></td><td data-label="意味：">アーティスト・作曲者</td></tr>
+      <tr><th scope="row"><code>{key: G}</code></th><td></td><td data-label="意味：">曲のキー</td></tr>
+      <tr><th scope="row"><code>{capo: 2}</code></th><td></td><td data-label="意味：">カポの位置</td></tr>
+      <tr><th scope="row"><code>{tempo: 90}</code></th><td></td><td data-label="意味：">テンポ（BPM）</td></tr>
+      <tr><th scope="row"><code>{comment: …}</code></th><td data-label="短縮形："><code>{c: …}</code></td><td data-label="意味：">曲と一緒に表示するメモ（「ゆっくり」など）</td></tr>
+      <tr><th scope="row"><code>{start_of_chorus}</code> … <code>{end_of_chorus}</code></th><td data-label="短縮形："><code>{soc}</code> … <code>{eoc}</code></td><td data-label="意味：">サビ（コーラス）の範囲</td></tr>
+      <tr><th scope="row"><code>{start_of_verse}</code> … <code>{end_of_verse}</code></th><td data-label="短縮形："><code>{sov}</code> … <code>{eov}</code></td><td data-label="意味：">A メロなど（バース）の範囲</td></tr>
+      <tr><th scope="row"><code>{start_of_tab}</code> … <code>{end_of_tab}</code></th><td data-label="短縮形："><code>{sot}</code> … <code>{eot}</code></td><td data-label="意味：">TAB 譜。等幅フォントでそのまま表示</td></tr>
     </tbody>
   </table>
 </div>

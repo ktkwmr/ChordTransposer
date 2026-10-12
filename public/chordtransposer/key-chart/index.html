@@ -96,6 +96,7 @@
     .pair figcaption, figure.shot figcaption, .table-wrap + .cap { color: var(--subtle); font-size: 13px; }
     figure { margin: 0 0 24px; }
     figure.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    figure.shot a { display: block; }
     figure.shot.phone img { max-width: 320px; }
     figure.shot figcaption { margin-top: 6px; }
     .note { margin: 0 0 20px; padding: 12px 16px; border-left: 3px solid var(--ink); background: var(--fill); border-radius: 0 var(--radius) var(--radius) 0; }
@@ -105,6 +106,15 @@
     .toc ol { margin: 0; padding-left: 1.4em; }
 
     .table-wrap { margin: 0 0 8px; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    /* Wide tables: shadows at the edges show that the table scrolls sideways */
+    .table-wrap.wide {
+      background:
+        linear-gradient(to right, var(--paper) 30%, rgba(255,255,255,0)) left / 40px 100% no-repeat local,
+        linear-gradient(to left, var(--paper) 30%, rgba(255,255,255,0)) right / 40px 100% no-repeat local,
+        radial-gradient(farthest-side at 0 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) left / 14px 100% no-repeat scroll,
+        radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) right / 14px 100% no-repeat scroll;
+    }
+    .scroll-hint { display: none; margin: 0 0 6px; color: var(--subtle); font-size: 13px; }
     .table-wrap + .cap { margin: 0 0 24px; }
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
     th, td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: center; white-space: nowrap; }
@@ -112,9 +122,13 @@
     thead th { background: var(--fill); font-weight: 600; }
     tbody th { text-align: left; font-weight: 600; background: var(--paper); position: sticky; left: 0; }
     td.chord, td.num { font-family: var(--mono); }
-    td.dim { color: #a3a3a3; }
+    td.dim { color: var(--muted); background: var(--fill); }
     td.hit { background: var(--ink); color: var(--paper); font-weight: 700; }
     table.text td, table.text th { white-space: normal; text-align: left; }
+    td code, th code { white-space: nowrap; }
+    table.text tbody th { white-space: nowrap; }
+    th.group { font-weight: 400; color: var(--muted); font-size: 13px; }
+    .table-wrap.wide tbody th { background: var(--paper); }
 
     dl.faq dt { margin: 28px 0 6px; font-weight: 700; font-size: 17px; }
     dl.faq dd { margin: 0; }
@@ -134,6 +148,15 @@
     .site-foot .meta { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; }
 
     @media (max-width: 600px) {
+      .scroll-hint { display: block; }
+      /* Two-column and text tables become stacked cards on phones */
+      table.stack, table.stack tbody, table.stack tr, table.stack th, table.stack td { display: block; width: auto; }
+      table.stack thead { display: none; }
+      table.stack tr { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+      table.stack tr:last-child { border-bottom: 0; }
+      table.stack th, table.stack td { padding: 2px 0; border: 0; text-align: left; white-space: normal; position: static; background: none; }
+      table.stack td:empty { display: none; }
+      table.stack td[data-label]::before { content: attr(data-label) " "; color: var(--subtle); font-family: var(--sans); }
       main { padding-top: 28px; }
       h1 { font-size: 25px; }
       h2 { font-size: 20px; }
@@ -158,99 +181,104 @@
   <main>
     <article>
       <h1>Chords in Every Key: Transposition Chart</h1>
-      <p class="lead">Every major key uses the same pattern of seven chords. Once you know the pattern, you can transpose any song by reading across a table — or by letting the app do it.</p>
-      
-      <nav class="toc" aria-label="Contents"><b>Contents</b><ol>
-        <li><a href="#pattern">The chord pattern of a major key</a></li>
-        <li><a href="#chart">Chords in all 12 keys</a></li>
-        <li><a href="#transpose">Transpose with the chart</a></li>
-        <li><a href="#shift">How many semitones between two keys?</a></li>
-        <li><a href="#other">Sevenths, slash chords, and other chords</a></li>
-      </ol></nav>
-      
-      <h2 id="pattern">The chord pattern of a major key</h2>
-      <p>Build a triad on each note of a major scale and you get seven chords. Their qualities always follow the same order:</p>
-      <div class="table-wrap">
-        <table class="text">
-          <thead><tr><th scope="col">Degree</th><th scope="col">Quality</th><th scope="col">In C</th><th scope="col">Role</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">I</th><td>major</td><td class="chord">C</td><td>Home. Songs usually start and end here.</td></tr>
-            <tr><th scope="row">IIm</th><td>minor</td><td class="chord">Dm</td><td>Often leads to V.</td></tr>
-            <tr><th scope="row">IIIm</th><td>minor</td><td class="chord">Em</td><td>A softer substitute for I or V.</td></tr>
-            <tr><th scope="row">IV</th><td>major</td><td class="chord">F</td><td>Moves away from home.</td></tr>
-            <tr><th scope="row">V</th><td>major (often V7)</td><td class="chord">G</td><td>Tension that pulls back to I.</td></tr>
-            <tr><th scope="row">VIm</th><td>minor</td><td class="chord">Am</td><td>The relative minor: the "sad" home.</td></tr>
-            <tr><th scope="row">VIIdim</th><td>diminished</td><td class="chord">Bdim</td><td>Rare in pop; often played as V7 instead.</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="cap">Roman numerals describe a chord by its position in the key, so "I–V–VIm–IV" means the same progression in any key.</p>
-      
-      <h2 id="chart">Chords in all 12 keys</h2>
-      <p>Each row is one major key. The last column is its relative minor key, which uses the same seven chords but treats VIm as home.</p>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th scope="col">Key</th><th scope="col">I</th><th scope="col">IIm</th><th scope="col">IIIm</th><th scope="col">IV</th><th scope="col">V</th><th scope="col">VIm</th><th scope="col">VIIdim</th><th scope="col">Relative minor</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">C</th><td class="chord">C</td><td class="chord">Dm</td><td class="chord">Em</td><td class="chord">F</td><td class="chord">G</td><td class="chord">Am</td><td class="chord">Bdim</td><td class="chord">Am</td></tr>
-            <tr><th scope="row">Db</th><td class="chord">Db</td><td class="chord">Ebm</td><td class="chord">Fm</td><td class="chord">Gb</td><td class="chord">Ab</td><td class="chord">Bbm</td><td class="chord">Cdim</td><td class="chord">Bbm</td></tr>
-            <tr><th scope="row">D</th><td class="chord">D</td><td class="chord">Em</td><td class="chord">F#m</td><td class="chord">G</td><td class="chord">A</td><td class="chord">Bm</td><td class="chord">C#dim</td><td class="chord">Bm</td></tr>
-            <tr><th scope="row">Eb</th><td class="chord">Eb</td><td class="chord">Fm</td><td class="chord">Gm</td><td class="chord">Ab</td><td class="chord">Bb</td><td class="chord">Cm</td><td class="chord">Ddim</td><td class="chord">Cm</td></tr>
-            <tr><th scope="row">E</th><td class="chord">E</td><td class="chord">F#m</td><td class="chord">G#m</td><td class="chord">A</td><td class="chord">B</td><td class="chord">C#m</td><td class="chord">D#dim</td><td class="chord">C#m</td></tr>
-            <tr><th scope="row">F</th><td class="chord">F</td><td class="chord">Gm</td><td class="chord">Am</td><td class="chord">Bb</td><td class="chord">C</td><td class="chord">Dm</td><td class="chord">Edim</td><td class="chord">Dm</td></tr>
-            <tr><th scope="row">F#</th><td class="chord">F#</td><td class="chord">G#m</td><td class="chord">A#m</td><td class="chord">B</td><td class="chord">C#</td><td class="chord">D#m</td><td class="chord">E#dim</td><td class="chord">D#m</td></tr>
-            <tr><th scope="row">G</th><td class="chord">G</td><td class="chord">Am</td><td class="chord">Bm</td><td class="chord">C</td><td class="chord">D</td><td class="chord">Em</td><td class="chord">F#dim</td><td class="chord">Em</td></tr>
-            <tr><th scope="row">Ab</th><td class="chord">Ab</td><td class="chord">Bbm</td><td class="chord">Cm</td><td class="chord">Db</td><td class="chord">Eb</td><td class="chord">Fm</td><td class="chord">Gdim</td><td class="chord">Fm</td></tr>
-            <tr><th scope="row">A</th><td class="chord">A</td><td class="chord">Bm</td><td class="chord">C#m</td><td class="chord">D</td><td class="chord">E</td><td class="chord">F#m</td><td class="chord">G#dim</td><td class="chord">F#m</td></tr>
-            <tr><th scope="row">Bb</th><td class="chord">Bb</td><td class="chord">Cm</td><td class="chord">Dm</td><td class="chord">Eb</td><td class="chord">F</td><td class="chord">Gm</td><td class="chord">Adim</td><td class="chord">Gm</td></tr>
-            <tr><th scope="row">B</th><td class="chord">B</td><td class="chord">C#m</td><td class="chord">D#m</td><td class="chord">E</td><td class="chord">F#</td><td class="chord">G#m</td><td class="chord">A#dim</td><td class="chord">G#m</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="cap">Chords are spelled from each key's scale, so the key of F# has E#dim (the same pitch as Fdim). Db and F# are written the usual way; their twins C# and Gb use the same pitches.</p>
-      
-      <h2 id="transpose">Transpose with the chart</h2>
-      <p>To move a song from one key to another, find each chord in the row of the old key, then read the chord in the same column of the new key.</p>
-      <p><b>Example:</b> a song in <b>G</b> uses G, Em, C, and D (I, VIm, IV, V). In the key of <b>Bb</b>, the same columns give Bb, Gm, Eb, and F.</p>
-      <div class="pair">
-        <figure><pre><code>G       Em      C       D
-      I       VIm     IV      V</code></pre><figcaption>Key of G</figcaption></figure>
-        <figure><pre><code>Bb      Gm      Eb      F
-      I       VIm     IV      V</code></pre><figcaption>Key of Bb (+3)</figcaption></figure>
-      </div>
-      <p>Doing this by hand gets slow with long songs and chords such as <code>D7sus4</code> or <code>F#m7-5</code>. Chord Transposer moves every chord in the chart in one step and keeps the spacing between chords and lyrics. For flat keys such as Bb, set <b>#/♭</b> to <b>Prefer b</b> so the chords come out as Bb and Eb rather than A# and D#.</p>
-      
-      <h2 id="shift">How many semitones between two keys?</h2>
-      <p>The app transposes by semitones. Find the original key in the left column and the new key at the top; the number is the value to choose in <b>Transpose</b>. The table shows the smaller move (up to 6 semitones). Moving the other way also works: +5 and −7 give the same chords, an octave apart.</p>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th scope="col">From \ To</th><th scope="col">C</th><th scope="col">Db</th><th scope="col">D</th><th scope="col">Eb</th><th scope="col">E</th><th scope="col">F</th><th scope="col">F#</th><th scope="col">G</th><th scope="col">Ab</th><th scope="col">A</th><th scope="col">Bb</th><th scope="col">B</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">C</th><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td></tr>
-            <tr><th scope="row">Db</th><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td></tr>
-            <tr><th scope="row">D</th><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td></tr>
-            <tr><th scope="row">Eb</th><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td></tr>
-            <tr><th scope="row">E</th><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td></tr>
-            <tr><th scope="row">F</th><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td></tr>
-            <tr><th scope="row">F#</th><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td></tr>
-            <tr><th scope="row">G</th><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td></tr>
-            <tr><th scope="row">Ab</th><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td></tr>
-            <tr><th scope="row">A</th><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td></tr>
-            <tr><th scope="row">Bb</th><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td></tr>
-            <tr><th scope="row">B</th><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="cap">For example, G → Bb is +3, and E → C is −4.</p>
-      <p>Singers often move a key by just one or two semitones. Try a small change first, then sing a line or two before going further.</p>
-      
-      <h2 id="other">Sevenths, slash chords, and other chords</h2>
-      <ul>
-        <li><b>Extensions stay the same.</b> Only the letter name (the root) moves: <code>Cmaj7</code> +2 is <code>Dmaj7</code>, and <code>G7sus4</code> +2 is <code>A7sus4</code>.</li>
-        <li><b>Slash chords move both notes.</b> <code>C/E</code> +2 is <code>D/F#</code>.</li>
-        <li><b>Chords outside the key</b> (borrowed chords such as <code>Bb</code> in the key of C) move by the same number of semitones as everything else.</li>
-      </ul>
-      <p>Next: <a href="../sharps-and-flats/">sharps or flats?</a> explains why the key of F uses Bb and not A#.</p>
+<p class="lead">Every major key uses the same pattern of seven chords. Once you know the pattern, you can transpose any song by reading across a table — or by letting the app do it.</p>
+
+<nav class="toc" aria-label="Contents"><b>Contents</b><ol>
+  <li><a href="#pattern">The chord pattern of a major key</a></li>
+  <li><a href="#chart">Chords in all 12 keys</a></li>
+  <li><a href="#transpose">Transpose with the chart</a></li>
+  <li><a href="#shift">How many semitones between two keys?</a></li>
+  <li><a href="#other">Sevenths, slash chords, and other chords</a></li>
+</ol></nav>
+
+<h2 id="pattern">The chord pattern of a major key</h2>
+<p>Build a triad on each note of a major scale and you get seven chords. Their qualities always follow the same order:</p>
+<div class="table-wrap">
+  <table class="text stack">
+    <thead><tr><th scope="col">Degree</th><th scope="col">Quality</th><th scope="col">In C</th><th scope="col">Role</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">I</th><td data-label="Quality:">major</td><td class="chord" data-label="In C:">C</td><td data-label="Role:">Home. Songs usually start and end here.</td></tr>
+      <tr><th scope="row">IIm</th><td data-label="Quality:">minor</td><td class="chord" data-label="In C:">Dm</td><td data-label="Role:">Often leads to V.</td></tr>
+      <tr><th scope="row">IIIm</th><td data-label="Quality:">minor</td><td class="chord" data-label="In C:">Em</td><td data-label="Role:">A softer substitute for I or V.</td></tr>
+      <tr><th scope="row">IV</th><td data-label="Quality:">major</td><td class="chord" data-label="In C:">F</td><td data-label="Role:">Moves away from home.</td></tr>
+      <tr><th scope="row">V</th><td data-label="Quality:">major (often V7)</td><td class="chord" data-label="In C:">G</td><td data-label="Role:">Tension that pulls back to I.</td></tr>
+      <tr><th scope="row">VIm</th><td data-label="Quality:">minor</td><td class="chord" data-label="In C:">Am</td><td data-label="Role:">The relative minor: the "sad" home.</td></tr>
+      <tr><th scope="row">VIIdim</th><td data-label="Quality:">diminished</td><td class="chord" data-label="In C:">Bdim</td><td data-label="Role:">Rare in pop; often played as V7 instead.</td></tr>
+    </tbody>
+  </table>
+</div>
+<p class="cap">Roman numerals describe a chord by its position in the key, so "I–V–VIm–IV" means the same progression in any key.</p>
+
+<h2 id="chart">Chords in all 12 keys</h2>
+<p>Each row is one major key. The last column is its relative minor key, which uses the same seven chords but treats VIm as home.</p>
+<p class="scroll-hint" aria-hidden="true">Scroll the table sideways →</p>
+<div class="table-wrap wide">
+<table>
+  <thead><tr><th scope="col">Key</th><th scope="col">I</th><th scope="col">IIm</th><th scope="col">IIIm</th><th scope="col">IV</th><th scope="col">V</th><th scope="col">VIm</th><th scope="col">VIIdim</th><th scope="col">Relative minor</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">C</th><td class="chord">C</td><td class="chord">Dm</td><td class="chord">Em</td><td class="chord">F</td><td class="chord">G</td><td class="chord">Am</td><td class="chord">Bdim</td><td class="chord">Am</td></tr>
+    <tr><th scope="row">Db</th><td class="chord">Db</td><td class="chord">Ebm</td><td class="chord">Fm</td><td class="chord">Gb</td><td class="chord">Ab</td><td class="chord">Bbm</td><td class="chord">Cdim</td><td class="chord">Bbm</td></tr>
+    <tr><th scope="row">D</th><td class="chord">D</td><td class="chord">Em</td><td class="chord">F#m</td><td class="chord">G</td><td class="chord">A</td><td class="chord">Bm</td><td class="chord">C#dim</td><td class="chord">Bm</td></tr>
+    <tr><th scope="row">Eb</th><td class="chord">Eb</td><td class="chord">Fm</td><td class="chord">Gm</td><td class="chord">Ab</td><td class="chord">Bb</td><td class="chord">Cm</td><td class="chord">Ddim</td><td class="chord">Cm</td></tr>
+    <tr><th scope="row">E</th><td class="chord">E</td><td class="chord">F#m</td><td class="chord">G#m</td><td class="chord">A</td><td class="chord">B</td><td class="chord">C#m</td><td class="chord">D#dim</td><td class="chord">C#m</td></tr>
+    <tr><th scope="row">F</th><td class="chord">F</td><td class="chord">Gm</td><td class="chord">Am</td><td class="chord">Bb</td><td class="chord">C</td><td class="chord">Dm</td><td class="chord">Edim</td><td class="chord">Dm</td></tr>
+    <tr><th scope="row">F#</th><td class="chord">F#</td><td class="chord">G#m</td><td class="chord">A#m</td><td class="chord">B</td><td class="chord">C#</td><td class="chord">D#m</td><td class="chord">E#dim</td><td class="chord">D#m</td></tr>
+    <tr><th scope="row">G</th><td class="chord">G</td><td class="chord">Am</td><td class="chord">Bm</td><td class="chord">C</td><td class="chord">D</td><td class="chord">Em</td><td class="chord">F#dim</td><td class="chord">Em</td></tr>
+    <tr><th scope="row">Ab</th><td class="chord">Ab</td><td class="chord">Bbm</td><td class="chord">Cm</td><td class="chord">Db</td><td class="chord">Eb</td><td class="chord">Fm</td><td class="chord">Gdim</td><td class="chord">Fm</td></tr>
+    <tr><th scope="row">A</th><td class="chord">A</td><td class="chord">Bm</td><td class="chord">C#m</td><td class="chord">D</td><td class="chord">E</td><td class="chord">F#m</td><td class="chord">G#dim</td><td class="chord">F#m</td></tr>
+    <tr><th scope="row">Bb</th><td class="chord">Bb</td><td class="chord">Cm</td><td class="chord">Dm</td><td class="chord">Eb</td><td class="chord">F</td><td class="chord">Gm</td><td class="chord">Adim</td><td class="chord">Gm</td></tr>
+    <tr><th scope="row">B</th><td class="chord">B</td><td class="chord">C#m</td><td class="chord">D#m</td><td class="chord">E</td><td class="chord">F#</td><td class="chord">G#m</td><td class="chord">A#dim</td><td class="chord">G#m</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="cap">Chords are spelled from each key's scale, so the key of F# has E#dim (the same pitch as Fdim). Db and F# are written the usual way; their twins C# and Gb use the same pitches.</p>
+
+<h2 id="transpose">Transpose with the chart</h2>
+<p>To move a song from one key to another, find each chord in the row of the old key, then read the chord in the same column of the new key.</p>
+<p><b>Example:</b> a song in <b>G</b> uses G, Em, C, and D (I, VIm, IV, V). In the key of <b>Bb</b>, the same columns give Bb, Gm, Eb, and F.</p>
+<div class="pair">
+  <figure><pre><code>G       Em      C       D
+I       VIm     IV      V</code></pre><figcaption>Key of G</figcaption></figure>
+  <figure><pre><code>Bb      Gm      Eb      F
+I       VIm     IV      V</code></pre><figcaption>Key of Bb (+3)</figcaption></figure>
+</div>
+<p>Doing this by hand gets slow with long songs and chords such as <code>D7sus4</code> or <code>F#m7-5</code>. Chord Transposer moves every chord in the chart in one step and keeps the spacing between chords and lyrics. For flat keys such as Bb, set <b>#/♭</b> to <b>Prefer b</b> so the chords come out as Bb and Eb rather than A# and D#.</p>
+
+<h2 id="shift">How many semitones between two keys?</h2>
+<p>The app transposes by semitones. Rows are the original key and columns are the new key: find the original key in the left column and the new key at the top; the number is the value to choose in <b>Transpose</b>. The table shows the smaller move (up to 6 semitones). Moving the other way also works: +5 and -7 give the same chords, an octave apart.</p>
+<p class="scroll-hint" aria-hidden="true">Scroll the table sideways →</p>
+<div class="table-wrap wide">
+<table>
+  <thead>
+    <tr><th scope="col" rowspan="2" class="group">From ↓</th><th scope="colgroup" colspan="12" class="group">To →</th></tr>
+    <tr><th scope="col">C</th><th scope="col">Db</th><th scope="col">D</th><th scope="col">Eb</th><th scope="col">E</th><th scope="col">F</th><th scope="col">F#</th><th scope="col">G</th><th scope="col">Ab</th><th scope="col">A</th><th scope="col">Bb</th><th scope="col">B</th></tr>
+  </thead>
+  <tbody>
+    <tr><th scope="row">C</th><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td></tr>
+    <tr><th scope="row">Db</th><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td></tr>
+    <tr><th scope="row">D</th><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td></tr>
+    <tr><th scope="row">Eb</th><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td></tr>
+    <tr><th scope="row">E</th><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td></tr>
+    <tr><th scope="row">F</th><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td></tr>
+    <tr><th scope="row">F#</th><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td></tr>
+    <tr><th scope="row">G</th><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td></tr>
+    <tr><th scope="row">Ab</th><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td></tr>
+    <tr><th scope="row">A</th><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td></tr>
+    <tr><th scope="row">Bb</th><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td></tr>
+    <tr><th scope="row">B</th><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="cap">For example, G → Bb is +3, and E → C is -4.</p>
+<p>Singers often move a key by just one or two semitones. Try a small change first, then sing a line or two before going further.</p>
+
+<h2 id="other">Sevenths, slash chords, and other chords</h2>
+<ul>
+  <li><b>Extensions stay the same.</b> Only the letter name (the root) moves: <code>Cmaj7</code> +2 is <code>Dmaj7</code>, and <code>G7sus4</code> +2 is <code>A7sus4</code>.</li>
+  <li><b>Slash chords move both notes.</b> <code>C/E</code> +2 is <code>D/F#</code>.</li>
+  <li><b>Chords outside the key</b> (borrowed chords such as <code>Bb</code> in the key of C) move by the same number of semitones as everything else.</li>
+</ul>
+<p>Next: <a href="../sharps-and-flats/">sharps or flats?</a> explains why the key of F uses Bb and not A#.</p>
     </article>
     <aside class="cta">
       <h2>Transpose your chord chart now</h2>

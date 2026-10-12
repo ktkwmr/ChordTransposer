@@ -96,6 +96,7 @@
     .pair figcaption, figure.shot figcaption, .table-wrap + .cap { color: var(--subtle); font-size: 13px; }
     figure { margin: 0 0 24px; }
     figure.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    figure.shot a { display: block; }
     figure.shot.phone img { max-width: 320px; }
     figure.shot figcaption { margin-top: 6px; }
     .note { margin: 0 0 20px; padding: 12px 16px; border-left: 3px solid var(--ink); background: var(--fill); border-radius: 0 var(--radius) var(--radius) 0; }
@@ -105,6 +106,15 @@
     .toc ol { margin: 0; padding-left: 1.4em; }
 
     .table-wrap { margin: 0 0 8px; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    /* Wide tables: shadows at the edges show that the table scrolls sideways */
+    .table-wrap.wide {
+      background:
+        linear-gradient(to right, var(--paper) 30%, rgba(255,255,255,0)) left / 40px 100% no-repeat local,
+        linear-gradient(to left, var(--paper) 30%, rgba(255,255,255,0)) right / 40px 100% no-repeat local,
+        radial-gradient(farthest-side at 0 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) left / 14px 100% no-repeat scroll,
+        radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) right / 14px 100% no-repeat scroll;
+    }
+    .scroll-hint { display: none; margin: 0 0 6px; color: var(--subtle); font-size: 13px; }
     .table-wrap + .cap { margin: 0 0 24px; }
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
     th, td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: center; white-space: nowrap; }
@@ -112,9 +122,13 @@
     thead th { background: var(--fill); font-weight: 600; }
     tbody th { text-align: left; font-weight: 600; background: var(--paper); position: sticky; left: 0; }
     td.chord, td.num { font-family: var(--mono); }
-    td.dim { color: #a3a3a3; }
+    td.dim { color: var(--muted); background: var(--fill); }
     td.hit { background: var(--ink); color: var(--paper); font-weight: 700; }
     table.text td, table.text th { white-space: normal; text-align: left; }
+    td code, th code { white-space: nowrap; }
+    table.text tbody th { white-space: nowrap; }
+    th.group { font-weight: 400; color: var(--muted); font-size: 13px; }
+    .table-wrap.wide tbody th { background: var(--paper); }
 
     dl.faq dt { margin: 28px 0 6px; font-weight: 700; font-size: 17px; }
     dl.faq dd { margin: 0; }
@@ -134,6 +148,15 @@
     .site-foot .meta { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; }
 
     @media (max-width: 600px) {
+      .scroll-hint { display: block; }
+      /* Two-column and text tables become stacked cards on phones */
+      table.stack, table.stack tbody, table.stack tr, table.stack th, table.stack td { display: block; width: auto; }
+      table.stack thead { display: none; }
+      table.stack tr { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+      table.stack tr:last-child { border-bottom: 0; }
+      table.stack th, table.stack td { padding: 2px 0; border: 0; text-align: left; white-space: normal; position: static; background: none; }
+      table.stack td:empty { display: none; }
+      table.stack td[data-label]::before { content: attr(data-label) " "; color: var(--subtle); font-family: var(--sans); }
       main { padding-top: 28px; }
       h1 { font-size: 25px; }
       h2 { font-size: 20px; }
@@ -158,99 +181,104 @@
   <main>
     <article>
       <h1>キー別のコード表（移調表）：12 キーのダイアトニックコード</h1>
-      <p class="lead">メジャーキーで使う 7 つのコードは、どのキーでも同じ並び方をしています。この並びを知っていれば、表を横に読むだけでどんな曲でも移調できます。もちろんアプリに任せることもできます。</p>
-      
-      <nav class="toc" aria-label="目次"><b>目次</b><ol>
-        <li><a href="#pattern">メジャーキーのコードの並び</a></li>
-        <li><a href="#chart">12 キーのコード表</a></li>
-        <li><a href="#transpose">表を使って移調する</a></li>
-        <li><a href="#shift">キーからキーへ、何半音動かす？</a></li>
-        <li><a href="#other">セブンスや分数コードなど</a></li>
-      </ol></nav>
-      
-      <h2 id="pattern">メジャーキーのコードの並び</h2>
-      <p>メジャースケールの各音の上に 3 和音を作ると、7 つのコードができます。これを<b>ダイアトニックコード</b>といい、コードの種類はどのキーでも同じ順番です。</p>
-      <div class="table-wrap">
-        <table class="text">
-          <thead><tr><th scope="col">度数</th><th scope="col">種類</th><th scope="col">キー C</th><th scope="col">役割</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">I</th><td>メジャー</td><td class="chord">C</td><td>トニック（安定）。曲の始まりと終わりに多い</td></tr>
-            <tr><th scope="row">IIm</th><td>マイナー</td><td class="chord">Dm</td><td>V につながることが多い</td></tr>
-            <tr><th scope="row">IIIm</th><td>マイナー</td><td class="chord">Em</td><td>I や V の代わりに使われる</td></tr>
-            <tr><th scope="row">IV</th><td>メジャー</td><td class="chord">F</td><td>サブドミナント。安定から離れる</td></tr>
-            <tr><th scope="row">V</th><td>メジャー（V7 も多い）</td><td class="chord">G</td><td>ドミナント。I に戻りたくなる緊張感</td></tr>
-            <tr><th scope="row">VIm</th><td>マイナー</td><td class="chord">Am</td><td>平行調のトニック。切ない響き</td></tr>
-            <tr><th scope="row">VIIdim</th><td>ディミニッシュ</td><td class="chord">Bdim</td><td>ポップスでは少なめ。VIIm7-5 として使われることも</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="cap">ローマ数字はキーの中での位置を表すので、「I–V–VIm–IV」はどのキーでも同じ進行を意味します。</p>
-      
-      <h2 id="chart">12 キーのコード表</h2>
-      <p>1 行が 1 つのメジャーキーです。右端の列は平行調（同じ 7 つのコードを使い、VIm を主役にするマイナーキー）です。</p>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th scope="col">キー</th><th scope="col">I</th><th scope="col">IIm</th><th scope="col">IIIm</th><th scope="col">IV</th><th scope="col">V</th><th scope="col">VIm</th><th scope="col">VIIdim</th><th scope="col">平行調</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">C</th><td class="chord">C</td><td class="chord">Dm</td><td class="chord">Em</td><td class="chord">F</td><td class="chord">G</td><td class="chord">Am</td><td class="chord">Bdim</td><td class="chord">Am</td></tr>
-            <tr><th scope="row">Db</th><td class="chord">Db</td><td class="chord">Ebm</td><td class="chord">Fm</td><td class="chord">Gb</td><td class="chord">Ab</td><td class="chord">Bbm</td><td class="chord">Cdim</td><td class="chord">Bbm</td></tr>
-            <tr><th scope="row">D</th><td class="chord">D</td><td class="chord">Em</td><td class="chord">F#m</td><td class="chord">G</td><td class="chord">A</td><td class="chord">Bm</td><td class="chord">C#dim</td><td class="chord">Bm</td></tr>
-            <tr><th scope="row">Eb</th><td class="chord">Eb</td><td class="chord">Fm</td><td class="chord">Gm</td><td class="chord">Ab</td><td class="chord">Bb</td><td class="chord">Cm</td><td class="chord">Ddim</td><td class="chord">Cm</td></tr>
-            <tr><th scope="row">E</th><td class="chord">E</td><td class="chord">F#m</td><td class="chord">G#m</td><td class="chord">A</td><td class="chord">B</td><td class="chord">C#m</td><td class="chord">D#dim</td><td class="chord">C#m</td></tr>
-            <tr><th scope="row">F</th><td class="chord">F</td><td class="chord">Gm</td><td class="chord">Am</td><td class="chord">Bb</td><td class="chord">C</td><td class="chord">Dm</td><td class="chord">Edim</td><td class="chord">Dm</td></tr>
-            <tr><th scope="row">F#</th><td class="chord">F#</td><td class="chord">G#m</td><td class="chord">A#m</td><td class="chord">B</td><td class="chord">C#</td><td class="chord">D#m</td><td class="chord">E#dim</td><td class="chord">D#m</td></tr>
-            <tr><th scope="row">G</th><td class="chord">G</td><td class="chord">Am</td><td class="chord">Bm</td><td class="chord">C</td><td class="chord">D</td><td class="chord">Em</td><td class="chord">F#dim</td><td class="chord">Em</td></tr>
-            <tr><th scope="row">Ab</th><td class="chord">Ab</td><td class="chord">Bbm</td><td class="chord">Cm</td><td class="chord">Db</td><td class="chord">Eb</td><td class="chord">Fm</td><td class="chord">Gdim</td><td class="chord">Fm</td></tr>
-            <tr><th scope="row">A</th><td class="chord">A</td><td class="chord">Bm</td><td class="chord">C#m</td><td class="chord">D</td><td class="chord">E</td><td class="chord">F#m</td><td class="chord">G#dim</td><td class="chord">F#m</td></tr>
-            <tr><th scope="row">Bb</th><td class="chord">Bb</td><td class="chord">Cm</td><td class="chord">Dm</td><td class="chord">Eb</td><td class="chord">F</td><td class="chord">Gm</td><td class="chord">Adim</td><td class="chord">Gm</td></tr>
-            <tr><th scope="row">B</th><td class="chord">B</td><td class="chord">C#m</td><td class="chord">D#m</td><td class="chord">E</td><td class="chord">F#</td><td class="chord">G#m</td><td class="chord">A#dim</td><td class="chord">G#m</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="cap">コードは各キーの音階に合わせて表記しているため、キー F# には E#dim（Fdim と同じ音）が出てきます。Db と F# は一般的な書き方で載せています。C# と Gb は同じ音の別名です。</p>
-      
-      <h2 id="transpose">表を使って移調する</h2>
-      <p>移調するには、元のキーの行で各コードを探し、新しいキーの行の同じ列のコードに置き換えます。</p>
-      <p><b>例：</b>キー <b>G</b> の曲で G・Em・C・D（I・VIm・IV・V）を使っているとき、キー <b>Bb</b> の行の同じ列は Bb・Gm・Eb・F です。</p>
-      <div class="pair">
-        <figure><pre><code>G       Em      C       D
-      I       VIm     IV      V</code></pre><figcaption>キー G</figcaption></figure>
-        <figure><pre><code>Bb      Gm      Eb      F
-      I       VIm     IV      V</code></pre><figcaption>キー Bb（+3）</figcaption></figure>
-      </div>
-      <p>長い曲や <code>D7sus4</code>・<code>F#m7-5</code> のようなコードが多いと、手作業では時間がかかります。Chord Transposer なら、コード譜のすべてのコードを一度に移調し、コードと歌詞の位置関係も保ちます。Bb のようなフラット系のキーでは、<b>#/♭</b> を「<b>b を優先</b>」にすると A#・D# ではなく Bb・Eb で表示されます。</p>
-      
-      <h2 id="shift">キーからキーへ、何半音動かす？</h2>
-      <p>アプリでは半音単位で移調します。左の列で元のキー、上の行で新しいキーを探すと、<b>移調</b>で選ぶ値がわかります。表には動きの小さい方（6 半音まで）を載せています。反対方向に動かしても同じコードになります（たとえば +5 と −7 は 1 オクターブ違いの同じキー）。</p>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th scope="col">元 \ 先</th><th scope="col">C</th><th scope="col">Db</th><th scope="col">D</th><th scope="col">Eb</th><th scope="col">E</th><th scope="col">F</th><th scope="col">F#</th><th scope="col">G</th><th scope="col">Ab</th><th scope="col">A</th><th scope="col">Bb</th><th scope="col">B</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">C</th><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td></tr>
-            <tr><th scope="row">Db</th><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td></tr>
-            <tr><th scope="row">D</th><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td></tr>
-            <tr><th scope="row">Eb</th><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td></tr>
-            <tr><th scope="row">E</th><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td></tr>
-            <tr><th scope="row">F</th><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td></tr>
-            <tr><th scope="row">F#</th><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td></tr>
-            <tr><th scope="row">G</th><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td></tr>
-            <tr><th scope="row">Ab</th><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td></tr>
-            <tr><th scope="row">A</th><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td></tr>
-            <tr><th scope="row">Bb</th><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td><td class="num">+1</td></tr>
-            <tr><th scope="row">B</th><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">−5</td><td class="num">−4</td><td class="num">−3</td><td class="num">−2</td><td class="num">−1</td><td class="num dim">0</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="cap">たとえば G → Bb は +3、E → C は −4 です。</p>
-      <p>歌のキーを合わせるときは、1〜2 半音の小さな変更で十分なことがよくあります。まず少しだけ動かして、実際に歌って確かめてから調整しましょう。</p>
-      
-      <h2 id="other">セブンスや分数コードなど</h2>
-      <ul>
-        <li><b>テンションや種類はそのまま。</b>動くのは音名（ルート）だけです。<code>Cmaj7</code> を +2 すると <code>Dmaj7</code>、<code>G7sus4</code> は <code>A7sus4</code> になります。</li>
-        <li><b>分数コード（オンコード）は両方の音が動きます。</b><code>C/E</code> を +2 すると <code>D/F#</code> です。</li>
-        <li><b>キーの外のコード</b>（キー C での <code>Bb</code> のような借用和音など）も、ほかのコードと同じ半音数だけ動きます。</li>
-      </ul>
-      <p>次の記事：<a href="../sharps-and-flats/"># と ♭ の使い分け</a>では、キー F で A# ではなく Bb と書く理由を説明しています。</p>
+<p class="lead">メジャーキーで使う 7 つのコードは、どのキーでも同じ並び方をしています。この並びを知っていれば、表を横に読むだけでどんな曲でも移調できます。もちろんアプリに任せることもできます。</p>
+
+<nav class="toc" aria-label="目次"><b>目次</b><ol>
+  <li><a href="#pattern">メジャーキーのコードの並び</a></li>
+  <li><a href="#chart">12 キーのコード表</a></li>
+  <li><a href="#transpose">表を使って移調する</a></li>
+  <li><a href="#shift">キーからキーへ、何半音動かす？</a></li>
+  <li><a href="#other">セブンスや分数コードなど</a></li>
+</ol></nav>
+
+<h2 id="pattern">メジャーキーのコードの並び</h2>
+<p>メジャースケールの各音の上に 3 和音を作ると、7 つのコードができます。これを<b>ダイアトニックコード</b>といい、コードの種類はどのキーでも同じ順番です。</p>
+<div class="table-wrap">
+  <table class="text stack">
+    <thead><tr><th scope="col">度数</th><th scope="col">種類</th><th scope="col">キー C</th><th scope="col">役割</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">I</th><td data-label="種類：">メジャー</td><td class="chord" data-label="キー C：">C</td><td data-label="役割：">トニック（安定）。曲の始まりと終わりに多い</td></tr>
+      <tr><th scope="row">IIm</th><td data-label="種類：">マイナー</td><td class="chord" data-label="キー C：">Dm</td><td data-label="役割：">V につながることが多い</td></tr>
+      <tr><th scope="row">IIIm</th><td data-label="種類：">マイナー</td><td class="chord" data-label="キー C：">Em</td><td data-label="役割：">I や V の代わりに使われる</td></tr>
+      <tr><th scope="row">IV</th><td data-label="種類：">メジャー</td><td class="chord" data-label="キー C：">F</td><td data-label="役割：">サブドミナント。安定から離れる</td></tr>
+      <tr><th scope="row">V</th><td data-label="種類：">メジャー（V7 も多い）</td><td class="chord" data-label="キー C：">G</td><td data-label="役割：">ドミナント。I に戻りたくなる緊張感</td></tr>
+      <tr><th scope="row">VIm</th><td data-label="種類：">マイナー</td><td class="chord" data-label="キー C：">Am</td><td data-label="役割：">平行調のトニック。切ない響き</td></tr>
+      <tr><th scope="row">VIIdim</th><td data-label="種類：">ディミニッシュ</td><td class="chord" data-label="キー C：">Bdim</td><td data-label="役割：">ポップスでは少なめ。VIIm7-5 として使われることも</td></tr>
+    </tbody>
+  </table>
+</div>
+<p class="cap">ローマ数字はキーの中での位置を表すので、「I–V–VIm–IV」はどのキーでも同じ進行を意味します。</p>
+
+<h2 id="chart">12 キーのコード表</h2>
+<p>1 行が 1 つのメジャーキーです。右端の列は平行調（同じ 7 つのコードを使い、VIm を主役にするマイナーキー）です。</p>
+<p class="scroll-hint" aria-hidden="true">表は横にスクロールできます →</p>
+<div class="table-wrap wide">
+<table>
+  <thead><tr><th scope="col">キー</th><th scope="col">I</th><th scope="col">IIm</th><th scope="col">IIIm</th><th scope="col">IV</th><th scope="col">V</th><th scope="col">VIm</th><th scope="col">VIIdim</th><th scope="col">平行調</th></tr></thead>
+  <tbody>
+    <tr><th scope="row">C</th><td class="chord">C</td><td class="chord">Dm</td><td class="chord">Em</td><td class="chord">F</td><td class="chord">G</td><td class="chord">Am</td><td class="chord">Bdim</td><td class="chord">Am</td></tr>
+    <tr><th scope="row">Db</th><td class="chord">Db</td><td class="chord">Ebm</td><td class="chord">Fm</td><td class="chord">Gb</td><td class="chord">Ab</td><td class="chord">Bbm</td><td class="chord">Cdim</td><td class="chord">Bbm</td></tr>
+    <tr><th scope="row">D</th><td class="chord">D</td><td class="chord">Em</td><td class="chord">F#m</td><td class="chord">G</td><td class="chord">A</td><td class="chord">Bm</td><td class="chord">C#dim</td><td class="chord">Bm</td></tr>
+    <tr><th scope="row">Eb</th><td class="chord">Eb</td><td class="chord">Fm</td><td class="chord">Gm</td><td class="chord">Ab</td><td class="chord">Bb</td><td class="chord">Cm</td><td class="chord">Ddim</td><td class="chord">Cm</td></tr>
+    <tr><th scope="row">E</th><td class="chord">E</td><td class="chord">F#m</td><td class="chord">G#m</td><td class="chord">A</td><td class="chord">B</td><td class="chord">C#m</td><td class="chord">D#dim</td><td class="chord">C#m</td></tr>
+    <tr><th scope="row">F</th><td class="chord">F</td><td class="chord">Gm</td><td class="chord">Am</td><td class="chord">Bb</td><td class="chord">C</td><td class="chord">Dm</td><td class="chord">Edim</td><td class="chord">Dm</td></tr>
+    <tr><th scope="row">F#</th><td class="chord">F#</td><td class="chord">G#m</td><td class="chord">A#m</td><td class="chord">B</td><td class="chord">C#</td><td class="chord">D#m</td><td class="chord">E#dim</td><td class="chord">D#m</td></tr>
+    <tr><th scope="row">G</th><td class="chord">G</td><td class="chord">Am</td><td class="chord">Bm</td><td class="chord">C</td><td class="chord">D</td><td class="chord">Em</td><td class="chord">F#dim</td><td class="chord">Em</td></tr>
+    <tr><th scope="row">Ab</th><td class="chord">Ab</td><td class="chord">Bbm</td><td class="chord">Cm</td><td class="chord">Db</td><td class="chord">Eb</td><td class="chord">Fm</td><td class="chord">Gdim</td><td class="chord">Fm</td></tr>
+    <tr><th scope="row">A</th><td class="chord">A</td><td class="chord">Bm</td><td class="chord">C#m</td><td class="chord">D</td><td class="chord">E</td><td class="chord">F#m</td><td class="chord">G#dim</td><td class="chord">F#m</td></tr>
+    <tr><th scope="row">Bb</th><td class="chord">Bb</td><td class="chord">Cm</td><td class="chord">Dm</td><td class="chord">Eb</td><td class="chord">F</td><td class="chord">Gm</td><td class="chord">Adim</td><td class="chord">Gm</td></tr>
+    <tr><th scope="row">B</th><td class="chord">B</td><td class="chord">C#m</td><td class="chord">D#m</td><td class="chord">E</td><td class="chord">F#</td><td class="chord">G#m</td><td class="chord">A#dim</td><td class="chord">G#m</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="cap">コードは各キーの音階に合わせて表記しているため、キー F# には E#dim（Fdim と同じ音）が出てきます。Db と F# は一般的な書き方で載せています。C# と Gb は同じ音の別名です。</p>
+
+<h2 id="transpose">表を使って移調する</h2>
+<p>移調するには、元のキーの行で各コードを探し、新しいキーの行の同じ列のコードに置き換えます。</p>
+<p><b>例：</b>キー <b>G</b> の曲で G・Em・C・D（I・VIm・IV・V）を使っているとき、キー <b>Bb</b> の行の同じ列は Bb・Gm・Eb・F です。</p>
+<div class="pair">
+  <figure><pre><code>G       Em      C       D
+I       VIm     IV      V</code></pre><figcaption>キー G</figcaption></figure>
+  <figure><pre><code>Bb      Gm      Eb      F
+I       VIm     IV      V</code></pre><figcaption>キー Bb（+3）</figcaption></figure>
+</div>
+<p>長い曲や <code>D7sus4</code>・<code>F#m7-5</code> のようなコードが多いと、手作業では時間がかかります。Chord Transposer なら、コード譜のすべてのコードを一度に移調し、コードと歌詞の位置関係も保ちます。Bb のようなフラット系のキーでは、<b>#/♭</b> を「<b>b を優先</b>」にすると A#・D# ではなく Bb・Eb で表示されます。</p>
+
+<h2 id="shift">キーからキーへ、何半音動かす？</h2>
+<p>アプリでは半音単位で移調します。<b>縦（左の列）が元のキー、横（上の行）が移調先のキー</b>です。左の列で元のキー、上の行で新しいキーを探すと、<b>移調</b>で選ぶ値がわかります。表には動きの小さい方（6 半音まで）を載せています。反対方向に動かしても同じコードになります（たとえば +5 と -7 は 1 オクターブ違いの同じキー）。</p>
+<p class="scroll-hint" aria-hidden="true">表は横にスクロールできます →</p>
+<div class="table-wrap wide">
+<table>
+  <thead>
+    <tr><th scope="col" rowspan="2" class="group">元のキー ↓</th><th scope="colgroup" colspan="12" class="group">移調先のキー →</th></tr>
+    <tr><th scope="col">C</th><th scope="col">Db</th><th scope="col">D</th><th scope="col">Eb</th><th scope="col">E</th><th scope="col">F</th><th scope="col">F#</th><th scope="col">G</th><th scope="col">Ab</th><th scope="col">A</th><th scope="col">Bb</th><th scope="col">B</th></tr>
+  </thead>
+  <tbody>
+    <tr><th scope="row">C</th><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td></tr>
+    <tr><th scope="row">Db</th><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td></tr>
+    <tr><th scope="row">D</th><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td></tr>
+    <tr><th scope="row">Eb</th><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td></tr>
+    <tr><th scope="row">E</th><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td></tr>
+    <tr><th scope="row">F</th><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td></tr>
+    <tr><th scope="row">F#</th><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td></tr>
+    <tr><th scope="row">G</th><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td></tr>
+    <tr><th scope="row">Ab</th><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td></tr>
+    <tr><th scope="row">A</th><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td><td class="num">+2</td></tr>
+    <tr><th scope="row">Bb</th><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td><td class="num">+1</td></tr>
+    <tr><th scope="row">B</th><td class="num">+1</td><td class="num">+2</td><td class="num">+3</td><td class="num">+4</td><td class="num">+5</td><td class="num">+6</td><td class="num">-5</td><td class="num">-4</td><td class="num">-3</td><td class="num">-2</td><td class="num">-1</td><td class="num dim">0</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="cap">たとえば G → Bb は +3、E → C は -4 です。</p>
+<p>歌のキーを合わせるときは、1〜2 半音の小さな変更で十分なことがよくあります。まず少しだけ動かして、実際に歌って確かめてから調整しましょう。</p>
+
+<h2 id="other">セブンスや分数コードなど</h2>
+<ul>
+  <li><b>テンションや種類はそのまま。</b>動くのは音名（ルート）だけです。<code>Cmaj7</code> を +2 すると <code>Dmaj7</code>、<code>G7sus4</code> は <code>A7sus4</code> になります。</li>
+  <li><b>分数コード（オンコード）は両方の音が動きます。</b><code>C/E</code> を +2 すると <code>D/F#</code> です。</li>
+  <li><b>キーの外のコード</b>（キー C での <code>Bb</code> のような借用和音など）も、ほかのコードと同じ半音数だけ動きます。</li>
+</ul>
+<p>次の記事：<a href="../sharps-and-flats/"># と ♭ の使い分け</a>では、キー F で A# ではなく Bb と書く理由を説明しています。</p>
     </article>
     <aside class="cta">
       <h2>さっそくコード譜を移調する</h2>

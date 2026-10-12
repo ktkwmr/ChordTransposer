@@ -1,32 +1,33 @@
+import { wideTable } from "./layout.mjs";
 import { MAJOR_KEYS, MINOR_KEYS, diatonicChords, shortestShift, signed } from "./music.mjs";
 
 const DEGREES = ["I", "IIm", "IIIm", "IV", "V", "VIm", "VIIdim"];
 // Keys for the shift table: all 12, sharps for the 6-accidental key as in MAJOR_KEYS
 const SHIFT_KEYS = MAJOR_KEYS;
 
-function chordTable(keyHead, minorHead) {
-  return `<div class="table-wrap">
-  <table>
-    <thead><tr><th scope="col">${keyHead}</th>${DEGREES.map((d) => `<th scope="col">${d}</th>`).join("")}<th scope="col">${minorHead}</th></tr></thead>
-    <tbody>
-${MAJOR_KEYS.map((k, i) => `      <tr><th scope="row">${k}</th>${diatonicChords(k).map((c) => `<td class="chord">${c}</td>`).join("")}<td class="chord">${MINOR_KEYS[i]}</td></tr>`).join("\n")}
-    </tbody>
-  </table>
-</div>`;
+function chordTable(lang, keyHead, minorHead) {
+  return wideTable(lang, `<table>
+  <thead><tr><th scope="col">${keyHead}</th>${DEGREES.map((d) => `<th scope="col">${d}</th>`).join("")}<th scope="col">${minorHead}</th></tr></thead>
+  <tbody>
+${MAJOR_KEYS.map((k, i) => `    <tr><th scope="row">${k}</th>${diatonicChords(k).map((c) => `<td class="chord">${c}</td>`).join("")}<td class="chord">${MINOR_KEYS[i]}</td></tr>`).join("\n")}
+  </tbody>
+</table>`);
 }
 
-function shiftTable(fromHead) {
-  return `<div class="table-wrap">
-  <table>
-    <thead><tr><th scope="col">${fromHead}</th>${SHIFT_KEYS.map((k) => `<th scope="col">${k}</th>`).join("")}</tr></thead>
-    <tbody>
-${SHIFT_KEYS.map((from) => `      <tr><th scope="row">${from}</th>${SHIFT_KEYS.map((to) => {
+// fromHead / toHead: what the rows and the columns are
+function shiftTable(lang, fromHead, toHead) {
+  return wideTable(lang, `<table>
+  <thead>
+    <tr><th scope="col" rowspan="2" class="group">${fromHead}</th><th scope="colgroup" colspan="${SHIFT_KEYS.length}" class="group">${toHead}</th></tr>
+    <tr>${SHIFT_KEYS.map((k) => `<th scope="col">${k}</th>`).join("")}</tr>
+  </thead>
+  <tbody>
+${SHIFT_KEYS.map((from) => `    <tr><th scope="row">${from}</th>${SHIFT_KEYS.map((to) => {
   const d = shortestShift(from, to);
   return `<td class="num${d === 0 ? " dim" : ""}">${signed(d)}</td>`;
 }).join("")}</tr>`).join("\n")}
-    </tbody>
-  </table>
-</div>`;
+  </tbody>
+</table>`);
 }
 
 export default {
@@ -50,16 +51,16 @@ export default {
 <h2 id="pattern">The chord pattern of a major key</h2>
 <p>Build a triad on each note of a major scale and you get seven chords. Their qualities always follow the same order:</p>
 <div class="table-wrap">
-  <table class="text">
+  <table class="text stack">
     <thead><tr><th scope="col">Degree</th><th scope="col">Quality</th><th scope="col">In C</th><th scope="col">Role</th></tr></thead>
     <tbody>
-      <tr><th scope="row">I</th><td>major</td><td class="chord">C</td><td>Home. Songs usually start and end here.</td></tr>
-      <tr><th scope="row">IIm</th><td>minor</td><td class="chord">Dm</td><td>Often leads to V.</td></tr>
-      <tr><th scope="row">IIIm</th><td>minor</td><td class="chord">Em</td><td>A softer substitute for I or V.</td></tr>
-      <tr><th scope="row">IV</th><td>major</td><td class="chord">F</td><td>Moves away from home.</td></tr>
-      <tr><th scope="row">V</th><td>major (often V7)</td><td class="chord">G</td><td>Tension that pulls back to I.</td></tr>
-      <tr><th scope="row">VIm</th><td>minor</td><td class="chord">Am</td><td>The relative minor: the "sad" home.</td></tr>
-      <tr><th scope="row">VIIdim</th><td>diminished</td><td class="chord">Bdim</td><td>Rare in pop; often played as V7 instead.</td></tr>
+      <tr><th scope="row">I</th><td data-label="Quality:">major</td><td class="chord" data-label="In C:">C</td><td data-label="Role:">Home. Songs usually start and end here.</td></tr>
+      <tr><th scope="row">IIm</th><td data-label="Quality:">minor</td><td class="chord" data-label="In C:">Dm</td><td data-label="Role:">Often leads to V.</td></tr>
+      <tr><th scope="row">IIIm</th><td data-label="Quality:">minor</td><td class="chord" data-label="In C:">Em</td><td data-label="Role:">A softer substitute for I or V.</td></tr>
+      <tr><th scope="row">IV</th><td data-label="Quality:">major</td><td class="chord" data-label="In C:">F</td><td data-label="Role:">Moves away from home.</td></tr>
+      <tr><th scope="row">V</th><td data-label="Quality:">major (often V7)</td><td class="chord" data-label="In C:">G</td><td data-label="Role:">Tension that pulls back to I.</td></tr>
+      <tr><th scope="row">VIm</th><td data-label="Quality:">minor</td><td class="chord" data-label="In C:">Am</td><td data-label="Role:">The relative minor: the "sad" home.</td></tr>
+      <tr><th scope="row">VIIdim</th><td data-label="Quality:">diminished</td><td class="chord" data-label="In C:">Bdim</td><td data-label="Role:">Rare in pop; often played as V7 instead.</td></tr>
     </tbody>
   </table>
 </div>
@@ -67,7 +68,7 @@ export default {
 
 <h2 id="chart">Chords in all 12 keys</h2>
 <p>Each row is one major key. The last column is its relative minor key, which uses the same seven chords but treats VIm as home.</p>
-${chordTable("Key", "Relative minor")}
+${chordTable("en", "Key", "Relative minor")}
 <p class="cap">Chords are spelled from each key's scale, so the key of F# has E#dim (the same pitch as Fdim). Db and F# are written the usual way; their twins C# and Gb use the same pitches.</p>
 
 <h2 id="transpose">Transpose with the chart</h2>
@@ -82,9 +83,9 @@ I       VIm     IV      V</code></pre><figcaption>Key of Bb (+3)</figcaption></f
 <p>Doing this by hand gets slow with long songs and chords such as <code>D7sus4</code> or <code>F#m7-5</code>. Chord Transposer moves every chord in the chart in one step and keeps the spacing between chords and lyrics. For flat keys such as Bb, set <b>#/♭</b> to <b>Prefer b</b> so the chords come out as Bb and Eb rather than A# and D#.</p>
 
 <h2 id="shift">How many semitones between two keys?</h2>
-<p>The app transposes by semitones. Find the original key in the left column and the new key at the top; the number is the value to choose in <b>Transpose</b>. The table shows the smaller move (up to 6 semitones). Moving the other way also works: +5 and −7 give the same chords, an octave apart.</p>
-${shiftTable("From \\ To")}
-<p class="cap">For example, G → Bb is +3, and E → C is −4.</p>
+<p>The app transposes by semitones. Rows are the original key and columns are the new key: find the original key in the left column and the new key at the top; the number is the value to choose in <b>Transpose</b>. The table shows the smaller move (up to 6 semitones). Moving the other way also works: +5 and -7 give the same chords, an octave apart.</p>
+${shiftTable("en", "From ↓", "To →")}
+<p class="cap">For example, G → Bb is +3, and E → C is -4.</p>
 <p>Singers often move a key by just one or two semitones. Try a small change first, then sing a line or two before going further.</p>
 
 <h2 id="other">Sevenths, slash chords, and other chords</h2>
@@ -115,16 +116,16 @@ ${shiftTable("From \\ To")}
 <h2 id="pattern">メジャーキーのコードの並び</h2>
 <p>メジャースケールの各音の上に 3 和音を作ると、7 つのコードができます。これを<b>ダイアトニックコード</b>といい、コードの種類はどのキーでも同じ順番です。</p>
 <div class="table-wrap">
-  <table class="text">
+  <table class="text stack">
     <thead><tr><th scope="col">度数</th><th scope="col">種類</th><th scope="col">キー C</th><th scope="col">役割</th></tr></thead>
     <tbody>
-      <tr><th scope="row">I</th><td>メジャー</td><td class="chord">C</td><td>トニック（安定）。曲の始まりと終わりに多い</td></tr>
-      <tr><th scope="row">IIm</th><td>マイナー</td><td class="chord">Dm</td><td>V につながることが多い</td></tr>
-      <tr><th scope="row">IIIm</th><td>マイナー</td><td class="chord">Em</td><td>I や V の代わりに使われる</td></tr>
-      <tr><th scope="row">IV</th><td>メジャー</td><td class="chord">F</td><td>サブドミナント。安定から離れる</td></tr>
-      <tr><th scope="row">V</th><td>メジャー（V7 も多い）</td><td class="chord">G</td><td>ドミナント。I に戻りたくなる緊張感</td></tr>
-      <tr><th scope="row">VIm</th><td>マイナー</td><td class="chord">Am</td><td>平行調のトニック。切ない響き</td></tr>
-      <tr><th scope="row">VIIdim</th><td>ディミニッシュ</td><td class="chord">Bdim</td><td>ポップスでは少なめ。VIIm7-5 として使われることも</td></tr>
+      <tr><th scope="row">I</th><td data-label="種類：">メジャー</td><td class="chord" data-label="キー C：">C</td><td data-label="役割：">トニック（安定）。曲の始まりと終わりに多い</td></tr>
+      <tr><th scope="row">IIm</th><td data-label="種類：">マイナー</td><td class="chord" data-label="キー C：">Dm</td><td data-label="役割：">V につながることが多い</td></tr>
+      <tr><th scope="row">IIIm</th><td data-label="種類：">マイナー</td><td class="chord" data-label="キー C：">Em</td><td data-label="役割：">I や V の代わりに使われる</td></tr>
+      <tr><th scope="row">IV</th><td data-label="種類：">メジャー</td><td class="chord" data-label="キー C：">F</td><td data-label="役割：">サブドミナント。安定から離れる</td></tr>
+      <tr><th scope="row">V</th><td data-label="種類：">メジャー（V7 も多い）</td><td class="chord" data-label="キー C：">G</td><td data-label="役割：">ドミナント。I に戻りたくなる緊張感</td></tr>
+      <tr><th scope="row">VIm</th><td data-label="種類：">マイナー</td><td class="chord" data-label="キー C：">Am</td><td data-label="役割：">平行調のトニック。切ない響き</td></tr>
+      <tr><th scope="row">VIIdim</th><td data-label="種類：">ディミニッシュ</td><td class="chord" data-label="キー C：">Bdim</td><td data-label="役割：">ポップスでは少なめ。VIIm7-5 として使われることも</td></tr>
     </tbody>
   </table>
 </div>
@@ -132,7 +133,7 @@ ${shiftTable("From \\ To")}
 
 <h2 id="chart">12 キーのコード表</h2>
 <p>1 行が 1 つのメジャーキーです。右端の列は平行調（同じ 7 つのコードを使い、VIm を主役にするマイナーキー）です。</p>
-${chordTable("キー", "平行調")}
+${chordTable("ja", "キー", "平行調")}
 <p class="cap">コードは各キーの音階に合わせて表記しているため、キー F# には E#dim（Fdim と同じ音）が出てきます。Db と F# は一般的な書き方で載せています。C# と Gb は同じ音の別名です。</p>
 
 <h2 id="transpose">表を使って移調する</h2>
@@ -147,9 +148,9 @@ I       VIm     IV      V</code></pre><figcaption>キー Bb（+3）</figcaption>
 <p>長い曲や <code>D7sus4</code>・<code>F#m7-5</code> のようなコードが多いと、手作業では時間がかかります。Chord Transposer なら、コード譜のすべてのコードを一度に移調し、コードと歌詞の位置関係も保ちます。Bb のようなフラット系のキーでは、<b>#/♭</b> を「<b>b を優先</b>」にすると A#・D# ではなく Bb・Eb で表示されます。</p>
 
 <h2 id="shift">キーからキーへ、何半音動かす？</h2>
-<p>アプリでは半音単位で移調します。左の列で元のキー、上の行で新しいキーを探すと、<b>移調</b>で選ぶ値がわかります。表には動きの小さい方（6 半音まで）を載せています。反対方向に動かしても同じコードになります（たとえば +5 と −7 は 1 オクターブ違いの同じキー）。</p>
-${shiftTable("元 \\ 先")}
-<p class="cap">たとえば G → Bb は +3、E → C は −4 です。</p>
+<p>アプリでは半音単位で移調します。<b>縦（左の列）が元のキー、横（上の行）が移調先のキー</b>です。左の列で元のキー、上の行で新しいキーを探すと、<b>移調</b>で選ぶ値がわかります。表には動きの小さい方（6 半音まで）を載せています。反対方向に動かしても同じコードになります（たとえば +5 と -7 は 1 オクターブ違いの同じキー）。</p>
+${shiftTable("ja", "元のキー ↓", "移調先のキー →")}
+<p class="cap">たとえば G → Bb は +3、E → C は -4 です。</p>
 <p>歌のキーを合わせるときは、1〜2 半音の小さな変更で十分なことがよくあります。まず少しだけ動かして、実際に歌って確かめてから調整しましょう。</p>
 
 <h2 id="other">セブンスや分数コードなど</h2>

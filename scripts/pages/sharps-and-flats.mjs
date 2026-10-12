@@ -67,17 +67,17 @@ ${keyTable(["# or b in the key", "Sharp keys (major / minor)", "Flat keys (major
 <h2 id="app">The #/♭ setting in Chord Transposer</h2>
 <p>The app has three choices for how transposed chords are spelled:</p>
 <div class="table-wrap">
-  <table class="text">
-    <thead><tr><th scope="col">Setting</th><th scope="col">What it does</th><th scope="col"><code>F Bb C7 Dm</code>, +3</th></tr></thead>
+  <table class="text stack">
+    <thead><tr><th scope="col">Setting</th><th scope="col"><code>F Bb C7 Dm</code> +3 becomes</th><th scope="col">Rule</th></tr></thead>
     <tbody>
-      <tr><th scope="row">Original</th><td>A chord written with b stays flat. Every other chord uses # when it lands on a black key.</td><td class="chord">G# Db D#7 Fm</td></tr>
-      <tr><th scope="row">Prefer #</th><td>Every black-key chord uses #.</td><td class="chord">G# C# D#7 Fm</td></tr>
-      <tr><th scope="row">Prefer b</th><td>Every black-key chord uses b.</td><td class="chord">Ab Db Eb7 Fm</td></tr>
+      <tr><th scope="row">Original</th><td class="chord" data-label="Result:">G# Db D#7 Fm</td><td data-label="Rule:">Follows the source: a chord written with b stays with b (Bb → Db). A chord with no # or b gets # (F → G#).</td></tr>
+      <tr><th scope="row">Prefer #</th><td class="chord" data-label="Result:">G# C# D#7 Fm</td><td data-label="Rule:">Always #.</td></tr>
+      <tr><th scope="row">Prefer b</th><td class="chord" data-label="Result:">Ab Db Eb7 Fm</td><td data-label="Rule:">Always b.</td></tr>
     </tbody>
   </table>
 </div>
-<p class="cap">The example moves a chart from F to Ab, a flat key, so Prefer b gives the expected spelling. Original writes Db, a flat, because the source chord Bb was a flat, but it writes G# and D#7 for the chords that had no accidental.</p>
-<p><b>How to choose:</b> find the new key in the table above. If it is a flat key, choose <b>Prefer b</b>; if it is a sharp key, choose <b>Prefer #</b>. Then check the chords outside the key and fix any by hand.</p>
+<p class="cap">The example moves a chart from F to Ab, a flat key, so Prefer b gives the expected spelling.</p>
+<p><b>How to choose:</b> look up the new key in the <a href="#keys">table of sharp and flat keys</a>. If it is a flat key, choose <b>Prefer b</b>; if it is a sharp key, choose <b>Prefer #</b>. Then check the chords outside the key and fix any by hand.</p>
 <p>When <b>Transpose</b> is 0, Prefer # and Prefer b only rewrite chords that already have # or b. Use this to clean up a chart that mixes the two, for example <code>Db</code> → <code>C#</code>.</p>
 <p>See also: <a href="../key-chart/">chords in every key</a>, which spells every chord from its key.</p>
 `,
@@ -130,17 +130,17 @@ ${keyTable(["調号の数", "シャープ系（メジャー / マイナー）", 
 <h2 id="app">Chord Transposer の #/♭ 設定</h2>
 <p>アプリには、移調したコードの書き方を決める 3 つの選択肢があります。</p>
 <div class="table-wrap">
-  <table class="text">
-    <thead><tr><th scope="col">設定</th><th scope="col">動作</th><th scope="col"><code>F Bb C7 Dm</code> を +3</th></tr></thead>
+  <table class="text stack">
+    <thead><tr><th scope="col">設定</th><th scope="col"><code>F Bb C7 Dm</code> を +3 した結果</th><th scope="col">ルール</th></tr></thead>
     <tbody>
-      <tr><th scope="row">オリジナル</th><td>b で書かれたコードはフラットのまま。それ以外のコードは、黒鍵の音になったとき # で書きます。</td><td class="chord">G# Db D#7 Fm</td></tr>
-      <tr><th scope="row"># を優先</th><td>黒鍵の音はすべて # で書きます。</td><td class="chord">G# C# D#7 Fm</td></tr>
-      <tr><th scope="row">b を優先</th><td>黒鍵の音はすべて b で書きます。</td><td class="chord">Ab Db Eb7 Fm</td></tr>
+      <tr><th scope="row">オリジナル</th><td class="chord" data-label="結果：">G# Db D#7 Fm</td><td data-label="ルール：">元の書き方に合わせます。b で書かれたコードは b のまま（Bb → Db）、# も b もないコードは # になります（F → G#）。</td></tr>
+      <tr><th scope="row"># を優先</th><td class="chord" data-label="結果：">G# C# D#7 Fm</td><td data-label="ルール：">いつも # で書きます。</td></tr>
+      <tr><th scope="row">b を優先</th><td class="chord" data-label="結果：">Ab Db Eb7 Fm</td><td data-label="ルール：">いつも b で書きます。</td></tr>
     </tbody>
   </table>
 </div>
-<p class="cap">この例はキー F からキー Ab（フラット系）への移調なので、「b を優先」が適切な書き方になります。「オリジナル」では、元が Bb だったコードは Db になりますが、# も b も付いていなかったコードは G#・D#7 になります。</p>
-<p><b>選び方：</b>上の表で移調先のキーを探します。フラット系なら「<b>b を優先</b>」、シャープ系なら「<b># を優先</b>」を選びます。そのあと、キーの外のコードを確認して、必要なら手で直してください。</p>
+<p class="cap">この例はキー F からキー Ab（フラット系）への移調なので、「b を優先」が適切な書き方になります。</p>
+<p><b>選び方：</b>移調先のキーを<a href="#keys">シャープ系・フラット系のキーの表</a>で探します。フラット系なら「<b>b を優先</b>」、シャープ系なら「<b># を優先</b>」を選びます。そのあと、キーの外のコードを確認して、必要なら手で直してください。</p>
 <p><b>移調</b>が 0 のときは、「# を優先」「b を優先」は # や b の付いたコードだけを書き換えます。# と b が混ざったコード譜をそろえるのに使えます（例：<code>Db</code> → <code>C#</code>）。</p>
 <p>関連記事：<a href="../key-chart/">キー別のコード表</a>では、すべてのコードを各キーの音階に合わせて表記しています。</p>
 `,

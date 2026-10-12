@@ -96,6 +96,7 @@
     .pair figcaption, figure.shot figcaption, .table-wrap + .cap { color: var(--subtle); font-size: 13px; }
     figure { margin: 0 0 24px; }
     figure.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    figure.shot a { display: block; }
     figure.shot.phone img { max-width: 320px; }
     figure.shot figcaption { margin-top: 6px; }
     .note { margin: 0 0 20px; padding: 12px 16px; border-left: 3px solid var(--ink); background: var(--fill); border-radius: 0 var(--radius) var(--radius) 0; }
@@ -105,6 +106,15 @@
     .toc ol { margin: 0; padding-left: 1.4em; }
 
     .table-wrap { margin: 0 0 8px; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    /* Wide tables: shadows at the edges show that the table scrolls sideways */
+    .table-wrap.wide {
+      background:
+        linear-gradient(to right, var(--paper) 30%, rgba(255,255,255,0)) left / 40px 100% no-repeat local,
+        linear-gradient(to left, var(--paper) 30%, rgba(255,255,255,0)) right / 40px 100% no-repeat local,
+        radial-gradient(farthest-side at 0 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) left / 14px 100% no-repeat scroll,
+        radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) right / 14px 100% no-repeat scroll;
+    }
+    .scroll-hint { display: none; margin: 0 0 6px; color: var(--subtle); font-size: 13px; }
     .table-wrap + .cap { margin: 0 0 24px; }
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
     th, td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: center; white-space: nowrap; }
@@ -112,9 +122,13 @@
     thead th { background: var(--fill); font-weight: 600; }
     tbody th { text-align: left; font-weight: 600; background: var(--paper); position: sticky; left: 0; }
     td.chord, td.num { font-family: var(--mono); }
-    td.dim { color: #a3a3a3; }
+    td.dim { color: var(--muted); background: var(--fill); }
     td.hit { background: var(--ink); color: var(--paper); font-weight: 700; }
     table.text td, table.text th { white-space: normal; text-align: left; }
+    td code, th code { white-space: nowrap; }
+    table.text tbody th { white-space: nowrap; }
+    th.group { font-weight: 400; color: var(--muted); font-size: 13px; }
+    .table-wrap.wide tbody th { background: var(--paper); }
 
     dl.faq dt { margin: 28px 0 6px; font-weight: 700; font-size: 17px; }
     dl.faq dd { margin: 0; }
@@ -134,6 +148,15 @@
     .site-foot .meta { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; }
 
     @media (max-width: 600px) {
+      .scroll-hint { display: block; }
+      /* Two-column and text tables become stacked cards on phones */
+      table.stack, table.stack tbody, table.stack tr, table.stack th, table.stack td { display: block; width: auto; }
+      table.stack thead { display: none; }
+      table.stack tr { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+      table.stack tr:last-child { border-bottom: 0; }
+      table.stack th, table.stack td { padding: 2px 0; border: 0; text-align: left; white-space: normal; position: static; background: none; }
+      table.stack td:empty { display: none; }
+      table.stack td[data-label]::before { content: attr(data-label) " "; color: var(--subtle); font-family: var(--sans); }
       main { padding-top: 28px; }
       h1 { font-size: 25px; }
       h2 { font-size: 20px; }
@@ -158,89 +181,89 @@
   <main>
     <article>
       <h1>The ChordPro format explained</h1>
-      <p class="lead">ChordPro is a plain-text format for songs with chords. Instead of putting chords on a separate line above the lyrics, it writes each chord in square brackets right before the syllable where it is played.</p>
-      
-      <nav class="toc" aria-label="Contents"><b>Contents</b><ol>
-        <li><a href="#compare">Chords over lyrics vs. ChordPro</a></li>
-        <li><a href="#syntax">The basic syntax</a></li>
-        <li><a href="#directives">Common directives</a></li>
-        <li><a href="#files">Files and apps</a></li>
-        <li><a href="#transpose">Transposing ChordPro files</a></li>
-        <li><a href="#convert">Converting between the two styles</a></li>
-      </ol></nav>
-      
-      <h2 id="compare">Chords over lyrics vs. ChordPro</h2>
-      <p>Most chord charts on the web use the "chords over lyrics" style. The same verse in ChordPro looks like this:</p>
-      <div class="pair">
-        <figure><pre><code>G          G7       C        G
-      Amazing grace, how sweet the sound
-      G                     Em     D
-      That saved a wretch like me</code></pre><figcaption>Chords over lyrics</figcaption></figure>
-        <figure><pre><code>[G]Amazing [G7]grace, how [C]sweet the [G]sound
-      That saved a [Em]wretch like [D]me</code></pre><figcaption>ChordPro</figcaption></figure>
-      </div>
-      <p class="cap"><i>Amazing Grace</i> is a traditional hymn in the public domain.</p>
-      <p>Chords over lyrics is easy to read but depends on spaces: in a proportional font, or after editing a line, the chords drift away from their words. ChordPro ties each chord to its syllable, so a songbook app can lay the song out in any font, column width, or screen size and still put every chord in the right place.</p>
-      
-      <h2 id="syntax">The basic syntax</h2>
-      <ul>
-        <li><b>Chords</b> go in square brackets, immediately before the syllable: <code>[Am]Hello</code>.</li>
-        <li>A chord <b>between words</b> or at the end of a line is fine: <code>sound [D]</code>.</li>
-        <li><b>Instrumental lines</b> can be written as chords only: <code>[G] [C] [D] [G]</code>.</li>
-        <li><b>Directives</b> go in curly braces on their own line: <code>{title: Amazing Grace}</code>.</li>
-        <li>Lines that start with <code>#</code> are <b>comments</b> for the file's author; apps do not display them.</li>
-      </ul>
-      
-      <h2 id="directives">Common directives</h2>
-      <p>Directives add information such as the song title or mark sections of the song. Many have a short form.</p>
-      <div class="table-wrap">
-        <table class="text">
-          <thead><tr><th scope="col">Directive</th><th scope="col">Short form</th><th scope="col">Meaning</th></tr></thead>
-          <tbody>
-            <tr><th scope="row"><code>{title: …}</code></th><td><code>{t: …}</code></td><td>Song title</td></tr>
-            <tr><th scope="row"><code>{subtitle: …}</code></th><td><code>{st: …}</code></td><td>Subtitle, often the artist</td></tr>
-            <tr><th scope="row"><code>{artist: …}</code></th><td></td><td>Performer or composer</td></tr>
-            <tr><th scope="row"><code>{key: G}</code></th><td></td><td>Key of the song</td></tr>
-            <tr><th scope="row"><code>{capo: 2}</code></th><td></td><td>Capo fret</td></tr>
-            <tr><th scope="row"><code>{tempo: 90}</code></th><td></td><td>Tempo in beats per minute</td></tr>
-            <tr><th scope="row"><code>{comment: …}</code></th><td><code>{c: …}</code></td><td>A note shown with the song, such as "Slowly"</td></tr>
-            <tr><th scope="row"><code>{start_of_chorus}</code> … <code>{end_of_chorus}</code></th><td><code>{soc}</code> … <code>{eoc}</code></td><td>Marks the chorus</td></tr>
-            <tr><th scope="row"><code>{start_of_verse}</code> … <code>{end_of_verse}</code></th><td><code>{sov}</code> … <code>{eov}</code></td><td>Marks a verse</td></tr>
-            <tr><th scope="row"><code>{start_of_tab}</code> … <code>{end_of_tab}</code></th><td><code>{sot}</code> … <code>{eot}</code></td><td>Guitar tablature, shown as is in a fixed-width font</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p>A complete small file:</p>
-      <pre><code>{title: Amazing Grace}
-      {key: G}
-      
-      {start_of_verse}
-      [G]Amazing [G7]grace, how [C]sweet the [G]sound
-      That saved a [Em]wretch like [D]me
-      [G]I once was [G7]lost, but [C]now am [G]found
-      Was [G]blind, but [D]now I [G]see
-      {end_of_verse}</code></pre>
-      <p>The full specification, with many more directives, is published at <a href="https://www.chordpro.org/" rel="noopener">chordpro.org</a>.</p>
-      
-      <h2 id="files">Files and apps</h2>
-      <p>A ChordPro file is an ordinary UTF-8 text file. Common extensions are <code>.cho</code>, <code>.chopro</code>, <code>.chordpro</code>, <code>.crd</code>, and <code>.pro</code>. Because it is plain text, you can write it in any text editor, keep it under version control, and import it into many songbook and stage apps.</p>
-      
-      <h2 id="transpose">Transposing ChordPro files</h2>
-      <p>Chord Transposer reads ChordPro text directly. Paste it, or open a <code>.cho</code>, <code>.chopro</code>, <code>.crd</code>, or <code>.pro</code> file:</p>
-      <ul>
-        <li>Chords in square brackets are transposed: <code>[G]Amazing</code> +2 → <code>[A]Amazing</code>.</li>
-        <li>Lyrics, directives in curly braces, and <code>#</code> comment lines are left as they are.</li>
-      </ul>
-      <div class="note"><p><b>Update <code>{key:}</code> yourself.</b> The app does not change directives, so after transposing, edit <code>{key: G}</code> to the new key (for +2, <code>{key: A}</code>). In the chords-over-lyrics style, a <code>Key:</code> line at the top of the chart <i>is</i> updated automatically.</p></div>
-      <p>Save the result and the file is ready to import into your songbook app.</p>
-      
-      <h2 id="convert">Converting between the two styles</h2>
-      <p>The app transposes but does not convert between styles. To convert by hand:</p>
-      <ul>
-        <li><b>Chords over lyrics → ChordPro:</b> for each chord, find the letter of the lyric directly below it and insert <code>[Chord]</code> there. Then delete the chord line.</li>
-        <li><b>ChordPro → chords over lyrics:</b> write each chord on a line above, starting in the same column as the syllable that followed it, and remove the brackets. Use a fixed-width font so the columns line up.</li>
-      </ul>
-      <p>See also: <a href="../transposition-basics/">transposing chords: the basics</a>.</p>
+<p class="lead">ChordPro is a plain-text format for songs with chords. Instead of putting chords on a separate line above the lyrics, it writes each chord in square brackets right before the syllable where it is played.</p>
+
+<nav class="toc" aria-label="Contents"><b>Contents</b><ol>
+  <li><a href="#compare">Chords over lyrics vs. ChordPro</a></li>
+  <li><a href="#syntax">The basic syntax</a></li>
+  <li><a href="#directives">Common directives</a></li>
+  <li><a href="#files">Files and apps</a></li>
+  <li><a href="#transpose">Transposing ChordPro files</a></li>
+  <li><a href="#convert">Converting between the two styles</a></li>
+</ol></nav>
+
+<h2 id="compare">Chords over lyrics vs. ChordPro</h2>
+<p>Most chord charts on the web use the "chords over lyrics" style. The same verse in ChordPro looks like this:</p>
+<div class="pair">
+  <figure><pre><code>G          G7       C        G
+Amazing grace, how sweet the sound
+G                     Em     D
+That saved a wretch like me</code></pre><figcaption>Chords over lyrics</figcaption></figure>
+  <figure><pre><code>[G]Amazing [G7]grace, how [C]sweet the [G]sound
+That saved a [Em]wretch like [D]me</code></pre><figcaption>ChordPro</figcaption></figure>
+</div>
+<p class="cap"><i>Amazing Grace</i> is a traditional hymn in the public domain.</p>
+<p>Chords over lyrics is easy to read but depends on spaces: in a proportional font, or after editing a line, the chords drift away from their words. ChordPro ties each chord to its syllable, so a songbook app can lay the song out in any font, column width, or screen size and still put every chord in the right place.</p>
+
+<h2 id="syntax">The basic syntax</h2>
+<ul>
+  <li><b>Chords</b> go in square brackets, immediately before the syllable: <code>[Am]Hello</code>.</li>
+  <li>A chord <b>between words</b> or at the end of a line is fine: <code>sound [D]</code>.</li>
+  <li><b>Instrumental lines</b> can be written as chords only: <code>[G] [C] [D] [G]</code>.</li>
+  <li><b>Directives</b> go in curly braces on their own line: <code>{title: Amazing Grace}</code>.</li>
+  <li>Lines that start with <code>#</code> are <b>comments</b> for the file's author; apps do not display them.</li>
+</ul>
+
+<h2 id="directives">Common directives</h2>
+<p>Directives add information such as the song title or mark sections of the song. Many have a short form.</p>
+<div class="table-wrap">
+  <table class="text stack">
+    <thead><tr><th scope="col">Directive</th><th scope="col">Short form</th><th scope="col">Meaning</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>{title: …}</code></th><td data-label="Short form:"><code>{t: …}</code></td><td data-label="Meaning:">Song title</td></tr>
+      <tr><th scope="row"><code>{subtitle: …}</code></th><td data-label="Short form:"><code>{st: …}</code></td><td data-label="Meaning:">Subtitle, often the artist</td></tr>
+      <tr><th scope="row"><code>{artist: …}</code></th><td></td><td data-label="Meaning:">Performer or composer</td></tr>
+      <tr><th scope="row"><code>{key: G}</code></th><td></td><td data-label="Meaning:">Key of the song</td></tr>
+      <tr><th scope="row"><code>{capo: 2}</code></th><td></td><td data-label="Meaning:">Capo fret</td></tr>
+      <tr><th scope="row"><code>{tempo: 90}</code></th><td></td><td data-label="Meaning:">Tempo in beats per minute</td></tr>
+      <tr><th scope="row"><code>{comment: …}</code></th><td data-label="Short form:"><code>{c: …}</code></td><td data-label="Meaning:">A note shown with the song, such as "Slowly"</td></tr>
+      <tr><th scope="row"><code>{start_of_chorus}</code> … <code>{end_of_chorus}</code></th><td data-label="Short form:"><code>{soc}</code> … <code>{eoc}</code></td><td data-label="Meaning:">Marks the chorus</td></tr>
+      <tr><th scope="row"><code>{start_of_verse}</code> … <code>{end_of_verse}</code></th><td data-label="Short form:"><code>{sov}</code> … <code>{eov}</code></td><td data-label="Meaning:">Marks a verse</td></tr>
+      <tr><th scope="row"><code>{start_of_tab}</code> … <code>{end_of_tab}</code></th><td data-label="Short form:"><code>{sot}</code> … <code>{eot}</code></td><td data-label="Meaning:">Guitar tablature, shown as is in a fixed-width font</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>A complete small file:</p>
+<pre><code>{title: Amazing Grace}
+{key: G}
+
+{start_of_verse}
+[G]Amazing [G7]grace, how [C]sweet the [G]sound
+That saved a [Em]wretch like [D]me
+[G]I once was [G7]lost, but [C]now am [G]found
+Was [G]blind, but [D]now I [G]see
+{end_of_verse}</code></pre>
+<p>The full specification, with many more directives, is published at <a href="https://www.chordpro.org/" rel="noopener">chordpro.org</a>.</p>
+
+<h2 id="files">Files and apps</h2>
+<p>A ChordPro file is an ordinary UTF-8 text file. Common extensions are <code>.cho</code>, <code>.chopro</code>, <code>.chordpro</code>, <code>.crd</code>, and <code>.pro</code>. Because it is plain text, you can write it in any text editor, keep it under version control, and import it into many songbook and stage apps.</p>
+
+<h2 id="transpose">Transposing ChordPro files</h2>
+<p>Chord Transposer reads ChordPro text directly. Paste it, or open a <code>.cho</code>, <code>.chopro</code>, <code>.crd</code>, or <code>.pro</code> file:</p>
+<ul>
+  <li>Chords in square brackets are transposed: <code>[G]Amazing</code> +2 → <code>[A]Amazing</code>.</li>
+  <li>Lyrics, directives in curly braces, and <code>#</code> comment lines are left as they are.</li>
+</ul>
+<div class="note"><p><b>Update <code>{key:}</code> yourself.</b> The app does not change directives, so after transposing, edit <code>{key: G}</code> to the new key (for +2, <code>{key: A}</code>). In the chords-over-lyrics style, a <code>Key:</code> line at the top of the chart <i>is</i> updated automatically.</p></div>
+<p>Save the result and the file is ready to import into your songbook app.</p>
+
+<h2 id="convert">Converting between the two styles</h2>
+<p>The app transposes but does not convert between styles. To convert by hand:</p>
+<ul>
+  <li><b>Chords over lyrics → ChordPro:</b> for each chord, find the letter of the lyric directly below it and insert <code>[Chord]</code> there. Then delete the chord line.</li>
+  <li><b>ChordPro → chords over lyrics:</b> write each chord on a line above, starting in the same column as the syllable that followed it, and remove the brackets. Use a fixed-width font so the columns line up.</li>
+</ul>
+<p>See also: <a href="../transposition-basics/">transposing chords: the basics</a>.</p>
     </article>
     <aside class="cta">
       <h2>Transpose your chord chart now</h2>

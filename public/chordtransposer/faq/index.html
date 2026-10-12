@@ -100,7 +100,7 @@
         "name": "How do I rewrite a chart for playing with a capo?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Transpose by minus the capo fret. For capo 2, choose −2: the output shows the chord shapes to play. The capo chart shows which fret to use for each key."
+          "text": "Set Transpose to the capo fret with a minus sign: for capo 2, choose -2. The output shows the chord shapes to play. The capo chart shows which fret to use for each key."
         }
       },
       {
@@ -207,6 +207,7 @@
     .pair figcaption, figure.shot figcaption, .table-wrap + .cap { color: var(--subtle); font-size: 13px; }
     figure { margin: 0 0 24px; }
     figure.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    figure.shot a { display: block; }
     figure.shot.phone img { max-width: 320px; }
     figure.shot figcaption { margin-top: 6px; }
     .note { margin: 0 0 20px; padding: 12px 16px; border-left: 3px solid var(--ink); background: var(--fill); border-radius: 0 var(--radius) var(--radius) 0; }
@@ -216,6 +217,15 @@
     .toc ol { margin: 0; padding-left: 1.4em; }
 
     .table-wrap { margin: 0 0 8px; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    /* Wide tables: shadows at the edges show that the table scrolls sideways */
+    .table-wrap.wide {
+      background:
+        linear-gradient(to right, var(--paper) 30%, rgba(255,255,255,0)) left / 40px 100% no-repeat local,
+        linear-gradient(to left, var(--paper) 30%, rgba(255,255,255,0)) right / 40px 100% no-repeat local,
+        radial-gradient(farthest-side at 0 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) left / 14px 100% no-repeat scroll,
+        radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) right / 14px 100% no-repeat scroll;
+    }
+    .scroll-hint { display: none; margin: 0 0 6px; color: var(--subtle); font-size: 13px; }
     .table-wrap + .cap { margin: 0 0 24px; }
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
     th, td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: center; white-space: nowrap; }
@@ -223,9 +233,13 @@
     thead th { background: var(--fill); font-weight: 600; }
     tbody th { text-align: left; font-weight: 600; background: var(--paper); position: sticky; left: 0; }
     td.chord, td.num { font-family: var(--mono); }
-    td.dim { color: #a3a3a3; }
+    td.dim { color: var(--muted); background: var(--fill); }
     td.hit { background: var(--ink); color: var(--paper); font-weight: 700; }
     table.text td, table.text th { white-space: normal; text-align: left; }
+    td code, th code { white-space: nowrap; }
+    table.text tbody th { white-space: nowrap; }
+    th.group { font-weight: 400; color: var(--muted); font-size: 13px; }
+    .table-wrap.wide tbody th { background: var(--paper); }
 
     dl.faq dt { margin: 28px 0 6px; font-weight: 700; font-size: 17px; }
     dl.faq dd { margin: 0; }
@@ -245,6 +259,15 @@
     .site-foot .meta { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; }
 
     @media (max-width: 600px) {
+      .scroll-hint { display: block; }
+      /* Two-column and text tables become stacked cards on phones */
+      table.stack, table.stack tbody, table.stack tr, table.stack th, table.stack td { display: block; width: auto; }
+      table.stack thead { display: none; }
+      table.stack tr { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+      table.stack tr:last-child { border-bottom: 0; }
+      table.stack th, table.stack td { padding: 2px 0; border: 0; text-align: left; white-space: normal; position: static; background: none; }
+      table.stack td:empty { display: none; }
+      table.stack td[data-label]::before { content: attr(data-label) " "; color: var(--subtle); font-family: var(--sans); }
       main { padding-top: 28px; }
       h1 { font-size: 25px; }
       h2 { font-size: 20px; }
@@ -269,41 +292,41 @@
   <main>
     <article>
       <h1>Frequently asked questions</h1>
-      <p class="lead">Short answers to common questions. For step-by-step instructions, see the <a href="../guide/">guide</a>.</p>
-      <dl class="faq">
-        <dt>Is Chord Transposer free?</dt>
-        <dd>Yes. It is free to use, with no sign-up or account.</dd>
-        <dt>Are my files uploaded to a server?</dt>
-        <dd>No. Chord charts you open or type are processed only in your browser and never leave your device. When you open a PDF or an image, the app downloads its reading libraries from a CDN, but your file is not sent.</dd>
-        <dt>Which files can I open?</dt>
-        <dd>Text files (including ChordPro files such as .cho and .crd), PDFs, and images such as PNG and JPEG. PDFs with text are read directly; scanned pages and images are read with OCR (Japanese and English). Up to the first 20 pages of a PDF are read. See <a href="../guide/#files">opening files</a>.</dd>
-        <dt>The text from my photo or scanned PDF is wrong. What can I do?</dt>
-        <dd>OCR can misread characters, especially in photos taken at an angle, in poor light, or at low resolution. Fix mistakes directly in Input — Output updates immediately. For better results, see the <a href="../guide/#ocr">tips for photos and scanned PDFs</a>. Handwritten charts are usually not recognized.</dd>
-        <dt>Why were some chords not transposed?</dt>
-        <dd>The app only changes text that looks like a chord. A single capital letter inside lyrics, such as "A" in "A man walked in", is left alone on purpose, and unusual symbols may not be recognized. ChordPro directives such as <code>{key: G}</code> are also not changed. Edit these in Input or by hand.</dd>
-        <dt>The chords no longer line up with the lyrics.</dt>
-        <dd>Chord charts line up only in a fixed-width (monospace) font, where every character has the same width. If you paste the result into a word processor, choose a font such as Courier New, Consolas, or MS Gothic. In Japanese lyrics, a full-width character takes the space of two half-width characters.</dd>
-        <dt>Why do I get A# when I expected Bb?</dt>
-        <dd>Both names are the same note. Set <b>#/♭</b> to <b>Prefer b</b> for flat keys (F, Bb, Eb, Ab, Db, Gb) or <b>Prefer #</b> for sharp keys. See <a href="../sharps-and-flats/">sharps or flats?</a>.</dd>
-        <dt>How many semitones should I transpose?</dt>
-        <dd>Count the semitones from the old key to the new key, or look them up in the <a href="../key-chart/#shift">key-to-key table</a>. For singing, try 1 or 2 semitones first. A karaoke key setting of +2 is the same as +2 in the app.</dd>
-        <dt>How do I rewrite a chart for playing with a capo?</dt>
-        <dd>Transpose by minus the capo fret. For capo 2, choose −2: the output shows the chord shapes to play. The <a href="../capo-chart/">capo chart</a> shows which fret to use for each key.</dd>
-        <dt>Can I transpose minor keys and songs with key changes?</dt>
-        <dd>Yes. Every chord moves by the same number of semitones, so minor keys and key changes within a song keep their relationships.</dd>
-        <dt>Does it understand German H notation?</dt>
-        <dd>Yes. H is read as B (and Hm as Bm). Transposed chords are written with B.</dd>
-        <dt>Does it work on iPhone and Android?</dt>
-        <dd>Yes. It works in the browser on phones, tablets, and computers. On a phone, Input and Output are shown as tabs. You can also add it to your home screen; see <a href="../guide/#offline">install the app</a>.</dd>
-        <dt>Can I use it offline?</dt>
-        <dd>Yes. After your first visit, the app opens and transposes without a connection. Opening PDFs and images needs a connection the first time, to download the reading libraries.</dd>
-        <dt>How do I print the result?</dt>
-        <dd>Open the preview. On a computer, use your browser's print command (Ctrl+P or ⌘P) in the preview window. On phones and tablets, tap the printer button; on iPhone and iPad, choose Print in the share menu. See <a href="../guide/#preview">preview, print, and save</a>.</dd>
-        <dt>Is my chart saved?</dt>
-        <dd>The chart you are working on and your settings are kept in your browser so you can continue next time. They are not sent anywhere. To keep a copy, save it as a text file. To remove the stored data, clear this site's data in your browser settings.</dd>
-        <dt>How do I report a problem or suggest a feature?</dt>
-        <dd>Please open an issue on <a href="https://github.com/ktkwmr/ChordTransposer/issues" rel="noopener">GitHub</a>. If a chart is converted incorrectly, include a short example of the text.</dd>
-      </dl>
+<p class="lead">Short answers to common questions. For step-by-step instructions, see the <a href="../guide/">guide</a>.</p>
+<dl class="faq">
+  <dt>Is Chord Transposer free?</dt>
+  <dd>Yes. It is free to use, with no sign-up or account.</dd>
+  <dt>Are my files uploaded to a server?</dt>
+  <dd>No. Chord charts you open or type are processed only in your browser and never leave your device. When you open a PDF or an image, the app downloads its reading libraries from a CDN, but your file is not sent.</dd>
+  <dt>Which files can I open?</dt>
+  <dd>Text files (including ChordPro files such as .cho and .crd), PDFs, and images such as PNG and JPEG. PDFs with text are read directly; scanned pages and images are read with OCR (Japanese and English). Up to the first 20 pages of a PDF are read. See <a href="../guide/#files">opening files</a>.</dd>
+  <dt>The text from my photo or scanned PDF is wrong. What can I do?</dt>
+  <dd>OCR can misread characters, especially in photos taken at an angle, in poor light, or at low resolution. Fix mistakes directly in Input — Output updates immediately. For better results, see the <a href="../guide/#ocr">tips for photos and scanned PDFs</a>. Handwritten charts are usually not recognized.</dd>
+  <dt>Why were some chords not transposed?</dt>
+  <dd>The app only changes text that looks like a chord. A single capital letter inside lyrics, such as "A" in "A man walked in", is left alone on purpose, and unusual symbols may not be recognized. ChordPro directives such as <code>{key: G}</code> are also not changed. Edit these in Input or by hand.</dd>
+  <dt>The chords no longer line up with the lyrics.</dt>
+  <dd>Chord charts line up only in a fixed-width (monospace) font, where every character has the same width. If you paste the result into a word processor, choose a font such as Courier New, Consolas, or MS Gothic. In Japanese lyrics, a full-width character takes the space of two half-width characters.</dd>
+  <dt>Why do I get A# when I expected Bb?</dt>
+  <dd>Both names are the same note. Set <b>#/♭</b> to <b>Prefer b</b> for flat keys (F, Bb, Eb, Ab, Db, Gb) or <b>Prefer #</b> for sharp keys. See <a href="../sharps-and-flats/">sharps or flats?</a>.</dd>
+  <dt>How many semitones should I transpose?</dt>
+  <dd>Count the semitones from the old key to the new key, or look them up in the <a href="../key-chart/#shift">key-to-key table</a>. For singing, try 1 or 2 semitones first. A karaoke key setting of +2 is the same as +2 in the app.</dd>
+  <dt>How do I rewrite a chart for playing with a capo?</dt>
+  <dd>Set Transpose to the capo fret with a minus sign: for capo 2, choose -2. The output shows the chord shapes to play. The <a href="../capo-chart/">capo chart</a> shows which fret to use for each key.</dd>
+  <dt>Can I transpose minor keys and songs with key changes?</dt>
+  <dd>Yes. Every chord moves by the same number of semitones, so minor keys and key changes within a song keep their relationships.</dd>
+  <dt>Does it understand German H notation?</dt>
+  <dd>Yes. H is read as B (and Hm as Bm). Transposed chords are written with B.</dd>
+  <dt>Does it work on iPhone and Android?</dt>
+  <dd>Yes. It works in the browser on phones, tablets, and computers. On a phone, Input and Output are shown as tabs. You can also add it to your home screen; see <a href="../guide/#offline">install the app</a>.</dd>
+  <dt>Can I use it offline?</dt>
+  <dd>Yes. After your first visit, the app opens and transposes without a connection. Opening PDFs and images needs a connection the first time, to download the reading libraries.</dd>
+  <dt>How do I print the result?</dt>
+  <dd>Open the preview. On a computer, use your browser's print command (Ctrl+P or ⌘P) in the preview window. On phones and tablets, tap the printer button; on iPhone and iPad, choose Print in the share menu. See <a href="../guide/#preview">preview, print, and save</a>.</dd>
+  <dt>Is my chart saved?</dt>
+  <dd>The chart you are working on and your settings are kept in your browser so you can continue next time. They are not sent anywhere. To keep a copy, save it as a text file. To remove the stored data, clear this site's data in your browser settings.</dd>
+  <dt>How do I report a problem or suggest a feature?</dt>
+  <dd>Please open an issue on <a href="https://github.com/ktkwmr/ChordTransposer/issues" rel="noopener">GitHub</a>. If a chart is converted incorrectly, include a short example of the text.</dd>
+</dl>
     </article>
     <aside class="cta">
       <h2>Transpose your chord chart now</h2>

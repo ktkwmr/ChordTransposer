@@ -35,7 +35,7 @@ const EN = [
   },
   {
     q: "How do I rewrite a chart for playing with a capo?",
-    a: 'Transpose by minus the capo fret. For capo 2, choose −2: the output shows the chord shapes to play. The <a href="../capo-chart/">capo chart</a> shows which fret to use for each key.',
+    a: 'Set Transpose to the capo fret with a minus sign: for capo 2, choose -2. The output shows the chord shapes to play. The <a href="../capo-chart/">capo chart</a> shows which fret to use for each key.',
   },
   {
     q: "Can I transpose minor keys and songs with key changes?",
@@ -102,7 +102,7 @@ const JA = [
   },
   {
     q: "カポを付けて弾くためのコード譜にするには？",
-    a: 'マイナスのカポのフレット数だけ移調します。カポ 2 なら −2 を選ぶと、出力に押さえる形のコードが表示されます。キーごとのカポの位置は<a href="../capo-chart/">カポ位置の早見表</a>をご覧ください。',
+    a: '移調を「-（カポのフレット数）」にします。カポ 2 なら -2 を選ぶと、出力に押さえる形（フォーム）のコードが表示されます。キーごとのカポの位置は<a href="../capo-chart/">カポ位置の早見表</a>をご覧ください。',
   },
   {
     q: "マイナーキーの曲や、途中で転調する曲も移調できますか？",

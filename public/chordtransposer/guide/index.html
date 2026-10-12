@@ -96,6 +96,7 @@
     .pair figcaption, figure.shot figcaption, .table-wrap + .cap { color: var(--subtle); font-size: 13px; }
     figure { margin: 0 0 24px; }
     figure.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    figure.shot a { display: block; }
     figure.shot.phone img { max-width: 320px; }
     figure.shot figcaption { margin-top: 6px; }
     .note { margin: 0 0 20px; padding: 12px 16px; border-left: 3px solid var(--ink); background: var(--fill); border-radius: 0 var(--radius) var(--radius) 0; }
@@ -105,6 +106,15 @@
     .toc ol { margin: 0; padding-left: 1.4em; }
 
     .table-wrap { margin: 0 0 8px; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    /* Wide tables: shadows at the edges show that the table scrolls sideways */
+    .table-wrap.wide {
+      background:
+        linear-gradient(to right, var(--paper) 30%, rgba(255,255,255,0)) left / 40px 100% no-repeat local,
+        linear-gradient(to left, var(--paper) 30%, rgba(255,255,255,0)) right / 40px 100% no-repeat local,
+        radial-gradient(farthest-side at 0 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) left / 14px 100% no-repeat scroll,
+        radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) right / 14px 100% no-repeat scroll;
+    }
+    .scroll-hint { display: none; margin: 0 0 6px; color: var(--subtle); font-size: 13px; }
     .table-wrap + .cap { margin: 0 0 24px; }
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
     th, td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: center; white-space: nowrap; }
@@ -112,9 +122,13 @@
     thead th { background: var(--fill); font-weight: 600; }
     tbody th { text-align: left; font-weight: 600; background: var(--paper); position: sticky; left: 0; }
     td.chord, td.num { font-family: var(--mono); }
-    td.dim { color: #a3a3a3; }
+    td.dim { color: var(--muted); background: var(--fill); }
     td.hit { background: var(--ink); color: var(--paper); font-weight: 700; }
     table.text td, table.text th { white-space: normal; text-align: left; }
+    td code, th code { white-space: nowrap; }
+    table.text tbody th { white-space: nowrap; }
+    th.group { font-weight: 400; color: var(--muted); font-size: 13px; }
+    .table-wrap.wide tbody th { background: var(--paper); }
 
     dl.faq dt { margin: 28px 0 6px; font-weight: 700; font-size: 17px; }
     dl.faq dd { margin: 0; }
@@ -134,6 +148,15 @@
     .site-foot .meta { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; }
 
     @media (max-width: 600px) {
+      .scroll-hint { display: block; }
+      /* Two-column and text tables become stacked cards on phones */
+      table.stack, table.stack tbody, table.stack tr, table.stack th, table.stack td { display: block; width: auto; }
+      table.stack thead { display: none; }
+      table.stack tr { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+      table.stack tr:last-child { border-bottom: 0; }
+      table.stack th, table.stack td { padding: 2px 0; border: 0; text-align: left; white-space: normal; position: static; background: none; }
+      table.stack td:empty { display: none; }
+      table.stack td[data-label]::before { content: attr(data-label) " "; color: var(--subtle); font-family: var(--sans); }
       main { padding-top: 28px; }
       h1 { font-size: 25px; }
       h2 { font-size: 20px; }
@@ -158,107 +181,111 @@
   <main>
     <article>
       <h1>How to use Chord Transposer</h1>
-      <p class="lead">Chord Transposer changes the key of a chord chart in your browser. This guide walks through every button and shares tips for getting clean results from PDFs and photos.</p>
-      
-      <nav class="toc" aria-label="Contents"><b>Contents</b><ol>
-        <li><a href="#screen">The screen at a glance</a></li>
-        <li><a href="#quick">Transpose a chart in four steps</a></li>
-        <li><a href="#files">Opening files</a></li>
-        <li><a href="#ocr">Tips for photos and scanned PDFs</a></li>
-        <li><a href="#check">Check the result</a></li>
-        <li><a href="#preview">Preview, print, and save</a></li>
-        <li><a href="#phone">On a phone</a></li>
-        <li><a href="#offline">Install the app and use it offline</a></li>
-      </ol></nav>
-      
-      <h2 id="screen">The screen at a glance</h2>
-      <figure class="shot">
-        <img src="/chordtransposer/images/guide/en-overview.png" alt="Chord Transposer on a computer: the toolbar at the top, the Input area on the left with Amazing Grace in G, and the Output area on the right with the song transposed to A. Numbers 1 to 8 mark the controls." width="1200" height="640" loading="lazy" decoding="async">
-        <figcaption>Input on the left, Output on the right. The numbers match the list below.</figcaption>
-      </figure>
-      <ol>
-        <li><b>Open</b> (folder button): open a chord chart file.</li>
-        <li><b>Input</b>: paste or type a chord chart here. You can edit it at any time.</li>
-        <li><b>Transpose</b>: the number of semitones to move, from −12 to +12.</li>
-        <li><b>#/♭</b>: how to write the transposed chords — Original, Prefer #, or Prefer b.</li>
-        <li><b>Size</b>: the text size of Input and Output.</li>
-        <li><b>Preview</b>: show the whole chart at once, ready to print. Input and Output each have their own Preview button.</li>
-        <li><b>Save</b>: save Input or Output as a text file.</li>
-        <li><b>Settings</b>: How to use, Privacy, and About (license information).</li>
-      </ol>
-      
-      <h2 id="quick">Transpose a chart in four steps</h2>
-      <ol>
-        <li><b>Add the chart.</b> Paste it into Input, or press the folder button to open a file.</li>
-        <li><b>Choose the shift</b> in Transpose. For example, +2 moves G to A. Not sure how far to move? See <a href="../key-chart/#shift">how many semitones between two keys</a>.</li>
-        <li><b>Choose sharps or flats</b> in #/♭. For a flat key such as F, Bb, or Eb, choose Prefer b (see <a href="../sharps-and-flats/">sharps or flats?</a>).</li>
-        <li><b>Use the result:</b> preview, print, or save Output. Output updates as soon as you change anything, so you can try several keys quickly.</li>
-      </ol>
-      <p>Only chord names change. Lyrics, titles, and notes stay as they are, and the app keeps each chord above the same word by adjusting the spaces around it. A <code>Key:</code> line at the top of the chart is updated too.</p>
-      
-      <h2 id="files">Opening files</h2>
-      <div class="table-wrap">
-        <table class="text">
-          <thead><tr><th scope="col">File</th><th scope="col">How it is read</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">Text (.txt, .cho, .chopro, .crd, .pro, …)</th><td>Read as it is. The most accurate option. <a href="../chordpro/">ChordPro</a> files work too.</td></tr>
-            <tr><th scope="row">PDF with text</th><td>The text is taken from the PDF, keeping the columns of chords and lyrics as far as possible.</td></tr>
-            <tr><th scope="row">Scanned PDF</th><td>Pages without text are read with OCR (text recognition). Up to the first 20 pages are read.</td></tr>
-            <tr><th scope="row">Image (PNG, JPEG, WebP, …)</th><td>Read with OCR for Japanese and English.</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p>When you open a file, Transpose goes back to 0 so the new song does not start in a shifted key. If the file does not seem to contain chords, the app tells you instead of loading it.</p>
-      <p>Files are processed only in your browser and are never uploaded. To read PDFs and images, the app downloads its reading libraries the first time you open one, so that step needs an internet connection.</p>
-      
-      <h2 id="ocr">Tips for photos and scanned PDFs</h2>
-      <p>OCR guesses each character from the picture, so it can misread chords — for example, <code>b</code> as <code>6</code>, or a bar line <code>|</code> as <code>I</code>. These tips make a big difference:</p>
-      <ul>
-        <li><b>Use text when you can.</b> If the chart exists as a web page, a text file, or a PDF you can select text in, use that instead of a photo or screenshot.</li>
-        <li><b>Shoot straight on.</b> Hold the phone parallel to the page so the lines are straight and the page is flat. Curved pages near a book's spine are hard to read.</li>
-        <li><b>Use even, bright light.</b> Avoid shadows from your hand or phone and glare on glossy paper.</li>
-        <li><b>Crop to the chart.</b> Remove headers, photos, and other columns before opening the image.</li>
-        <li><b>Use enough resolution.</b> The chord letters should be sharp when you zoom in. Very small text in a large photo is often misread.</li>
-        <li><b>Printed charts work best.</b> Handwritten chords are usually not recognized.</li>
-        <li><b>Scan at 300 dpi or more</b> if you use a scanner, in black and white or grayscale.</li>
-      </ul>
-      <p>After OCR, compare Input with the original and fix any mistakes in Input. Output follows your corrections immediately.</p>
-      
-      <h2 id="check">Check the result</h2>
-      <p>The app recognizes most chord symbols: <code>C</code>, <code>Am7</code>, <code>F#m7-5</code>, <code>Gsus4</code>, <code>Cadd9</code>, <code>Bbmaj7</code>, slash chords such as <code>D/F#</code>, chords in brackets such as <code>[G]</code> or <code>(Em)</code>, and bar lines like <code>| C | G |</code>. Things to check:</p>
-      <ul>
-        <li><b>Single capital letters in lyrics</b> such as "A" or "I" in "A man walked in" are not changed. On a line that contains only chords, they are.</li>
-        <li><b>Unusual symbols</b> (for example, Nashville numbers or chords with words attached) may be left as they are. Edit them in Input or by hand.</li>
-        <li><b>Directives in ChordPro</b>, such as <code>{key: G}</code>, are not changed. Update them yourself.</li>
-      </ul>
-      
-      <h2 id="preview">Preview, print, and save</h2>
-      <figure class="shot">
-        <img src="/chordtransposer/images/guide/en-preview.png" alt="The preview of the transposed song in large text, with a print button and a close button in the top-right corner." width="1024" height="720" loading="lazy" decoding="async">
-        <figcaption>Preview on a tablet. Long charts are split into columns to fit on one screen.</figcaption>
-      </figure>
-      <ul>
-        <li><b>Preview</b> lays out the whole chart, in columns if needed, at the largest size that fits on one screen. On a computer it opens in a new window (allow pop-ups for this site if your browser blocks it). On phones and tablets it opens over the page; pinch to zoom.</li>
-        <li><b>Print</b> on a computer with your browser's print command (Ctrl+P, or ⌘P on a Mac) in the preview window. On phones and tablets, tap the printer button in the preview; on iPhone and iPad, then choose Print in the share menu that appears.</li>
-        <li><b>Save</b> writes a UTF-8 text file. The output file is named after the original file and the shift, for example <code>song_transposed+2.txt</code>. In Chrome and Edge on a computer you can choose where to save it; other browsers save it to your downloads.</li>
-      </ul>
-      
-      <h2 id="phone">On a phone</h2>
-      <figure class="shot phone">
-        <img src="/chordtransposer/images/guide/en-phone.png" alt="Chord Transposer on a phone: the toolbar at the top, Input and Output tabs with the Output tab selected, and the transposed song below." width="780" height="1440" loading="lazy" decoding="async" style="max-width:320px">
-        <figcaption>On a narrow screen, Input and Output are tabs. Preview and Save are next to the tabs.</figcaption>
-      </figure>
-      <p>Tap the folder button to choose a file from your phone, or a photo from your camera roll. The Preview and Save buttons act on the tab that is open.</p>
-      
-      <h2 id="offline">Install the app and use it offline</h2>
-      <p>Chord Transposer is a web app you can add to your home screen:</p>
-      <ul>
-        <li><b>iPhone / iPad (Safari):</b> tap Share, then <b>Add to Home Screen</b>.</li>
-        <li><b>Android (Chrome):</b> open the menu and choose <b>Install app</b> or <b>Add to Home screen</b>.</li>
-        <li><b>Computer (Chrome / Edge):</b> click the install icon in the address bar.</li>
-      </ul>
-      <p>After your first visit, the app opens and transposes without an internet connection. The chart you were working on and your settings are kept in your browser, so you can pick up where you left off. Clear this site's data in your browser settings to remove them.</p>
-      <p>More questions? See the <a href="../faq/">FAQ</a>.</p>
+<p class="lead">Chord Transposer changes the key of a chord chart in your browser. This guide walks through every button and shares tips for getting clean results from PDFs and photos.</p>
+
+<nav class="toc" aria-label="Contents"><b>Contents</b><ol>
+  <li><a href="#quick">Transpose a chart in four steps</a></li>
+  <li><a href="#screen">The screen at a glance</a></li>
+  <li><a href="#files">Opening files</a></li>
+  <li><a href="#ocr">Tips for photos and scanned PDFs</a></li>
+  <li><a href="#check">Check the result</a></li>
+  <li><a href="#preview">Preview, print, and save</a></li>
+  <li><a href="#phone">On a phone</a></li>
+  <li><a href="#offline">Install the app and use it offline</a></li>
+</ol></nav>
+
+<h2 id="quick">Transpose a chart in four steps</h2>
+<ol>
+  <li><b>Add the chart.</b> Paste it into Input, or press the folder button to open a file.</li>
+  <li><b>Choose the shift</b> in Transpose. For example, +2 moves G to A. Not sure how far to move? See <a href="../key-chart/#shift">how many semitones between two keys</a>.</li>
+  <li><b>Choose sharps or flats</b> in #/♭. For a flat key such as F, Bb, or Eb, choose Prefer b (see <a href="../sharps-and-flats/">sharps or flats?</a>).</li>
+  <li><b>Use the result:</b> preview, print, or save Output. Output updates as soon as you change anything, so you can try several keys quickly.</li>
+</ol>
+<p>Only chord names change. Lyrics, titles, and notes stay as they are, and the app keeps each chord above the same word by adjusting the spaces around it. A <code>Key:</code> line at the top of the chart is updated too.</p>
+
+<h2 id="screen">The screen at a glance</h2>
+<figure class="shot">
+  <a href="/chordtransposer/images/guide/en-overview.png"><picture><source media="(max-width: 600px)" srcset="/chordtransposer/images/guide/en-overview-phone.png" width="780" height="1120"><img src="/chordtransposer/images/guide/en-overview.png" alt="Chord Transposer on a computer: the toolbar at the top, the Input area on the left with Amazing Grace in G, and the Output area on the right with the song transposed to A. Numbers 1 to 8 mark the controls." width="1200" height="640" loading="lazy" decoding="async"></picture></a>
+  <figcaption>On a computer, Input is on the left and Output on the right; on a phone they are tabs. The numbers match the list below. Tap the image to enlarge it.</figcaption>
+</figure>
+<ol>
+  <li><b>Open</b> (folder button): open a chord chart file.</li>
+  <li><b>Input</b>: paste or type a chord chart here. You can edit it at any time.</li>
+  <li><b>Transpose</b>: the number of semitones to move, from -12 to +12.</li>
+  <li><b>#/♭</b>: how to write the transposed chords — Original, Prefer #, or Prefer b.</li>
+  <li><b>Size</b>: the text size of Input and Output.</li>
+  <li><b>Preview</b>: show the whole chart at once, ready to print. Input and Output each have their own Preview button.</li>
+  <li><b>Save</b>: save Input or Output as a text file.</li>
+  <li><b>Settings</b> (gear button): a menu with How to use, Guides &amp; articles, Privacy, and About (license information).</li>
+</ol>
+<figure class="shot menu">
+  <a href="/chordtransposer/images/guide/en-menu.png"><picture><img src="/chordtransposer/images/guide/en-menu.png" alt="The settings menu opened from the gear button, with How to use, Guides &amp; articles, Privacy, and About." width="362" height="484" loading="lazy" decoding="async" style="max-width:181px"></picture></a>
+  <figcaption>The settings menu.</figcaption>
+</figure>
+
+<h2 id="files">Opening files</h2>
+<div class="table-wrap">
+  <table class="text stack">
+    <thead><tr><th scope="col">File</th><th scope="col">How it is read</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Text (.txt, .cho, .chopro, .crd, .pro, …)</th><td>Read as it is. The most accurate option. <a href="../chordpro/">ChordPro</a> files work too.</td></tr>
+      <tr><th scope="row">PDF with text</th><td>The text is taken from the PDF, keeping the columns of chords and lyrics as far as possible.</td></tr>
+      <tr><th scope="row">Scanned PDF</th><td>Pages without text are read with OCR (text recognition). Up to the first 20 pages are read.</td></tr>
+      <tr><th scope="row">Image (PNG, JPEG, WebP, …)</th><td>Read with OCR for Japanese and English.</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>When you open a file, Transpose goes back to 0 so the new song does not start in a shifted key. If the file does not seem to contain chords, the app tells you instead of loading it.</p>
+<p>Files are processed only in your browser and are never uploaded. To read PDFs and images, the app downloads its reading libraries the first time you open one, so that step needs an internet connection.</p>
+
+<h2 id="ocr">Tips for photos and scanned PDFs</h2>
+<p>OCR guesses each character from the picture, so it can misread chords — for example, <code>b</code> as <code>6</code>, or a bar line <code>|</code> as <code>I</code>. These tips make a big difference:</p>
+<ul>
+  <li><b>Use text when you can.</b> If the chart exists as a web page, a text file, or a PDF you can select text in, use that instead of a photo or screenshot.</li>
+  <li><b>Shoot straight on.</b> Hold the phone parallel to the page so the lines are straight and the page is flat. Curved pages near a book's spine are hard to read.</li>
+  <li><b>Use even, bright light.</b> Avoid shadows from your hand or phone and glare on glossy paper.</li>
+  <li><b>Crop to the chart.</b> Remove headers, photos, and other columns before opening the image.</li>
+  <li><b>Use enough resolution.</b> The chord letters should be sharp when you zoom in. Very small text in a large photo is often misread.</li>
+  <li><b>Printed charts work best.</b> Handwritten chords are usually not recognized.</li>
+  <li><b>Scan at 300 dpi or more</b> if you use a scanner, in black and white or grayscale.</li>
+</ul>
+<p>After OCR, compare Input with the original and fix any mistakes in Input. Output follows your corrections immediately.</p>
+
+<h2 id="check">Check the result</h2>
+<p>The app recognizes most chord symbols: <code>C</code>, <code>Am7</code>, <code>F#m7-5</code>, <code>Gsus4</code>, <code>Cadd9</code>, <code>Bbmaj7</code>, slash chords such as <code>D/F#</code>, chords in brackets such as <code>[G]</code> or <code>(Em)</code>, and bar lines like <code>| C | G |</code>. Things to check:</p>
+<ul>
+  <li><b>Single capital letters in lyrics</b> such as "A" or "I" in "A man walked in" are not changed. On a line that contains only chords, they are.</li>
+  <li><b>Unusual symbols</b> (for example, Nashville numbers or chords with words attached) may be left as they are. Edit them in Input or by hand.</li>
+  <li><b>Directives in ChordPro</b>, such as <code>{key: G}</code>, are not changed. Update them yourself.</li>
+</ul>
+
+<h2 id="preview">Preview, print, and save</h2>
+<figure class="shot">
+  <a href="/chordtransposer/images/guide/en-preview.png"><picture><img src="/chordtransposer/images/guide/en-preview.png" alt="The preview of the transposed song in large text, with a print button and a close button in the top-right corner." width="1024" height="720" loading="lazy" decoding="async"></picture></a>
+  <figcaption>Preview on a tablet. Long charts are split into columns to fit on one screen. Tap the image to enlarge it.</figcaption>
+</figure>
+<ul>
+  <li><b>Preview</b> lays out the whole chart, in columns if needed, at the largest size that fits on one screen. On a computer it opens in a new window (allow pop-ups for this site if your browser blocks it). On phones and tablets it opens over the page; pinch to zoom.</li>
+  <li><b>Print</b> on a computer with your browser's print command (Ctrl+P, or ⌘P on a Mac) in the preview window. On phones and tablets, tap the printer button in the preview; on iPhone and iPad, then choose Print in the share menu that appears.</li>
+  <li><b>Save</b> writes a UTF-8 text file. The output file is named after the original file and the shift, for example <code>song_transposed+2.txt</code>. In Chrome and Edge on a computer you can choose where to save it; other browsers save it to your downloads.</li>
+</ul>
+
+<h2 id="phone">On a phone</h2>
+<figure class="shot phone">
+  <a href="/chordtransposer/images/guide/en-phone.png"><picture><img src="/chordtransposer/images/guide/en-phone.png" alt="Chord Transposer on a phone: the toolbar at the top, Input and Output tabs with the Output tab selected, and the transposed song below." width="780" height="1440" loading="lazy" decoding="async" style="max-width:320px"></picture></a>
+  <figcaption>On a narrow screen, Input and Output are tabs. Preview and Save are next to the tabs.</figcaption>
+</figure>
+<p>Tap the folder button to choose a file from your phone, or a photo from your camera roll. The Preview and Save buttons act on the tab that is open.</p>
+
+<h2 id="offline">Install the app and use it offline</h2>
+<p>Chord Transposer is a web app you can add to your home screen:</p>
+<ul>
+  <li><b>iPhone / iPad (Safari):</b> tap Share, then <b>Add to Home Screen</b>.</li>
+  <li><b>Android (Chrome):</b> open the menu and choose <b>Install app</b> or <b>Add to Home screen</b>.</li>
+  <li><b>Computer (Chrome / Edge):</b> click the install icon in the address bar.</li>
+</ul>
+<p>After your first visit, the app opens and transposes without an internet connection. The chart you were working on and your settings are kept in your browser, so you can pick up where you left off. Clear this site's data in your browser settings to remove them.</p>
+<p>More questions? See the <a href="../faq/">FAQ</a>.</p>
     </article>
     <aside class="cta">
       <h2>Transpose your chord chart now</h2>

@@ -96,6 +96,7 @@
     .pair figcaption, figure.shot figcaption, .table-wrap + .cap { color: var(--subtle); font-size: 13px; }
     figure { margin: 0 0 24px; }
     figure.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    figure.shot a { display: block; }
     figure.shot.phone img { max-width: 320px; }
     figure.shot figcaption { margin-top: 6px; }
     .note { margin: 0 0 20px; padding: 12px 16px; border-left: 3px solid var(--ink); background: var(--fill); border-radius: 0 var(--radius) var(--radius) 0; }
@@ -105,6 +106,15 @@
     .toc ol { margin: 0; padding-left: 1.4em; }
 
     .table-wrap { margin: 0 0 8px; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    /* Wide tables: shadows at the edges show that the table scrolls sideways */
+    .table-wrap.wide {
+      background:
+        linear-gradient(to right, var(--paper) 30%, rgba(255,255,255,0)) left / 40px 100% no-repeat local,
+        linear-gradient(to left, var(--paper) 30%, rgba(255,255,255,0)) right / 40px 100% no-repeat local,
+        radial-gradient(farthest-side at 0 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) left / 14px 100% no-repeat scroll,
+        radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) right / 14px 100% no-repeat scroll;
+    }
+    .scroll-hint { display: none; margin: 0 0 6px; color: var(--subtle); font-size: 13px; }
     .table-wrap + .cap { margin: 0 0 24px; }
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
     th, td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: center; white-space: nowrap; }
@@ -112,9 +122,13 @@
     thead th { background: var(--fill); font-weight: 600; }
     tbody th { text-align: left; font-weight: 600; background: var(--paper); position: sticky; left: 0; }
     td.chord, td.num { font-family: var(--mono); }
-    td.dim { color: #a3a3a3; }
+    td.dim { color: var(--muted); background: var(--fill); }
     td.hit { background: var(--ink); color: var(--paper); font-weight: 700; }
     table.text td, table.text th { white-space: normal; text-align: left; }
+    td code, th code { white-space: nowrap; }
+    table.text tbody th { white-space: nowrap; }
+    th.group { font-weight: 400; color: var(--muted); font-size: 13px; }
+    .table-wrap.wide tbody th { background: var(--paper); }
 
     dl.faq dt { margin: 28px 0 6px; font-weight: 700; font-size: 17px; }
     dl.faq dd { margin: 0; }
@@ -134,6 +148,15 @@
     .site-foot .meta { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; }
 
     @media (max-width: 600px) {
+      .scroll-hint { display: block; }
+      /* Two-column and text tables become stacked cards on phones */
+      table.stack, table.stack tbody, table.stack tr, table.stack th, table.stack td { display: block; width: auto; }
+      table.stack thead { display: none; }
+      table.stack tr { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+      table.stack tr:last-child { border-bottom: 0; }
+      table.stack th, table.stack td { padding: 2px 0; border: 0; text-align: left; white-space: normal; position: static; background: none; }
+      table.stack td:empty { display: none; }
+      table.stack td[data-label]::before { content: attr(data-label) " "; color: var(--subtle); font-family: var(--sans); }
       main { padding-top: 28px; }
       h1 { font-size: 25px; }
       h2 { font-size: 20px; }
@@ -158,107 +181,111 @@
   <main>
     <article>
       <h1>Chord Transposer の使い方</h1>
-      <p class="lead">Chord Transposer は、コード譜のキーをブラウザで変えられるアプリです。このガイドでは、すべてのボタンの働きと、PDF や写真からきれいに読み取るコツを説明します。</p>
-      
-      <nav class="toc" aria-label="目次"><b>目次</b><ol>
-        <li><a href="#screen">画面の見方</a></li>
-        <li><a href="#quick">4 ステップで移調する</a></li>
-        <li><a href="#files">ファイルを開く</a></li>
-        <li><a href="#ocr">写真やスキャンした PDF を読み取るコツ</a></li>
-        <li><a href="#check">結果を確認する</a></li>
-        <li><a href="#preview">プレビュー・印刷・保存</a></li>
-        <li><a href="#phone">スマホで使う</a></li>
-        <li><a href="#offline">ホーム画面に追加してオフラインで使う</a></li>
-      </ol></nav>
-      
-      <h2 id="screen">画面の見方</h2>
-      <figure class="shot">
-        <img src="/chordtransposer/images/guide/ja-overview.png" alt="パソコンで表示した Chord Transposer。上にツールバー、左の入力欄にキー C の「故郷」、右の出力欄にキー D に移調した結果。1〜8 の番号で各ボタンを示している。" width="1200" height="640" loading="lazy" decoding="async">
-        <figcaption>左が入力、右が出力です。番号は下の一覧と対応しています。</figcaption>
-      </figure>
-      <ol>
-        <li><b>開く</b>（フォルダのボタン）：コード譜のファイルを開きます。</li>
-        <li><b>入力</b>：コード譜を貼り付けたり、直接入力したりします。いつでも編集できます。</li>
-        <li><b>移調</b>：動かす半音の数です。−12〜+12 から選びます。</li>
-        <li><b>#/♭</b>：移調したコードの書き方です。「オリジナル」「# を優先」「b を優先」から選びます。</li>
-        <li><b>文字サイズ</b>：入力欄と出力欄の文字の大きさです。</li>
-        <li><b>プレビュー</b>：コード譜全体をまとめて表示し、印刷できます。入力と出力のそれぞれにボタンがあります。</li>
-        <li><b>保存</b>：入力または出力をテキストファイルに保存します。</li>
-        <li><b>設定</b>：使い方・プライバシー・このアプリについて（ライセンス）を表示します。</li>
-      </ol>
-      
-      <h2 id="quick">4 ステップで移調する</h2>
-      <ol>
-        <li><b>コード譜を用意します。</b>入力欄に貼り付けるか、フォルダのボタンでファイルを開きます。</li>
-        <li><b>移調で半音数を選びます。</b>たとえば +2 なら G が A になります。いくつ動かせばいいかわからないときは、<a href="../key-chart/#shift">キーからキーへの半音数の表</a>を見てください。</li>
-        <li><b>#/♭ で書き方を選びます。</b>F・Bb・Eb のようなフラット系のキーなら「b を優先」を選びます（<a href="../sharps-and-flats/"># と ♭ の使い分け</a>を参照）。</li>
-        <li><b>結果を使います。</b>出力をプレビュー・印刷・保存します。設定を変えるとすぐに出力が更新されるので、いくつかのキーを手早く試せます。</li>
-      </ol>
-      <p>書き換わるのはコード名だけです。歌詞・曲名・メモはそのまま残り、コードの前後のスペースを調整して、同じ文字の上にコードを保ちます。コード譜の先頭にある <code>Key:</code> の行も書き換わります。</p>
-      
-      <h2 id="files">ファイルを開く</h2>
-      <div class="table-wrap">
-        <table class="text">
-          <thead><tr><th scope="col">ファイル</th><th scope="col">読み込み方</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">テキスト（.txt・.cho・.chopro・.crd・.pro など）</th><td>そのまま読み込みます。いちばん正確です。<a href="../chordpro/">ChordPro</a> のファイルにも対応しています。</td></tr>
-            <tr><th scope="row">文字情報のある PDF</th><td>PDF の文字を取り出し、コードと歌詞の位置関係をできるだけ保ちます。</td></tr>
-            <tr><th scope="row">スキャンした PDF</th><td>文字情報のないページを OCR（文字認識）で読み取ります。読み込むのは先頭から 20 ページまでです。</td></tr>
-            <tr><th scope="row">画像（PNG・JPEG・WebP など）</th><td>日本語と英語の OCR で読み取ります。</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p>ファイルを開くと、新しい曲がずれたキーのまま始まらないよう、移調は 0 に戻ります。コードが含まれていないファイルは、読み込まずにお知らせします。</p>
-      <p>ファイルはブラウザの中だけで処理され、サーバーには送られません。PDF や画像を読み取るためのライブラリは、初めて開いたときにダウンロードするので、そのときはインターネット接続が必要です。</p>
-      
-      <h2 id="ocr">写真やスキャンした PDF を読み取るコツ</h2>
-      <p>OCR は画像から文字を推測するため、<code>b</code> を <code>6</code> と読んだり、小節線の <code>|</code> を <code>I</code> と読んだりすることがあります。次の点に気をつけると、精度が大きく上がります。</p>
-      <ul>
-        <li><b>できるだけテキストを使う。</b>Web ページ、テキストファイル、文字を選択できる PDF があるなら、写真やスクリーンショットよりそちらを使いましょう。</li>
-        <li><b>真上から撮る。</b>スマホを紙と平行に構え、行がまっすぐ、紙が平らに写るようにします。本の綴じ目近くの曲がったページは読み取りにくくなります。</li>
-        <li><b>明るく均一な光で。</b>手やスマホの影、光沢紙の反射を避けます。</li>
-        <li><b>コード譜の部分だけに切り抜く。</b>見出しや写真、ほかの段は、画像を開く前に切り取っておきます。</li>
-        <li><b>十分な解像度で。</b>拡大したときにコードの文字がくっきり見えるようにします。大きな写真の中の小さな文字は読み違えやすくなります。</li>
-        <li><b>印刷されたコード譜がおすすめ。</b>手書きのコードは、ほとんど認識できません。</li>
-        <li><b>スキャナーなら 300 dpi 以上</b>で、白黒またはグレースケールで読み込みます。</li>
-      </ul>
-      <p>読み取ったあとは、入力欄を元の譜面と見比べて、間違いがあれば入力欄で直してください。直した内容はすぐに出力に反映されます。</p>
-      
-      <h2 id="check">結果を確認する</h2>
-      <p><code>C</code>・<code>Am7</code>・<code>F#m7-5</code>・<code>Gsus4</code>・<code>Cadd9</code>・<code>Bbmaj7</code> などのコード、<code>D/F#</code> のような分数コード（オンコード）、<code>[G]</code> や <code>(Em)</code> のようにかっこで囲んだコード、<code>| C | G |</code> のような小節線を含む行に対応しています。次の点を確認してください。</p>
-      <ul>
-        <li><b>英語の歌詞の中の大文字 1 文字</b>（"A man walked in" の "A" など）は書き換えません。コードだけの行では書き換えます。</li>
-        <li><b>特殊な表記</b>（ナッシュビル・ナンバーや、言葉がついたコードなど）はそのまま残ることがあります。入力欄で直すか、手で書き換えてください。</li>
-        <li><b>ChordPro のディレクティブ</b>（<code>{key: G}</code> など）は書き換わりません。手で直してください。</li>
-      </ul>
-      
-      <h2 id="preview">プレビュー・印刷・保存</h2>
-      <figure class="shot">
-        <img src="/chordtransposer/images/guide/ja-preview.png" alt="移調した「故郷」を大きな文字で表示したプレビュー。右上に印刷ボタンと閉じるボタンがある。" width="1024" height="720" loading="lazy" decoding="async">
-        <figcaption>タブレットでのプレビュー。長いコード譜は段組みにして 1 画面に収めます。</figcaption>
-      </figure>
-      <ul>
-        <li><b>プレビュー</b>は、コード譜全体を 1 画面に収まるいちばん大きな文字で、必要なら段組みにして表示します。パソコンでは新しいウィンドウで開きます（ポップアップがブロックされたら、このサイトのポップアップを許可してください）。スマホ・タブレットでは画面に重ねて表示し、ピンチで拡大・縮小できます。</li>
-        <li><b>印刷</b>は、パソコンではプレビューのウィンドウでブラウザの印刷機能（Ctrl+P、Mac では ⌘P）を使います。スマホ・タブレットでは、プレビューのプリンターのボタンをタップします。iPhone・iPad では、続けて表示される共有メニューで「プリント」を選びます。</li>
-        <li><b>保存</b>すると UTF-8 のテキストファイルになります。出力のファイル名は、元のファイル名と移調の幅から <code>song_transposed+2.txt</code> のように付けられます。パソコンの Chrome・Edge では保存先を選べ、ほかのブラウザではダウンロードフォルダに保存されます。</li>
-      </ul>
-      
-      <h2 id="phone">スマホで使う</h2>
-      <figure class="shot phone">
-        <img src="/chordtransposer/images/guide/ja-phone.png" alt="スマホで表示した Chord Transposer。上にツールバー、その下に入力と出力のタブがあり、出力タブに移調した「故郷」が表示されている。" width="780" height="1440" loading="lazy" decoding="async" style="max-width:320px">
-        <figcaption>画面の幅が狭いときは、入力と出力がタブで切り替わります。プレビューと保存はタブの右にあります。</figcaption>
-      </figure>
-      <p>フォルダのボタンをタップすると、スマホ内のファイルや写真ライブラリから選べます。プレビューと保存のボタンは、開いているタブの内容に対して働きます。</p>
-      
-      <h2 id="offline">ホーム画面に追加してオフラインで使う</h2>
-      <p>Chord Transposer はホーム画面に追加できる Web アプリです。</p>
-      <ul>
-        <li><b>iPhone・iPad（Safari）：</b>共有ボタンをタップし、<b>ホーム画面に追加</b>を選びます。</li>
-        <li><b>Android（Chrome）：</b>メニューを開き、<b>アプリをインストール</b>または<b>ホーム画面に追加</b>を選びます。</li>
-        <li><b>パソコン（Chrome・Edge）：</b>アドレスバーのインストールのアイコンをクリックします。</li>
-      </ul>
-      <p>一度開けば、インターネットに接続していなくてもアプリを開いて移調できます。編集中のコード譜と設定はブラウザに保存されるので、次に開いたときに続きから使えます。消したいときは、ブラウザの設定でこのサイトのデータを削除してください。</p>
-      <p>そのほかの疑問は<a href="../faq/">よくある質問</a>をご覧ください。</p>
+<p class="lead">Chord Transposer は、コード譜のキーをブラウザで変えられるアプリです。このガイドでは、すべてのボタンの働きと、PDF や写真からきれいに読み取るコツを説明します。</p>
+
+<nav class="toc" aria-label="目次"><b>目次</b><ol>
+  <li><a href="#quick">4 ステップで移調する</a></li>
+  <li><a href="#screen">画面の見方</a></li>
+  <li><a href="#files">ファイルを開く</a></li>
+  <li><a href="#ocr">写真やスキャンした PDF を読み取るコツ</a></li>
+  <li><a href="#check">結果を確認する</a></li>
+  <li><a href="#preview">プレビュー・印刷・保存</a></li>
+  <li><a href="#phone">スマホで使う</a></li>
+  <li><a href="#offline">ホーム画面に追加してオフラインで使う</a></li>
+</ol></nav>
+
+<h2 id="quick">4 ステップで移調する</h2>
+<ol>
+  <li><b>コード譜を用意します。</b>入力欄に貼り付けるか、フォルダのボタンでファイルを開きます。</li>
+  <li><b>移調で半音数を選びます。</b>たとえば +2 なら G が A になります。いくつ動かせばいいかわからないときは、<a href="../key-chart/#shift">キーからキーへの半音数の表</a>を見てください。</li>
+  <li><b>#/♭ で書き方を選びます。</b>F・Bb・Eb のようなフラット系のキーなら「b を優先」を選びます（<a href="../sharps-and-flats/"># と ♭ の使い分け</a>を参照）。</li>
+  <li><b>結果を使います。</b>出力をプレビュー・印刷・保存します。設定を変えるとすぐに出力が更新されるので、いくつかのキーを手早く試せます。</li>
+</ol>
+<p>書き換わるのはコード名だけです。歌詞・曲名・メモはそのまま残り、コードの前後のスペースを調整して、同じ文字の上にコードを保ちます。コード譜の先頭にある <code>Key:</code> の行も書き換わります。</p>
+
+<h2 id="screen">画面の見方</h2>
+<figure class="shot">
+  <a href="/chordtransposer/images/guide/ja-overview.png"><picture><source media="(max-width: 600px)" srcset="/chordtransposer/images/guide/ja-overview-phone.png" width="780" height="1120"><img src="/chordtransposer/images/guide/ja-overview.png" alt="パソコンで表示した Chord Transposer。上にツールバー、左の入力欄にキー C の「故郷」、右の出力欄にキー D に移調した結果。1〜8 の番号で各ボタンを示している。" width="1200" height="640" loading="lazy" decoding="async"></picture></a>
+  <figcaption>パソコンでは左が入力、右が出力です。スマホでは入力と出力がタブになります。番号は下の一覧と対応しています。画像をタップすると拡大します。</figcaption>
+</figure>
+<ol>
+  <li><b>開く</b>（フォルダのボタン）：コード譜のファイルを開きます。</li>
+  <li><b>入力</b>：コード譜を貼り付けたり、直接入力したりします。いつでも編集できます。</li>
+  <li><b>移調</b>：動かす半音の数です。-12〜+12 から選びます。</li>
+  <li><b>#/♭</b>：移調したコードの書き方です。「オリジナル」「# を優先」「b を優先」から選びます。</li>
+  <li><b>文字サイズ</b>：入力欄と出力欄の文字の大きさです。</li>
+  <li><b>プレビュー</b>：コード譜全体をまとめて表示し、印刷できます。入力と出力のそれぞれにボタンがあります。</li>
+  <li><b>保存</b>：入力または出力をテキストファイルに保存します。</li>
+  <li><b>設定</b>（歯車のボタン）：「使い方」「ガイド・記事」「プライバシー」「このアプリについて」（ライセンス）のメニューを開きます。</li>
+</ol>
+<figure class="shot menu">
+  <a href="/chordtransposer/images/guide/ja-menu.png"><picture><img src="/chordtransposer/images/guide/ja-menu.png" alt="歯車のボタンから開いた設定メニュー。「使い方」「ガイド・記事」「プライバシー」「このアプリについて」の 4 項目がある。" width="390" height="484" loading="lazy" decoding="async" style="max-width:195px"></picture></a>
+  <figcaption>設定メニュー</figcaption>
+</figure>
+
+<h2 id="files">ファイルを開く</h2>
+<div class="table-wrap">
+  <table class="text stack">
+    <thead><tr><th scope="col">ファイル</th><th scope="col">読み込み方</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">テキスト（.txt・.cho・.chopro・.crd・.pro など）</th><td>そのまま読み込みます。いちばん正確です。<a href="../chordpro/">ChordPro</a> のファイルにも対応しています。</td></tr>
+      <tr><th scope="row">文字情報のある PDF</th><td>PDF の文字を取り出し、コードと歌詞の位置関係をできるだけ保ちます。</td></tr>
+      <tr><th scope="row">スキャンした PDF</th><td>文字情報のないページを OCR（文字認識）で読み取ります。読み込むのは先頭から 20 ページまでです。</td></tr>
+      <tr><th scope="row">画像（PNG・JPEG・WebP など）</th><td>日本語と英語の OCR で読み取ります。</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>ファイルを開くと、新しい曲がずれたキーのまま始まらないよう、移調は 0 に戻ります。コードが含まれていないファイルは、読み込まずにお知らせします。</p>
+<p>ファイルはブラウザの中だけで処理され、サーバーには送られません。PDF や画像を読み取るためのライブラリは、初めて開いたときにダウンロードするので、そのときはインターネット接続が必要です。</p>
+
+<h2 id="ocr">写真やスキャンした PDF を読み取るコツ</h2>
+<p>OCR は画像から文字を推測するため、<code>b</code> を <code>6</code> と読んだり、小節線の <code>|</code> を <code>I</code> と読んだりすることがあります。次の点に気をつけると、精度が大きく上がります。</p>
+<ul>
+  <li><b>できるだけテキストを使う。</b>Web ページ、テキストファイル、文字を選択できる PDF があるなら、写真やスクリーンショットよりそちらを使いましょう。</li>
+  <li><b>真上から撮る。</b>スマホを紙と平行に構え、行がまっすぐ、紙が平らに写るようにします。本の綴じ目近くの曲がったページは読み取りにくくなります。</li>
+  <li><b>明るく均一な光で。</b>手やスマホの影、光沢紙の反射を避けます。</li>
+  <li><b>コード譜の部分だけに切り抜く。</b>見出しや写真、ほかの段は、画像を開く前に切り取っておきます。</li>
+  <li><b>十分な解像度で。</b>拡大したときにコードの文字がくっきり見えるようにします。大きな写真の中の小さな文字は読み違えやすくなります。</li>
+  <li><b>印刷されたコード譜がおすすめ。</b>手書きのコードは、ほとんど認識できません。</li>
+  <li><b>スキャナーなら 300 dpi 以上</b>で、白黒またはグレースケールで読み込みます。</li>
+</ul>
+<p>読み取ったあとは、入力欄を元の譜面と見比べて、間違いがあれば入力欄で直してください。直した内容はすぐに出力に反映されます。</p>
+
+<h2 id="check">結果を確認する</h2>
+<p><code>C</code>・<code>Am7</code>・<code>F#m7-5</code>・<code>Gsus4</code>・<code>Cadd9</code>・<code>Bbmaj7</code> などのコード、<code>D/F#</code> のような分数コード（オンコード）、<code>[G]</code> や <code>(Em)</code> のようにかっこで囲んだコード、<code>| C | G |</code> のような小節線を含む行に対応しています。次の点を確認してください。</p>
+<ul>
+  <li><b>英語の歌詞の中の大文字 1 文字</b>（"A man walked in" の "A" など）は書き換えません。コードだけの行では書き換えます。</li>
+  <li><b>特殊な表記</b>（ナッシュビル・ナンバーや、言葉がついたコードなど）はそのまま残ることがあります。入力欄で直すか、手で書き換えてください。</li>
+  <li><b>ChordPro のディレクティブ</b>（<code>{key: G}</code> など）は書き換わりません。手で直してください。</li>
+</ul>
+
+<h2 id="preview">プレビュー・印刷・保存</h2>
+<figure class="shot">
+  <a href="/chordtransposer/images/guide/ja-preview.png"><picture><img src="/chordtransposer/images/guide/ja-preview.png" alt="移調した「故郷」を大きな文字で表示したプレビュー。右上に印刷ボタンと閉じるボタンがある。" width="1024" height="720" loading="lazy" decoding="async"></picture></a>
+  <figcaption>タブレットでのプレビュー。長いコード譜は段組みにして 1 画面に収めます。画像をタップすると拡大します。</figcaption>
+</figure>
+<ul>
+  <li><b>プレビュー</b>は、コード譜全体を 1 画面に収まるいちばん大きな文字で、必要なら段組みにして表示します。パソコンでは新しいウィンドウで開きます（ポップアップがブロックされたら、このサイトのポップアップを許可してください）。スマホ・タブレットでは画面に重ねて表示し、ピンチで拡大・縮小できます。</li>
+  <li><b>印刷</b>は、パソコンではプレビューのウィンドウでブラウザの印刷機能（Ctrl+P、Mac では ⌘P）を使います。スマホ・タブレットでは、プレビューのプリンターのボタンをタップします。iPhone・iPad では、続けて表示される共有メニューで「プリント」を選びます。</li>
+  <li><b>保存</b>すると UTF-8 のテキストファイルになります。出力のファイル名は、元のファイル名と移調の幅から <code>song_transposed+2.txt</code> のように付けられます。パソコンの Chrome・Edge では保存先を選べ、ほかのブラウザではダウンロードフォルダに保存されます。</li>
+</ul>
+
+<h2 id="phone">スマホで使う</h2>
+<figure class="shot phone">
+  <a href="/chordtransposer/images/guide/ja-phone.png"><picture><img src="/chordtransposer/images/guide/ja-phone.png" alt="スマホで表示した Chord Transposer。上にツールバー、その下に入力と出力のタブがあり、出力タブに移調した「故郷」が表示されている。" width="780" height="1440" loading="lazy" decoding="async" style="max-width:320px"></picture></a>
+  <figcaption>画面の幅が狭いときは、入力と出力がタブで切り替わります。プレビューと保存はタブの右にあります。</figcaption>
+</figure>
+<p>フォルダのボタンをタップすると、スマホ内のファイルや写真ライブラリから選べます。プレビューと保存のボタンは、開いているタブの内容に対して働きます。</p>
+
+<h2 id="offline">ホーム画面に追加してオフラインで使う</h2>
+<p>Chord Transposer はホーム画面に追加できる Web アプリです。</p>
+<ul>
+  <li><b>iPhone・iPad（Safari）：</b>共有ボタンをタップし、<b>ホーム画面に追加</b>を選びます。</li>
+  <li><b>Android（Chrome）：</b>メニューを開き、<b>アプリをインストール</b>または<b>ホーム画面に追加</b>を選びます。</li>
+  <li><b>パソコン（Chrome・Edge）：</b>アドレスバーのインストールのアイコンをクリックします。</li>
+</ul>
+<p>一度開けば、インターネットに接続していなくてもアプリを開いて移調できます。編集中のコード譜と設定はブラウザに保存されるので、次に開いたときに続きから使えます。消したいときは、ブラウザの設定でこのサイトのデータを削除してください。</p>
+<p>そのほかの疑問は<a href="../faq/">よくある質問</a>をご覧ください。</p>
     </article>
     <aside class="cta">
       <h2>さっそくコード譜を移調する</h2>

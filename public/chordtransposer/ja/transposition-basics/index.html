@@ -96,6 +96,7 @@
     .pair figcaption, figure.shot figcaption, .table-wrap + .cap { color: var(--subtle); font-size: 13px; }
     figure { margin: 0 0 24px; }
     figure.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    figure.shot a { display: block; }
     figure.shot.phone img { max-width: 320px; }
     figure.shot figcaption { margin-top: 6px; }
     .note { margin: 0 0 20px; padding: 12px 16px; border-left: 3px solid var(--ink); background: var(--fill); border-radius: 0 var(--radius) var(--radius) 0; }
@@ -105,6 +106,15 @@
     .toc ol { margin: 0; padding-left: 1.4em; }
 
     .table-wrap { margin: 0 0 8px; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    /* Wide tables: shadows at the edges show that the table scrolls sideways */
+    .table-wrap.wide {
+      background:
+        linear-gradient(to right, var(--paper) 30%, rgba(255,255,255,0)) left / 40px 100% no-repeat local,
+        linear-gradient(to left, var(--paper) 30%, rgba(255,255,255,0)) right / 40px 100% no-repeat local,
+        radial-gradient(farthest-side at 0 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) left / 14px 100% no-repeat scroll,
+        radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) right / 14px 100% no-repeat scroll;
+    }
+    .scroll-hint { display: none; margin: 0 0 6px; color: var(--subtle); font-size: 13px; }
     .table-wrap + .cap { margin: 0 0 24px; }
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
     th, td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: center; white-space: nowrap; }
@@ -112,9 +122,13 @@
     thead th { background: var(--fill); font-weight: 600; }
     tbody th { text-align: left; font-weight: 600; background: var(--paper); position: sticky; left: 0; }
     td.chord, td.num { font-family: var(--mono); }
-    td.dim { color: #a3a3a3; }
+    td.dim { color: var(--muted); background: var(--fill); }
     td.hit { background: var(--ink); color: var(--paper); font-weight: 700; }
     table.text td, table.text th { white-space: normal; text-align: left; }
+    td code, th code { white-space: nowrap; }
+    table.text tbody th { white-space: nowrap; }
+    th.group { font-weight: 400; color: var(--muted); font-size: 13px; }
+    .table-wrap.wide tbody th { background: var(--paper); }
 
     dl.faq dt { margin: 28px 0 6px; font-weight: 700; font-size: 17px; }
     dl.faq dd { margin: 0; }
@@ -134,6 +148,15 @@
     .site-foot .meta { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; }
 
     @media (max-width: 600px) {
+      .scroll-hint { display: block; }
+      /* Two-column and text tables become stacked cards on phones */
+      table.stack, table.stack tbody, table.stack tr, table.stack th, table.stack td { display: block; width: auto; }
+      table.stack thead { display: none; }
+      table.stack tr { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+      table.stack tr:last-child { border-bottom: 0; }
+      table.stack th, table.stack td { padding: 2px 0; border: 0; text-align: left; white-space: normal; position: static; background: none; }
+      table.stack td:empty { display: none; }
+      table.stack td[data-label]::before { content: attr(data-label) " "; color: var(--subtle); font-family: var(--sans); }
       main { padding-top: 28px; }
       h1 { font-size: 25px; }
       h2 { font-size: 20px; }
@@ -158,98 +181,98 @@
   <main>
     <article>
       <h1>コードの移調のやり方：移調・転調の基礎</h1>
-      <p class="lead">移調とは、曲全体を別のキー（調）に上げ下げすることです。メロディーやコード進行の形はそのままで、音の高さだけが変わります。手で移調するための基礎と、もっと速い方法を紹介します。</p>
-      
-      <nav class="toc" aria-label="目次"><b>目次</b><ol>
-        <li><a href="#diff">移調と転調の違い</a></li>
-        <li><a href="#why">なぜ移調するのか</a></li>
-        <li><a href="#semitones">半音：移調の単位</a></li>
-        <li><a href="#by-hand">コード譜を手で移調する</a></li>
-        <li><a href="#find-key">曲のキーを見つける</a></li>
-        <li><a href="#singer">歌いやすいキーを選ぶ</a></li>
-        <li><a href="#app">アプリでまとめて移調する</a></li>
-      </ol></nav>
-      
-      <h2 id="diff">移調と転調の違い</h2>
-      <p>よく似た言葉ですが、意味が違います。</p>
-      <ul>
-        <li><b>移調</b>：曲全体を、そっくりそのまま別のキーに移すこと。歌いやすい高さに合わせるときなどに行います。</li>
-        <li><b>転調</b>：曲の途中でキーが変わること。最後のサビで半音や全音上がる「サビ転調」などが代表例です。</li>
-      </ul>
-      <p>日常会話では「キーを変える」という意味で「転調」と言うこともありますが、コード譜を書き換える作業は正確には<b>移調</b>です。転調を含む曲を移調するときは、転調の前も後も同じ半音数だけ動かします。</p>
-      
-      <h2 id="why">なぜ移調するのか</h2>
-      <ul>
-        <li><b>声に合わせるため。</b>高すぎる・低すぎる曲も、数半音動かすだけで歌いやすくなります。</li>
-        <li><b>コードを弾きやすくするため。</b>キー Eb の曲はギターではセーハ（バレー）だらけですが、D や E に移せば開放弦のコードで弾けることがあります（<a href="../capo-chart/">カポ</a>を使う方法もあります）。</li>
-        <li><b>ほかの楽器と合わせるため。</b>トランペット・クラリネット・サックスは「移調楽器」で、楽譜の音とピアノで鳴る音が違います。たとえば B♭ のトランペットの譜面は、実際の音より 2 半音高く書きます。</li>
-        <li><b>音源のキーに合わせるため。</b>手元の楽譜と録音のキーが違うときに使います。</li>
-      </ul>
-      
-      <h2 id="semitones">半音：移調の単位</h2>
-      <p>1 オクターブは 12 の<b>半音</b>に分かれています。ギターでは 1 フレット、ピアノでは隣の鍵盤（白鍵・黒鍵を問わず）が半音 1 つです。</p>
-      <pre><code>C  C#  D  D#  E  F  F#  G  G#  A  A#  B  (C)
-         Db      Eb         Gb      Ab      Bb</code></pre>
-      <p>E と F、B と C の間には黒鍵がないので、この 2 組は半音 1 つしか離れていません。</p>
-      <p>上げるときは右へ、下げるときは左へ数えます。B の次は C に戻ります。たとえば <b>G を +2</b> → G#、<b>A</b>。<b>C を −3</b> → B、Bb、<b>A</b> です。</p>
-      <p>12 半音動かすと 1 オクターブ上の同じコード名になるので、コード譜では +12 は 0 と同じで、+5 と −7 も同じコードになります。</p>
-      
-      <h2 id="by-hand">コード譜を手で移調する</h2>
-      <ol>
-        <li><b>動かす幅を決めます</b>（例：「2 半音上げる」）。</li>
-        <li>すべてのコードの<b>ルート音</b>（アルファベットと # / b）を、その半音数だけ動かします。</li>
-        <li><b>ルート以外はそのまま</b>です。m・7・maj7・sus4・add9 などは変わりません。Em7 を +2 すると F#m7 です。</li>
-        <li>分数コード（オンコード）は<b>ベース音も動かします</b>。D/F# を +2 すると E/G# です。</li>
-        <li>移調先のキーに合わせて<b>シャープかフラットかを選びます</b>（<a href="../sharps-and-flats/"># と ♭ の使い分け</a>を参照）。</li>
-      </ol>
-      <p>文部省唱歌「故郷（ふるさと）」（著作権の保護期間が終了した曲）の冒頭を、キー C から D（+2）に移調した例です。</p>
-      <div class="pair">
-        <figure><pre><code>C            G7  C
-      うさぎ追いし かの山
-      F            C   G7
-      こぶな釣りし かの川
-      C        F     C
-      夢は今も めぐりて
-      F     C    G7    C
-      忘れがたき ふるさと</code></pre><figcaption>キー C</figcaption></figure>
-        <figure><pre><code>D            A7  D
-      うさぎ追いし かの山
-      G            D   A7
-      こぶな釣りし かの川
-      D        G     D
-      夢は今も めぐりて
-      G     D    A7    D
-      忘れがたき ふるさと</code></pre><figcaption>キー D（+2）</figcaption></figure>
-      </div>
-      <p class="cap">コードは説明用に簡単に付けたものです。</p>
-      <p><a href="../key-chart/">キー別のコード表</a>を使うと、元のキーの行でコードを探し、新しいキーの行の同じ列を読むだけで移調できます。</p>
-      
-      <h2 id="find-key">曲のキーを見つける</h2>
-      <p>どこから移調するかを知るには、元のキーが必要です。手がかりは次のとおりです。</p>
-      <ul>
-        <li><b>最後のコード</b>は、たいていその曲のキーです。最初のコードもキーであることが多いです。</li>
-        <li>「落ち着く」感じがして、いちばんよく出てくるコードがキーであることが多いです。</li>
-        <li>使われているコードが<a href="../key-chart/">キー別のコード表</a>のどの行に収まるかを見ます。G・C・D・Em ならキー G です。</li>
-        <li>落ち着くコードがマイナー（Am、Em など）なら、マイナーキーの曲です。移調のやり方は同じです。</li>
-      </ul>
-      
-      <h2 id="singer">歌いやすいキーを選ぶ</h2>
-      <ol>
-        <li>メロディーのいちばん高い音と低い音を確かめます。</li>
-        <li>原曲のキーで歌ってみて、高いところが苦しいか、低いところが出ないかを確かめます。</li>
-        <li>1〜2 半音ずつ動かして試します。小さな変更で十分なことがよくあります。</li>
-      </ol>
-      <p><b>カラオケのキー変更も半音単位です。</b>カラオケで「+2」が歌いやすかった曲は、アプリでも +2 にすれば同じキーになります。</p>
-      
-      <h2 id="app">アプリでまとめて移調する</h2>
-      <p>Chord Transposer なら、ここまでの作業をコード譜全体に一度で行えます。</p>
-      <ol>
-        <li>コード譜を貼り付けるか、テキスト・PDF・画像ファイルを開きます。</li>
-        <li><b>移調</b>で半音数（−12〜+12）を選びます。</li>
-        <li><b>#/♭</b> でシャープとフラットの書き方を選びます。</li>
-        <li>結果をプレビュー・印刷・保存します。</li>
-      </ol>
-      <p>コードは歌詞の正しい位置の上に保たれ、歌詞は書き換えられません。詳しい使い方とコツは<a href="../guide/">使い方ガイド</a>をご覧ください。</p>
+<p class="lead">移調とは、曲全体を別のキー（調）に上げ下げすることです。メロディーやコード進行の形はそのままで、音の高さだけが変わります。手で移調するための基礎と、もっと速い方法を紹介します。</p>
+
+<nav class="toc" aria-label="目次"><b>目次</b><ol>
+  <li><a href="#diff">移調と転調の違い</a></li>
+  <li><a href="#why">なぜ移調するのか</a></li>
+  <li><a href="#semitones">半音：移調の単位</a></li>
+  <li><a href="#by-hand">コード譜を手で移調する</a></li>
+  <li><a href="#find-key">曲のキーを見つける</a></li>
+  <li><a href="#singer">歌いやすいキーを選ぶ</a></li>
+  <li><a href="#app">アプリでまとめて移調する</a></li>
+</ol></nav>
+
+<h2 id="diff">移調と転調の違い</h2>
+<p>よく似た言葉ですが、意味が違います。</p>
+<ul>
+  <li><b>移調</b>：曲全体を、そっくりそのまま別のキーに移すこと。歌いやすい高さに合わせるときなどに行います。</li>
+  <li><b>転調</b>：曲の途中でキーが変わること。最後のサビで半音や全音上がる「サビ転調」などが代表例です。</li>
+</ul>
+<p>日常会話では「キーを変える」という意味で「転調」と言うこともありますが、コード譜を書き換える作業は正確には<b>移調</b>です。転調を含む曲を移調するときは、転調の前も後も同じ半音数だけ動かします。</p>
+
+<h2 id="why">なぜ移調するのか</h2>
+<ul>
+  <li><b>声に合わせるため。</b>高すぎる・低すぎる曲も、数半音動かすだけで歌いやすくなります。</li>
+  <li><b>コードを弾きやすくするため。</b>キー Eb の曲はギターではセーハ（バレー）だらけですが、D や E に移せば開放弦のコードで弾けることがあります（<a href="../capo-chart/">カポ</a>を使う方法もあります）。</li>
+  <li><b>ほかの楽器と合わせるため。</b>トランペット・クラリネット・サックスは「移調楽器」で、楽譜の音とピアノで鳴る音が違います。たとえば B♭ のトランペットの譜面は、実際の音より 2 半音高く書きます。</li>
+  <li><b>音源のキーに合わせるため。</b>手元の楽譜と録音のキーが違うときに使います。</li>
+</ul>
+
+<h2 id="semitones">半音：移調の単位</h2>
+<p>1 オクターブは 12 の<b>半音</b>に分かれています。ギターでは 1 フレット、ピアノでは隣の鍵盤（白鍵・黒鍵を問わず）が半音 1 つです。</p>
+<pre><code>C  C#  D  D#  E  F  F#  G  G#  A  A#  B  (C)
+   Db      Eb         Gb      Ab      Bb</code></pre>
+<p>E と F、B と C の間には黒鍵がないので、この 2 組は半音 1 つしか離れていません。</p>
+<p>上げるときは右へ、下げるときは左へ数えます。B の次は C に戻ります。たとえば <b>G を +2</b> → G#、<b>A</b>。<b>C を -3</b> → B、Bb、<b>A</b> です。</p>
+<p>12 半音動かすと 1 オクターブ上の同じコード名になるので、コード譜では +12 は 0 と同じで、+5 と -7 も同じコードになります。</p>
+
+<h2 id="by-hand">コード譜を手で移調する</h2>
+<ol>
+  <li><b>動かす幅を決めます</b>（例：「2 半音上げる」）。</li>
+  <li>すべてのコードの<b>ルート音</b>（アルファベットと # / b）を、その半音数だけ動かします。</li>
+  <li><b>ルート以外はそのまま</b>です。m・7・maj7・sus4・add9 などは変わりません。Em7 を +2 すると F#m7 です。</li>
+  <li>分数コード（オンコード）は<b>ベース音も動かします</b>。D/F# を +2 すると E/G# です。</li>
+  <li>移調先のキーに合わせて<b>シャープかフラットかを選びます</b>（<a href="../sharps-and-flats/"># と ♭ の使い分け</a>を参照）。</li>
+</ol>
+<p>文部省唱歌「故郷（ふるさと）」（著作権の保護期間が終了した曲）の冒頭を、キー C から D（+2）に移調した例です。</p>
+<div class="pair">
+  <figure><pre><code>C            G7  C
+うさぎ追いし かの山
+F            C   G7
+こぶな釣りし かの川
+C        F     C
+夢は今も めぐりて
+F     C    G7    C
+忘れがたき ふるさと</code></pre><figcaption>キー C</figcaption></figure>
+  <figure><pre><code>D            A7  D
+うさぎ追いし かの山
+G            D   A7
+こぶな釣りし かの川
+D        G     D
+夢は今も めぐりて
+G     D    A7    D
+忘れがたき ふるさと</code></pre><figcaption>キー D（+2）</figcaption></figure>
+</div>
+<p class="cap">コードは説明用に簡単に付けたものです。</p>
+<p><a href="../key-chart/">キー別のコード表</a>を使うと、元のキーの行でコードを探し、新しいキーの行の同じ列を読むだけで移調できます。</p>
+
+<h2 id="find-key">曲のキーを見つける</h2>
+<p>どこから移調するかを知るには、元のキーが必要です。手がかりは次のとおりです。</p>
+<ul>
+  <li><b>最後のコード</b>は、たいていその曲のキーです。最初のコードもキーであることが多いです。</li>
+  <li>「落ち着く」感じがして、いちばんよく出てくるコードがキーであることが多いです。</li>
+  <li>使われているコードが<a href="../key-chart/">キー別のコード表</a>のどの行に収まるかを見ます。G・C・D・Em ならキー G です。</li>
+  <li>落ち着くコードがマイナー（Am、Em など）なら、マイナーキーの曲です。移調のやり方は同じです。</li>
+</ul>
+
+<h2 id="singer">歌いやすいキーを選ぶ</h2>
+<ol>
+  <li>メロディーのいちばん高い音と低い音を確かめます。</li>
+  <li>原曲のキーで歌ってみて、高いところが苦しいか、低いところが出ないかを確かめます。</li>
+  <li>1〜2 半音ずつ動かして試します。小さな変更で十分なことがよくあります。</li>
+</ol>
+<p><b>カラオケのキー変更も半音単位です。</b>カラオケで「+2」が歌いやすかった曲は、アプリでも +2 にすれば同じキーになります。</p>
+
+<h2 id="app">アプリでまとめて移調する</h2>
+<p>Chord Transposer なら、ここまでの作業をコード譜全体に一度で行えます。</p>
+<ol>
+  <li>コード譜を貼り付けるか、テキスト・PDF・画像ファイルを開きます。</li>
+  <li><b>移調</b>で半音数（-12〜+12）を選びます。</li>
+  <li><b>#/♭</b> でシャープとフラットの書き方を選びます。</li>
+  <li>結果をプレビュー・印刷・保存します。</li>
+</ol>
+<p>コードは歌詞の正しい位置の上に保たれ、歌詞は書き換えられません。詳しい使い方とコツは<a href="../guide/">使い方ガイド</a>をご覧ください。</p>
     </article>
     <aside class="cta">
       <h2>さっそくコード譜を移調する</h2>

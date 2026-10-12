@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Takes the app screenshots used in the guide page:
-//   public/chordtransposer/images/guide/{en,ja}-{overview,phone,preview}.png
+//   public/chordtransposer/images/guide/{en,ja}-{overview,overview-phone,menu,phone,preview}.png
 // Requires Playwright (once):
 //   npm install --no-save playwright && npx playwright install chromium
 // Then:
@@ -61,18 +61,20 @@ const server = createServer(async (req, res) => {
 await new Promise((r) => server.listen(0, "127.0.0.1", r));
 const origin = `http://127.0.0.1:${server.address().port}`;
 
-// Numbered markers drawn next to controls, matching the numbered steps in the guide
+// Numbered markers drawn next to controls, matching the numbered list in the guide.
+// sel may list several selectors ("a, b"); the first visible match is used.
+// side "inside" puts the marker in the top-right corner of the element.
 async function addMarkers(page, targets) {
   await page.evaluate((targets) => {
     targets.forEach(([sel, n, side]) => {
-      const el = document.querySelector(sel);
+      const el = [...document.querySelectorAll(sel)].find((e) => e.getBoundingClientRect().width > 0);
       if (!el) throw new Error("marker target not found: " + sel);
       const r = el.getBoundingClientRect();
       const m = document.createElement("div");
       m.textContent = n;
       const size = 22;
-      const x = side === "left" ? r.left - size - 4 : side === "below" ? r.left + r.width / 2 - size / 2 : r.right + 4;
-      const y = side === "below" ? r.bottom + 4 : r.top + r.height / 2 - size / 2;
+      const x = side === "left" ? r.left - size - 4 : side === "below" ? r.left + r.width / 2 - size / 2 : side === "inside" ? r.right - size - 12 : r.right + 4;
+      const y = side === "below" ? r.bottom + 4 : side === "inside" ? r.top + 10 : r.top + r.height / 2 - size / 2;
       Object.assign(m.style, {
         position: "fixed", left: x + "px", top: y + "px", width: size + "px", height: size + "px", zIndex: 99999,
         borderRadius: "50%", background: "#e11d48", color: "#fff", font: "700 13px/22px system-ui, sans-serif",
@@ -108,15 +110,40 @@ for (const lang of ["en", "ja"]) {
       ["#saveBtn", "7", "below"],
       ["#settingsBtn", "8", "left"],
     ]);
-    // "inside": put marker 2 in the top-left corner of the input area
-    await page.evaluate(() => {
-      const markers = [...document.querySelectorAll("body > div[style*='z-index: 99999']")];
-      const two = markers.find((m) => m.textContent === "2");
-      const r = document.querySelector("#input").getBoundingClientRect();
-      two.style.left = r.right - 34 + "px";
-      two.style.top = r.top + 10 + "px";
-    });
     await page.screenshot({ path: join(OUT, `${lang}-overview.png`) });
+    await ctx.close();
+  }
+  // 1a. Settings menu, opened (2x, shown at half size)
+  {
+    const ctx = await browser.newContext({ viewport: { width: 1200, height: 640 }, deviceScaleFactor: 2, locale: lang });
+    const page = await ctx.newPage();
+    await page.goto(origin + PATH[lang]);
+    await page.click("#settingsBtn");
+    await page.waitForTimeout(100);
+    const box = await page.evaluate(() => {
+      const r = document.querySelector("#settingsMenu").getBoundingClientRect();
+      const b = document.querySelector("#settingsBtn").getBoundingClientRect();
+      return { x: Math.floor(r.left - 16), y: Math.floor(b.top - 8), right: Math.ceil(Math.max(r.right, b.right) + 16), bottom: Math.ceil(r.bottom + 24) };
+    });
+    await page.screenshot({ path: join(OUT, `${lang}-menu.png`), clip: { x: box.x, y: box.y, width: box.right - box.x, height: box.bottom - box.y } });
+    await ctx.close();
+  }
+  // 1b. Phone overview with the same numbered controls (shown instead of 1 on narrow screens)
+  {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 560 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, locale: lang });
+    const page = await ctx.newPage();
+    await setUp(page, lang);   // a phone switches to the Output tab after transposing
+    await addMarkers(page, [
+      ["#openBtn", "1", "below"],
+      ['.tab[data-view="in"]', "2", "below"],
+      ["label.ctl.key", "3", "below"],
+      ["label.ctl.acc", "4", "below"],
+      ["label.ctl.size", "5", "below"],
+      ["#previewInBtn, #previewBtn", "6", "below"],
+      ["#saveInBtn, #saveBtn", "7", "below"],
+      ["#settingsBtn", "8", "left"],
+    ]);
+    await page.screenshot({ path: join(OUT, `${lang}-overview-phone.png`) });
     await ctx.close();
   }
   // 2. Phone, Output tab
@@ -139,7 +166,7 @@ for (const lang of ["en", "ja"]) {
     await page.screenshot({ path: join(OUT, `${lang}-preview.png`) });
     await ctx.close();
   }
-  console.log(`Wrote ${lang}-overview.png, ${lang}-phone.png, ${lang}-preview.png`);
+  console.log(`Wrote the ${lang} screenshots`);
 }
 await browser.close();
 server.close();

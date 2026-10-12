@@ -96,6 +96,7 @@
     .pair figcaption, figure.shot figcaption, .table-wrap + .cap { color: var(--subtle); font-size: 13px; }
     figure { margin: 0 0 24px; }
     figure.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    figure.shot a { display: block; }
     figure.shot.phone img { max-width: 320px; }
     figure.shot figcaption { margin-top: 6px; }
     .note { margin: 0 0 20px; padding: 12px 16px; border-left: 3px solid var(--ink); background: var(--fill); border-radius: 0 var(--radius) var(--radius) 0; }
@@ -105,6 +106,15 @@
     .toc ol { margin: 0; padding-left: 1.4em; }
 
     .table-wrap { margin: 0 0 8px; overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius); }
+    /* Wide tables: shadows at the edges show that the table scrolls sideways */
+    .table-wrap.wide {
+      background:
+        linear-gradient(to right, var(--paper) 30%, rgba(255,255,255,0)) left / 40px 100% no-repeat local,
+        linear-gradient(to left, var(--paper) 30%, rgba(255,255,255,0)) right / 40px 100% no-repeat local,
+        radial-gradient(farthest-side at 0 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) left / 14px 100% no-repeat scroll,
+        radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,0.18), rgba(0,0,0,0)) right / 14px 100% no-repeat scroll;
+    }
+    .scroll-hint { display: none; margin: 0 0 6px; color: var(--subtle); font-size: 13px; }
     .table-wrap + .cap { margin: 0 0 24px; }
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
     th, td { padding: 7px 10px; border-bottom: 1px solid var(--line); text-align: center; white-space: nowrap; }
@@ -112,9 +122,13 @@
     thead th { background: var(--fill); font-weight: 600; }
     tbody th { text-align: left; font-weight: 600; background: var(--paper); position: sticky; left: 0; }
     td.chord, td.num { font-family: var(--mono); }
-    td.dim { color: #a3a3a3; }
+    td.dim { color: var(--muted); background: var(--fill); }
     td.hit { background: var(--ink); color: var(--paper); font-weight: 700; }
     table.text td, table.text th { white-space: normal; text-align: left; }
+    td code, th code { white-space: nowrap; }
+    table.text tbody th { white-space: nowrap; }
+    th.group { font-weight: 400; color: var(--muted); font-size: 13px; }
+    .table-wrap.wide tbody th { background: var(--paper); }
 
     dl.faq dt { margin: 28px 0 6px; font-weight: 700; font-size: 17px; }
     dl.faq dd { margin: 0; }
@@ -134,6 +148,15 @@
     .site-foot .meta { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 0; }
 
     @media (max-width: 600px) {
+      .scroll-hint { display: block; }
+      /* Two-column and text tables become stacked cards on phones */
+      table.stack, table.stack tbody, table.stack tr, table.stack th, table.stack td { display: block; width: auto; }
+      table.stack thead { display: none; }
+      table.stack tr { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+      table.stack tr:last-child { border-bottom: 0; }
+      table.stack th, table.stack td { padding: 2px 0; border: 0; text-align: left; white-space: normal; position: static; background: none; }
+      table.stack td:empty { display: none; }
+      table.stack td[data-label]::before { content: attr(data-label) " "; color: var(--subtle); font-family: var(--sans); }
       main { padding-top: 28px; }
       h1 { font-size: 25px; }
       h2 { font-size: 20px; }
@@ -158,74 +181,74 @@
   <main>
     <article>
       <h1>Sharps or flats? Choosing # and b in chord charts</h1>
-      <p class="lead">On a piano, C# and Db are the same black key. In a chord chart, though, one spelling usually reads better than the other. Here is how to choose.</p>
-      
-      <nav class="toc" aria-label="Contents"><b>Contents</b><ol>
-        <li><a href="#same">Same sound, two names</a></li>
-        <li><a href="#rule">The basic rule: follow the key</a></li>
-        <li><a href="#keys">Sharp keys and flat keys</a></li>
-        <li><a href="#outside">Chords outside the key</a></li>
-        <li><a href="#app">The #/♭ setting in Chord Transposer</a></li>
-      </ol></nav>
-      
-      <h2 id="same">Same sound, two names</h2>
-      <p>There are 12 different notes in an octave but only 7 letters (A to G). The five notes between the letters get two names each: C#/Db, D#/Eb, F#/Gb, G#/Ab, and A#/Bb. Two names for the same pitch are called <b>enharmonic</b> equivalents.</p>
-      <p>A guitar or keyboard plays them the same way, so neither spelling is "wrong". But the right one makes a chart quicker to read and shows how the chords relate to each other.</p>
-      <div class="note"><p>In plain text, <code>#</code> stands for sharp (♯) and a lowercase <code>b</code> for flat (♭). Chord Transposer reads both forms and writes <code>#</code> and <code>b</code>.</p></div>
-      
-      <h2 id="rule">The basic rule: follow the key</h2>
-      <p>A major scale uses each letter exactly once. In the key of F, the notes are F, G, A, <b>Bb</b>, C, D, E. Writing A# instead would use the letter A twice and skip B, so the fourth chord of F is <b>Bb</b>, not A#.</p>
-      <div class="pair">
-        <figure><pre><code>F    Bb   C7   F</code></pre><figcaption>Key of F: reads naturally</figcaption></figure>
-        <figure><pre><code>F    A#   C7   F</code></pre><figcaption>Same sound, but harder to read</figcaption></figure>
-      </div>
-      <p>So: in a <b>sharp key</b>, write black-key chords with #. In a <b>flat key</b>, write them with b.</p>
-      
-      <h2 id="keys">Sharp keys and flat keys</h2>
-      <p>Each key (and its relative minor) uses either sharps or flats, never both:</p>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th scope="col"># or b in the key</th><th scope="col">Sharp keys (major / minor)</th><th scope="col">Flat keys (major / minor)</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">0</th><td class="chord" colspan="2">C / Am</td></tr>
-            <tr><th scope="row">1</th><td class="chord">G / Em</td><td class="chord">F / Dm</td></tr>
-            <tr><th scope="row">2</th><td class="chord">D / Bm</td><td class="chord">Bb / Gm</td></tr>
-            <tr><th scope="row">3</th><td class="chord">A / F#m</td><td class="chord">Eb / Cm</td></tr>
-            <tr><th scope="row">4</th><td class="chord">E / C#m</td><td class="chord">Ab / Fm</td></tr>
-            <tr><th scope="row">5</th><td class="chord">B / G#m</td><td class="chord">Db / Bbm</td></tr>
-            <tr><th scope="row">6</th><td class="chord">F# / D#m</td><td class="chord">Gb / Ebm</td></tr>
-            <tr><th scope="row">7</th><td class="chord">C# / A#m</td><td class="chord">Cb / Abm</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="cap">The keys with 6 and 7 accidentals have twins: F# = Gb, C# = Db, and Cb = B. Most charts use F# (or Gb), Db, and B.</p>
-      <p>A quick memory aid: <b>F and every key whose name contains b</b> are flat keys. The other keys, apart from C, are sharp keys.</p>
-      
-      <h2 id="outside">Chords outside the key</h2>
-      <p>Songs often borrow chords from outside the key. Common habits:</p>
-      <ul>
-        <li><b>Borrowed chords from the minor key</b> are written with flats. In C, the chords from C minor are <code>Bb</code>, <code>Ab</code>, <code>Eb</code>, and <code>Fm</code> — not A#, G#, or D#.</li>
-        <li><b>Rising lines</b> are usually written with sharps: <code>C  C#dim  Dm</code>.</li>
-        <li><b>Falling lines</b> are usually written with flats: <code>D  Db  C</code>, or a bass line like <code>C  C/B  C/Bb  F/A</code>.</li>
-      </ul>
-      <p>When in doubt, pick the spelling that keeps the letters moving in a step-by-step order.</p>
-      
-      <h2 id="app">The #/♭ setting in Chord Transposer</h2>
-      <p>The app has three choices for how transposed chords are spelled:</p>
-      <div class="table-wrap">
-        <table class="text">
-          <thead><tr><th scope="col">Setting</th><th scope="col">What it does</th><th scope="col"><code>F Bb C7 Dm</code>, +3</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">Original</th><td>A chord written with b stays flat. Every other chord uses # when it lands on a black key.</td><td class="chord">G# Db D#7 Fm</td></tr>
-            <tr><th scope="row">Prefer #</th><td>Every black-key chord uses #.</td><td class="chord">G# C# D#7 Fm</td></tr>
-            <tr><th scope="row">Prefer b</th><td>Every black-key chord uses b.</td><td class="chord">Ab Db Eb7 Fm</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="cap">The example moves a chart from F to Ab, a flat key, so Prefer b gives the expected spelling. Original writes Db, a flat, because the source chord Bb was a flat, but it writes G# and D#7 for the chords that had no accidental.</p>
-      <p><b>How to choose:</b> find the new key in the table above. If it is a flat key, choose <b>Prefer b</b>; if it is a sharp key, choose <b>Prefer #</b>. Then check the chords outside the key and fix any by hand.</p>
-      <p>When <b>Transpose</b> is 0, Prefer # and Prefer b only rewrite chords that already have # or b. Use this to clean up a chart that mixes the two, for example <code>Db</code> → <code>C#</code>.</p>
-      <p>See also: <a href="../key-chart/">chords in every key</a>, which spells every chord from its key.</p>
+<p class="lead">On a piano, C# and Db are the same black key. In a chord chart, though, one spelling usually reads better than the other. Here is how to choose.</p>
+
+<nav class="toc" aria-label="Contents"><b>Contents</b><ol>
+  <li><a href="#same">Same sound, two names</a></li>
+  <li><a href="#rule">The basic rule: follow the key</a></li>
+  <li><a href="#keys">Sharp keys and flat keys</a></li>
+  <li><a href="#outside">Chords outside the key</a></li>
+  <li><a href="#app">The #/♭ setting in Chord Transposer</a></li>
+</ol></nav>
+
+<h2 id="same">Same sound, two names</h2>
+<p>There are 12 different notes in an octave but only 7 letters (A to G). The five notes between the letters get two names each: C#/Db, D#/Eb, F#/Gb, G#/Ab, and A#/Bb. Two names for the same pitch are called <b>enharmonic</b> equivalents.</p>
+<p>A guitar or keyboard plays them the same way, so neither spelling is "wrong". But the right one makes a chart quicker to read and shows how the chords relate to each other.</p>
+<div class="note"><p>In plain text, <code>#</code> stands for sharp (♯) and a lowercase <code>b</code> for flat (♭). Chord Transposer reads both forms and writes <code>#</code> and <code>b</code>.</p></div>
+
+<h2 id="rule">The basic rule: follow the key</h2>
+<p>A major scale uses each letter exactly once. In the key of F, the notes are F, G, A, <b>Bb</b>, C, D, E. Writing A# instead would use the letter A twice and skip B, so the fourth chord of F is <b>Bb</b>, not A#.</p>
+<div class="pair">
+  <figure><pre><code>F    Bb   C7   F</code></pre><figcaption>Key of F: reads naturally</figcaption></figure>
+  <figure><pre><code>F    A#   C7   F</code></pre><figcaption>Same sound, but harder to read</figcaption></figure>
+</div>
+<p>So: in a <b>sharp key</b>, write black-key chords with #. In a <b>flat key</b>, write them with b.</p>
+
+<h2 id="keys">Sharp keys and flat keys</h2>
+<p>Each key (and its relative minor) uses either sharps or flats, never both:</p>
+<div class="table-wrap">
+  <table>
+    <thead><tr><th scope="col"># or b in the key</th><th scope="col">Sharp keys (major / minor)</th><th scope="col">Flat keys (major / minor)</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">0</th><td class="chord" colspan="2">C / Am</td></tr>
+      <tr><th scope="row">1</th><td class="chord">G / Em</td><td class="chord">F / Dm</td></tr>
+      <tr><th scope="row">2</th><td class="chord">D / Bm</td><td class="chord">Bb / Gm</td></tr>
+      <tr><th scope="row">3</th><td class="chord">A / F#m</td><td class="chord">Eb / Cm</td></tr>
+      <tr><th scope="row">4</th><td class="chord">E / C#m</td><td class="chord">Ab / Fm</td></tr>
+      <tr><th scope="row">5</th><td class="chord">B / G#m</td><td class="chord">Db / Bbm</td></tr>
+      <tr><th scope="row">6</th><td class="chord">F# / D#m</td><td class="chord">Gb / Ebm</td></tr>
+      <tr><th scope="row">7</th><td class="chord">C# / A#m</td><td class="chord">Cb / Abm</td></tr>
+    </tbody>
+  </table>
+</div>
+<p class="cap">The keys with 6 and 7 accidentals have twins: F# = Gb, C# = Db, and Cb = B. Most charts use F# (or Gb), Db, and B.</p>
+<p>A quick memory aid: <b>F and every key whose name contains b</b> are flat keys. The other keys, apart from C, are sharp keys.</p>
+
+<h2 id="outside">Chords outside the key</h2>
+<p>Songs often borrow chords from outside the key. Common habits:</p>
+<ul>
+  <li><b>Borrowed chords from the minor key</b> are written with flats. In C, the chords from C minor are <code>Bb</code>, <code>Ab</code>, <code>Eb</code>, and <code>Fm</code> — not A#, G#, or D#.</li>
+  <li><b>Rising lines</b> are usually written with sharps: <code>C  C#dim  Dm</code>.</li>
+  <li><b>Falling lines</b> are usually written with flats: <code>D  Db  C</code>, or a bass line like <code>C  C/B  C/Bb  F/A</code>.</li>
+</ul>
+<p>When in doubt, pick the spelling that keeps the letters moving in a step-by-step order.</p>
+
+<h2 id="app">The #/♭ setting in Chord Transposer</h2>
+<p>The app has three choices for how transposed chords are spelled:</p>
+<div class="table-wrap">
+  <table class="text stack">
+    <thead><tr><th scope="col">Setting</th><th scope="col"><code>F Bb C7 Dm</code> +3 becomes</th><th scope="col">Rule</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Original</th><td class="chord" data-label="Result:">G# Db D#7 Fm</td><td data-label="Rule:">Follows the source: a chord written with b stays with b (Bb → Db). A chord with no # or b gets # (F → G#).</td></tr>
+      <tr><th scope="row">Prefer #</th><td class="chord" data-label="Result:">G# C# D#7 Fm</td><td data-label="Rule:">Always #.</td></tr>
+      <tr><th scope="row">Prefer b</th><td class="chord" data-label="Result:">Ab Db Eb7 Fm</td><td data-label="Rule:">Always b.</td></tr>
+    </tbody>
+  </table>
+</div>
+<p class="cap">The example moves a chart from F to Ab, a flat key, so Prefer b gives the expected spelling.</p>
+<p><b>How to choose:</b> look up the new key in the <a href="#keys">table of sharp and flat keys</a>. If it is a flat key, choose <b>Prefer b</b>; if it is a sharp key, choose <b>Prefer #</b>. Then check the chords outside the key and fix any by hand.</p>
+<p>When <b>Transpose</b> is 0, Prefer # and Prefer b only rewrite chords that already have # or b. Use this to clean up a chart that mixes the two, for example <code>Db</code> → <code>C#</code>.</p>
+<p>See also: <a href="../key-chart/">chords in every key</a>, which spells every chord from its key.</p>
     </article>
     <aside class="cta">
       <h2>Transpose your chord chart now</h2>

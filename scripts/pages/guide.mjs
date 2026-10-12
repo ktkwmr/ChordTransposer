@@ -1,5 +1,26 @@
-const img = (lang, name, alt, cls = "") =>
-  `<img src="/chordtransposer/images/guide/${lang}-${name}.png" alt="${alt}" width="${name === "phone" ? 780 : name === "preview" ? 1024 : 1200}" height="${name === "phone" ? 1440 : name === "preview" ? 720 : 640}" loading="lazy" decoding="async"${cls}>`;
+import { readFileSync } from "node:fs";
+
+const IMAGES = new URL("../../public/chordtransposer/images/guide/", import.meta.url);
+const SRC = "/chordtransposer/images/guide/";
+
+// Width and height from the PNG header, so the page reserves the right space before the image loads
+function size(file) {
+  const buf = readFileSync(new URL(file, IMAGES));
+  return { w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) };
+}
+
+// A screenshot that opens at full size when tapped. phone: a narrower screenshot for phones.
+// half: a 2x screenshot shown at its real size
+const img = (lang, name, alt, { phone, maxWidth, half } = {}) => {
+  const file = `${lang}-${name}.png`;
+  const { w, h } = size(file);
+  const max = half ? w / 2 : maxWidth;
+  const style = max ? ` style="max-width:${max}px"` : "";
+  const source = phone
+    ? `<source media="(max-width: 600px)" srcset="${SRC}${lang}-${phone}.png" width="${size(`${lang}-${phone}.png`).w}" height="${size(`${lang}-${phone}.png`).h}">`
+    : "";
+  return `<a href="${SRC}${file}"><picture>${source}<img src="${SRC}${file}" alt="${alt}" width="${w}" height="${h}" loading="lazy" decoding="async"${style}></picture></a>`;
+};
 
 export default {
   slug: "guide",
@@ -13,8 +34,8 @@ export default {
 <p class="lead">Chord Transposer changes the key of a chord chart in your browser. This guide walks through every button and shares tips for getting clean results from PDFs and photos.</p>
 
 <nav class="toc" aria-label="Contents"><b>Contents</b><ol>
-  <li><a href="#screen">The screen at a glance</a></li>
   <li><a href="#quick">Transpose a chart in four steps</a></li>
+  <li><a href="#screen">The screen at a glance</a></li>
   <li><a href="#files">Opening files</a></li>
   <li><a href="#ocr">Tips for photos and scanned PDFs</a></li>
   <li><a href="#check">Check the result</a></li>
@@ -22,22 +43,6 @@ export default {
   <li><a href="#phone">On a phone</a></li>
   <li><a href="#offline">Install the app and use it offline</a></li>
 </ol></nav>
-
-<h2 id="screen">The screen at a glance</h2>
-<figure class="shot">
-  ${img("en", "overview", "Chord Transposer on a computer: the toolbar at the top, the Input area on the left with Amazing Grace in G, and the Output area on the right with the song transposed to A. Numbers 1 to 8 mark the controls.")}
-  <figcaption>Input on the left, Output on the right. The numbers match the list below.</figcaption>
-</figure>
-<ol>
-  <li><b>Open</b> (folder button): open a chord chart file.</li>
-  <li><b>Input</b>: paste or type a chord chart here. You can edit it at any time.</li>
-  <li><b>Transpose</b>: the number of semitones to move, from −12 to +12.</li>
-  <li><b>#/♭</b>: how to write the transposed chords — Original, Prefer #, or Prefer b.</li>
-  <li><b>Size</b>: the text size of Input and Output.</li>
-  <li><b>Preview</b>: show the whole chart at once, ready to print. Input and Output each have their own Preview button.</li>
-  <li><b>Save</b>: save Input or Output as a text file.</li>
-  <li><b>Settings</b>: How to use, Privacy, and About (license information).</li>
-</ol>
 
 <h2 id="quick">Transpose a chart in four steps</h2>
 <ol>
@@ -48,9 +53,29 @@ export default {
 </ol>
 <p>Only chord names change. Lyrics, titles, and notes stay as they are, and the app keeps each chord above the same word by adjusting the spaces around it. A <code>Key:</code> line at the top of the chart is updated too.</p>
 
+<h2 id="screen">The screen at a glance</h2>
+<figure class="shot">
+  ${img("en", "overview", "Chord Transposer on a computer: the toolbar at the top, the Input area on the left with Amazing Grace in G, and the Output area on the right with the song transposed to A. Numbers 1 to 8 mark the controls.", { phone: "overview-phone" })}
+  <figcaption>On a computer, Input is on the left and Output on the right; on a phone they are tabs. The numbers match the list below. Tap the image to enlarge it.</figcaption>
+</figure>
+<ol>
+  <li><b>Open</b> (folder button): open a chord chart file.</li>
+  <li><b>Input</b>: paste or type a chord chart here. You can edit it at any time.</li>
+  <li><b>Transpose</b>: the number of semitones to move, from -12 to +12.</li>
+  <li><b>#/♭</b>: how to write the transposed chords — Original, Prefer #, or Prefer b.</li>
+  <li><b>Size</b>: the text size of Input and Output.</li>
+  <li><b>Preview</b>: show the whole chart at once, ready to print. Input and Output each have their own Preview button.</li>
+  <li><b>Save</b>: save Input or Output as a text file.</li>
+  <li><b>Settings</b> (gear button): a menu with How to use, Guides &amp; articles, Privacy, and About (license information).</li>
+</ol>
+<figure class="shot menu">
+  ${img("en", "menu", "The settings menu opened from the gear button, with How to use, Guides &amp; articles, Privacy, and About.", { half: true })}
+  <figcaption>The settings menu.</figcaption>
+</figure>
+
 <h2 id="files">Opening files</h2>
 <div class="table-wrap">
-  <table class="text">
+  <table class="text stack">
     <thead><tr><th scope="col">File</th><th scope="col">How it is read</th></tr></thead>
     <tbody>
       <tr><th scope="row">Text (.txt, .cho, .chopro, .crd, .pro, …)</th><td>Read as it is. The most accurate option. <a href="../chordpro/">ChordPro</a> files work too.</td></tr>
@@ -87,7 +112,7 @@ export default {
 <h2 id="preview">Preview, print, and save</h2>
 <figure class="shot">
   ${img("en", "preview", "The preview of the transposed song in large text, with a print button and a close button in the top-right corner.")}
-  <figcaption>Preview on a tablet. Long charts are split into columns to fit on one screen.</figcaption>
+  <figcaption>Preview on a tablet. Long charts are split into columns to fit on one screen. Tap the image to enlarge it.</figcaption>
 </figure>
 <ul>
   <li><b>Preview</b> lays out the whole chart, in columns if needed, at the largest size that fits on one screen. On a computer it opens in a new window (allow pop-ups for this site if your browser blocks it). On phones and tablets it opens over the page; pinch to zoom.</li>
@@ -97,7 +122,7 @@ export default {
 
 <h2 id="phone">On a phone</h2>
 <figure class="shot phone">
-  ${img("en", "phone", "Chord Transposer on a phone: the toolbar at the top, Input and Output tabs with the Output tab selected, and the transposed song below.", ' style="max-width:320px"')}
+  ${img("en", "phone", "Chord Transposer on a phone: the toolbar at the top, Input and Output tabs with the Output tab selected, and the transposed song below.", { maxWidth: 320 })}
   <figcaption>On a narrow screen, Input and Output are tabs. Preview and Save are next to the tabs.</figcaption>
 </figure>
 <p>Tap the folder button to choose a file from your phone, or a photo from your camera roll. The Preview and Save buttons act on the tab that is open.</p>
@@ -123,8 +148,8 @@ export default {
 <p class="lead">Chord Transposer は、コード譜のキーをブラウザで変えられるアプリです。このガイドでは、すべてのボタンの働きと、PDF や写真からきれいに読み取るコツを説明します。</p>
 
 <nav class="toc" aria-label="目次"><b>目次</b><ol>
-  <li><a href="#screen">画面の見方</a></li>
   <li><a href="#quick">4 ステップで移調する</a></li>
+  <li><a href="#screen">画面の見方</a></li>
   <li><a href="#files">ファイルを開く</a></li>
   <li><a href="#ocr">写真やスキャンした PDF を読み取るコツ</a></li>
   <li><a href="#check">結果を確認する</a></li>
@@ -132,22 +157,6 @@ export default {
   <li><a href="#phone">スマホで使う</a></li>
   <li><a href="#offline">ホーム画面に追加してオフラインで使う</a></li>
 </ol></nav>
-
-<h2 id="screen">画面の見方</h2>
-<figure class="shot">
-  ${img("ja", "overview", "パソコンで表示した Chord Transposer。上にツールバー、左の入力欄にキー C の「故郷」、右の出力欄にキー D に移調した結果。1〜8 の番号で各ボタンを示している。")}
-  <figcaption>左が入力、右が出力です。番号は下の一覧と対応しています。</figcaption>
-</figure>
-<ol>
-  <li><b>開く</b>（フォルダのボタン）：コード譜のファイルを開きます。</li>
-  <li><b>入力</b>：コード譜を貼り付けたり、直接入力したりします。いつでも編集できます。</li>
-  <li><b>移調</b>：動かす半音の数です。−12〜+12 から選びます。</li>
-  <li><b>#/♭</b>：移調したコードの書き方です。「オリジナル」「# を優先」「b を優先」から選びます。</li>
-  <li><b>文字サイズ</b>：入力欄と出力欄の文字の大きさです。</li>
-  <li><b>プレビュー</b>：コード譜全体をまとめて表示し、印刷できます。入力と出力のそれぞれにボタンがあります。</li>
-  <li><b>保存</b>：入力または出力をテキストファイルに保存します。</li>
-  <li><b>設定</b>：使い方・プライバシー・このアプリについて（ライセンス）を表示します。</li>
-</ol>
 
 <h2 id="quick">4 ステップで移調する</h2>
 <ol>
@@ -158,9 +167,29 @@ export default {
 </ol>
 <p>書き換わるのはコード名だけです。歌詞・曲名・メモはそのまま残り、コードの前後のスペースを調整して、同じ文字の上にコードを保ちます。コード譜の先頭にある <code>Key:</code> の行も書き換わります。</p>
 
+<h2 id="screen">画面の見方</h2>
+<figure class="shot">
+  ${img("ja", "overview", "パソコンで表示した Chord Transposer。上にツールバー、左の入力欄にキー C の「故郷」、右の出力欄にキー D に移調した結果。1〜8 の番号で各ボタンを示している。", { phone: "overview-phone" })}
+  <figcaption>パソコンでは左が入力、右が出力です。スマホでは入力と出力がタブになります。番号は下の一覧と対応しています。画像をタップすると拡大します。</figcaption>
+</figure>
+<ol>
+  <li><b>開く</b>（フォルダのボタン）：コード譜のファイルを開きます。</li>
+  <li><b>入力</b>：コード譜を貼り付けたり、直接入力したりします。いつでも編集できます。</li>
+  <li><b>移調</b>：動かす半音の数です。-12〜+12 から選びます。</li>
+  <li><b>#/♭</b>：移調したコードの書き方です。「オリジナル」「# を優先」「b を優先」から選びます。</li>
+  <li><b>文字サイズ</b>：入力欄と出力欄の文字の大きさです。</li>
+  <li><b>プレビュー</b>：コード譜全体をまとめて表示し、印刷できます。入力と出力のそれぞれにボタンがあります。</li>
+  <li><b>保存</b>：入力または出力をテキストファイルに保存します。</li>
+  <li><b>設定</b>（歯車のボタン）：「使い方」「ガイド・記事」「プライバシー」「このアプリについて」（ライセンス）のメニューを開きます。</li>
+</ol>
+<figure class="shot menu">
+  ${img("ja", "menu", "歯車のボタンから開いた設定メニュー。「使い方」「ガイド・記事」「プライバシー」「このアプリについて」の 4 項目がある。", { half: true })}
+  <figcaption>設定メニュー</figcaption>
+</figure>
+
 <h2 id="files">ファイルを開く</h2>
 <div class="table-wrap">
-  <table class="text">
+  <table class="text stack">
     <thead><tr><th scope="col">ファイル</th><th scope="col">読み込み方</th></tr></thead>
     <tbody>
       <tr><th scope="row">テキスト（.txt・.cho・.chopro・.crd・.pro など）</th><td>そのまま読み込みます。いちばん正確です。<a href="../chordpro/">ChordPro</a> のファイルにも対応しています。</td></tr>
@@ -197,7 +226,7 @@ export default {
 <h2 id="preview">プレビュー・印刷・保存</h2>
 <figure class="shot">
   ${img("ja", "preview", "移調した「故郷」を大きな文字で表示したプレビュー。右上に印刷ボタンと閉じるボタンがある。")}
-  <figcaption>タブレットでのプレビュー。長いコード譜は段組みにして 1 画面に収めます。</figcaption>
+  <figcaption>タブレットでのプレビュー。長いコード譜は段組みにして 1 画面に収めます。画像をタップすると拡大します。</figcaption>
 </figure>
 <ul>
   <li><b>プレビュー</b>は、コード譜全体を 1 画面に収まるいちばん大きな文字で、必要なら段組みにして表示します。パソコンでは新しいウィンドウで開きます（ポップアップがブロックされたら、このサイトのポップアップを許可してください）。スマホ・タブレットでは画面に重ねて表示し、ピンチで拡大・縮小できます。</li>
@@ -207,7 +236,7 @@ export default {
 
 <h2 id="phone">スマホで使う</h2>
 <figure class="shot phone">
-  ${img("ja", "phone", "スマホで表示した Chord Transposer。上にツールバー、その下に入力と出力のタブがあり、出力タブに移調した「故郷」が表示されている。", ' style="max-width:320px"')}
+  ${img("ja", "phone", "スマホで表示した Chord Transposer。上にツールバー、その下に入力と出力のタブがあり、出力タブに移調した「故郷」が表示されている。", { maxWidth: 320 })}
   <figcaption>画面の幅が狭いときは、入力と出力がタブで切り替わります。プレビューと保存はタブの右にあります。</figcaption>
 </figure>
 <p>フォルダのボタンをタップすると、スマホ内のファイルや写真ライブラリから選べます。プレビューと保存のボタンは、開いているタブの内容に対して働きます。</p>

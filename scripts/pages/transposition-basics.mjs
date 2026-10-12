@@ -32,8 +32,8 @@ export default {
 <pre><code>C  C#  D  D#  E  F  F#  G  G#  A  A#  B  (C)
    Db      Eb         Gb      Ab      Bb</code></pre>
 <p>Note that there is no black key between E and F or between B and C, so those pairs are only one semitone apart.</p>
-<p>To move a chord up, count steps to the right; to move it down, count to the left, wrapping around from B back to C. For example, <b>G +2</b> → G#, <b>A</b>. And <b>C −3</b> → B, Bb, <b>A</b>.</p>
-<p>Shifting by 12 semitones gives the same chord names an octave higher, so for chord charts +12 is the same as 0, and +5 gives the same chords as −7.</p>
+<p>To move a chord up, count steps to the right; to move it down, count to the left, wrapping around from B back to C. For example, <b>G +2</b> → G#, <b>A</b>. And <b>C -3</b> → B, Bb, <b>A</b>.</p>
+<p>Shifting by 12 semitones gives the same chord names an octave higher, so for chord charts +12 is the same as 0, and +5 gives the same chords as -7.</p>
 
 <h2 id="by-hand">Transpose a chord chart by hand</h2>
 <ol>
@@ -85,7 +85,7 @@ Was blind, but now I see</code></pre><figcaption>Key of A (+2)</figcaption></fig
 <p>Chord Transposer does all of the above for a whole chart at once:</p>
 <ol>
   <li>Paste the chord chart, or open a text, PDF, or image file.</li>
-  <li>Choose the number of semitones in <b>Transpose</b> (−12 to +12).</li>
+  <li>Choose the number of semitones in <b>Transpose</b> (-12 to +12).</li>
   <li>Choose how to write sharps and flats in <b>#/♭</b>.</li>
   <li>Preview, print, or save the result.</li>
 </ol>
@@ -132,8 +132,8 @@ Was blind, but now I see</code></pre><figcaption>Key of A (+2)</figcaption></fig
 <pre><code>C  C#  D  D#  E  F  F#  G  G#  A  A#  B  (C)
    Db      Eb         Gb      Ab      Bb</code></pre>
 <p>E と F、B と C の間には黒鍵がないので、この 2 組は半音 1 つしか離れていません。</p>
-<p>上げるときは右へ、下げるときは左へ数えます。B の次は C に戻ります。たとえば <b>G を +2</b> → G#、<b>A</b>。<b>C を −3</b> → B、Bb、<b>A</b> です。</p>
-<p>12 半音動かすと 1 オクターブ上の同じコード名になるので、コード譜では +12 は 0 と同じで、+5 と −7 も同じコードになります。</p>
+<p>上げるときは右へ、下げるときは左へ数えます。B の次は C に戻ります。たとえば <b>G を +2</b> → G#、<b>A</b>。<b>C を -3</b> → B、Bb、<b>A</b> です。</p>
+<p>12 半音動かすと 1 オクターブ上の同じコード名になるので、コード譜では +12 は 0 と同じで、+5 と -7 も同じコードになります。</p>
 
 <h2 id="by-hand">コード譜を手で移調する</h2>
 <ol>
@@ -186,7 +186,7 @@ G     D    A7    D
 <p>Chord Transposer なら、ここまでの作業をコード譜全体に一度で行えます。</p>
 <ol>
   <li>コード譜を貼り付けるか、テキスト・PDF・画像ファイルを開きます。</li>
-  <li><b>移調</b>で半音数（−12〜+12）を選びます。</li>
+  <li><b>移調</b>で半音数（-12〜+12）を選びます。</li>
   <li><b>#/♭</b> でシャープとフラットの書き方を選びます。</li>
   <li>結果をプレビュー・印刷・保存します。</li>
 </ol>
