@@ -31,8 +31,8 @@ A web app that transposes chord charts. Paste a chord chart or open a text, PDF,
 - オフラインで使えるよう、アプリ本体と OCR 用データをブラウザ内に保存します。サイトデータを削除すると消えます。
 - サイトは Cloudflare で配信しており、運用・セキュリティのために標準的なアクセスログ（IP アドレス、日時、アクセスしたページ）が記録されます。
 
-The same notice is shown in the app under ⚙ → **Privacy**.
-アプリ内の ⚙ → **プライバシー** でも同じ内容を表示しています。
+The same notice is shown in the app under ⚙ → **Privacy**. The full privacy policy, including the notice for advertising (Google AdSense) and external transmission, is at `/chordtransposer/privacy/` (Japanese: `/chordtransposer/ja/privacy/`), and the operator information is at `/chordtransposer/about/`.
+アプリ内の ⚙ → **プライバシー** でも同じ内容を表示しています。広告（Google AdSense）や外部送信についての説明を含むプライバシーポリシーは `/chordtransposer/ja/privacy/`、運営者情報は `/chordtransposer/ja/about/` にあります。
 
 ## Project structure / 構成
 
@@ -119,6 +119,8 @@ Articles about using the app and transposing chords, in English and Japanese:
 | Sharps or flats? | `/chordtransposer/sharps-and-flats/` | `/chordtransposer/ja/sharps-and-flats/` |
 | The ChordPro format | `/chordtransposer/chordpro/` | `/chordtransposer/ja/chordpro/` |
 | FAQ | `/chordtransposer/faq/` | `/chordtransposer/ja/faq/` |
+| About this site (operator) | `/chordtransposer/about/` | `/chordtransposer/ja/about/` |
+| Privacy policy | `/chordtransposer/privacy/` | `/chordtransposer/ja/privacy/` |
 
 Each page is written in `scripts/pages/<slug>.mjs`, with the English and Japanese text written separately (the articles are not translated string by string). The shared header, footer, styles, and `<head>` tags (canonical, hreflang, Open Graph, JSON-LD) are in `scripts/pages/layout.mjs`. Tables such as the capo chart are computed in `scripts/pages/music.mjs`.
 
@@ -129,7 +131,9 @@ node scripts/build-pages.mjs          # regenerate the guide pages and sitemap.x
 node scripts/build-pages.mjs --check  # exit 1 if something is out of date
 ```
 
-To add a page, create `scripts/pages/<slug>.mjs` and add the slug to `PAGES` in `scripts/build-pages.mjs`; it is added to the footer of every page and to the sitemap.
+To add a page, create `scripts/pages/<slug>.mjs` and add the slug to `PAGES` (articles) or `INFO_PAGES` (site information such as the privacy policy) in `scripts/build-pages.mjs`; it is added to the footer of every page and to the sitemap.
+
+When a service that receives visitors' information is added or removed (for example when ads are added), update `scripts/pages/privacy.mjs` and its `modified` date, and the Privacy text in the app (`privacy.body` in `index.html`).
 
 Example chord charts must be original or in the public domain (for example *Amazing Grace* and 「故郷」). Do not use lyrics of copyrighted songs.
 

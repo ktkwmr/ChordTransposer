@@ -10,7 +10,8 @@
 // scripts/pages/layout.mjs. Tables such as the capo chart are computed in
 // scripts/pages/music.mjs so they cannot contain typos.
 //
-// To add a page: create scripts/pages/<slug>.mjs and add it to PAGES below.
+// To add a page: create scripts/pages/<slug>.mjs and add it to PAGES (articles) or
+// INFO_PAGES (site information, linked from the bottom line of the footer) below.
 //
 // Usage: node scripts/build-pages.mjs [--check]
 //   --check  do not write; exit 1 if a generated file is out of date.
@@ -23,12 +24,13 @@ import { renderPage, ORIGIN, APP_PATH, PUBLISHED, pagePath } from "./pages/layou
 
 // Footer order
 const PAGES = ["guide", "transposition-basics", "capo-chart", "key-chart", "sharps-and-flats", "chordpro", "faq"];
+// Site information (operator and privacy policy)
+const INFO_PAGES = ["about", "privacy"];
 
 const CHECK = process.argv.includes("--check");
 const PUBLIC = fileURLToPath(new URL("../public/", import.meta.url));
 
-const pages = [];
-for (const slug of PAGES) {
+async function load(slug) {
   const mod = (await import(`./pages/${slug}.mjs`)).default;
   if (mod.slug !== slug) throw new Error(`scripts/pages/${slug}.mjs: slug is "${mod.slug}"`);
   for (const lang of ["en", "ja"]) {
@@ -36,13 +38,29 @@ for (const slug of PAGES) {
       if (!mod[lang] || !mod[lang][key]) throw new Error(`scripts/pages/${slug}.mjs: ${lang}.${key} is missing`);
     }
   }
-  pages.push(mod);
+  return mod;
 }
+const pages = [];
+for (const slug of PAGES) pages.push(await load(slug));
+const infoPages = [];
+for (const slug of INFO_PAGES) infoPages.push({ ...(await load(slug)), info: true });
 
 function jsonLdFor(lang, page) {
   const t = page[lang];
   const url = ORIGIN + pagePath(lang, page.slug);
   const author = { "@type": "Person", name: "ktkwmr", url: "https://github.com/ktkwmr" };
+  if (page.info) {
+    return {
+      "@context": "https://schema.org",
+      "@type": page.schemaType || "WebPage",
+      name: t.heading || t.title,
+      description: t.description,
+      url,
+      inLanguage: lang,
+      ...(page.modified ? { dateModified: page.modified } : {}),
+      isPartOf: { "@type": "WebSite", name: "Chord Transposer", url: ORIGIN + APP_PATH[lang] },
+    };
+  }
   if (page.faq) {
     return {
       "@context": "https://schema.org",
@@ -73,11 +91,11 @@ function jsonLdFor(lang, page) {
 }
 
 const outputs = new Map();
-for (const page of pages) {
+for (const page of [...pages, ...infoPages]) {
   for (const lang of ["en", "ja"]) {
     const t = page[lang];
     const body = typeof t.body === "function" ? t.body() : t.body;
-    const html = renderPage({ lang, page, pages, body, jsonLd: jsonLdFor(lang, page) });
+    const html = renderPage({ lang, page, pages, infoPages, body, jsonLd: jsonLdFor(lang, page) });
     outputs.set(PUBLIC + pagePath(lang, page.slug).slice(1) + "index.html", html);
   }
 }
@@ -89,7 +107,7 @@ const alternates = (enPath, jaPath) =>
     `    <xhtml:link rel="alternate" hreflang="ja" href="${ORIGIN}${jaPath}" />`,
     `    <xhtml:link rel="alternate" hreflang="x-default" href="${ORIGIN}${enPath}" />`,
   ].join("\n");
-const urlEntries = [[APP_PATH.en, APP_PATH.ja], ...pages.map((p) => [pagePath("en", p.slug), pagePath("ja", p.slug)])]
+const urlEntries = [[APP_PATH.en, APP_PATH.ja], ...[...pages, ...infoPages].map((p) => [pagePath("en", p.slug), pagePath("ja", p.slug)])]
   .flatMap(([enPath, jaPath]) =>
     [enPath, jaPath].map((loc) => `  <url>\n    <loc>${ORIGIN}${loc}</loc>\n${alternates(enPath, jaPath)}\n  </url>`)
   )

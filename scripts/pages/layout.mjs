@@ -162,7 +162,7 @@ const CSS = `
     }`;
 
 // pages: [{ slug, [lang]: { nav } }] in footer order
-export function renderPage({ lang, page, pages, body, jsonLd }) {
+export function renderPage({ lang, page, pages, infoPages = [], body, jsonLd }) {
   const ui = UI[lang];
   const t = page[lang];
   const otherLang = ui.other.lang;
@@ -193,7 +193,7 @@ export function renderPage({ lang, page, pages, body, jsonLd }) {
   <link rel="alternate" hreflang="en" href="${enUrl}" />
   <link rel="alternate" hreflang="ja" href="${jaUrl}" />
   <link rel="alternate" hreflang="x-default" href="${enUrl}" />
-  <meta property="og:type" content="article" />
+  <meta property="og:type" content="${page.info ? "website" : "article"}" />
   <meta property="og:site_name" content="Chord Transposer" />
   <meta property="og:title" content="${escapeHtml(t.title)}" />
   <meta property="og:description" content="${escapeHtml(t.description)}" />
@@ -241,6 +241,7 @@ ${nav}
       </nav>
       <p class="meta">
         <span>${ui.footer}</span>
+${infoPages.map((p) => `        <a href="${pagePath(lang, p.slug)}"${p.slug === page.slug ? ' aria-current="page"' : ""}>${escapeHtml(p[lang].nav)}</a>`).join("\n")}
         <a href="https://github.com/ktkwmr/ChordTransposer" rel="noopener">${ui.source}</a>
         <a href="https://github.com/ktkwmr/ChordTransposer/issues" rel="noopener">${ui.feedback}</a>
       </p>
