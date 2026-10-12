@@ -258,7 +258,7 @@
       box-shadow: var(--shadow);
     }
     .menu[hidden] { display: none; }
-    .menu button {
+    .menu button, .menu a {
       display: block;
       width: 100%;
       height: 40px;
@@ -271,10 +271,11 @@
       text-align: left;
       cursor: pointer;
     }
-    .menu button:active { background: var(--line); }
-    .menu button:focus-visible { outline-offset: -2px; }
+    .menu a { line-height: 40px; font-weight: 600; text-decoration: none; white-space: nowrap; }   /* ガイドページへのリンク */
+    .menu button:active, .menu a:active { background: var(--line); }
+    .menu button:focus-visible, .menu a:focus-visible { outline-offset: -2px; }
     @media (hover: hover) {
-      .menu button:hover { background: var(--hover-fill); }
+      .menu button:hover, .menu a:hover { background: var(--hover-fill); }
     }
 
     #fileInput { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none; }
@@ -403,6 +404,8 @@
     .help-list b { color: var(--ink); }
     ul.help-list { list-style: disc; }
     .help-list a { color: inherit; }
+    dialog.msg p.help-more { margin: 14px 0 0; padding-left: 20px; font-size: 13px; }
+    .help-more a { color: var(--ink); font-weight: 600; }
 
     dialog.about { width: min(560px, calc(100vw - 32px)); height: min(640px, calc(100% - 32px)); }
     dialog.about[open] { display: flex; flex-direction: column; }
@@ -783,6 +786,7 @@
 <li><b>文字サイズ</b> – 文字の大きさを変えます。</li>
 <li><b>プレビュー</b> – 入力または出力の全体をまとめて表示します。スマホ・タブレットでは、ピンチで拡大・縮小でき、プリンターのボタンで印刷できます（iPhone・iPad では、表示される共有メニューで「プリント」を選びます）。</li>
 <li><b>保存</b> – 入力または出力をテキストファイルに保存します。</li></ol>
+      <p class="help-more"><a href="/chordtransposer/ja/guide/" data-i18n="help.more" data-i18n-attr="href:guide.url">詳しい使い方ガイドを見る →</a></p>
     </div>
     <div class="dlg-actions">
       <button class="primary" id="helpClose" type="button" data-i18n="close">閉じる</button>
@@ -805,6 +809,7 @@
 
   <div class="menu" id="settingsMenu" role="menu" aria-label="設定" data-i18n-attr="aria-label:settings" hidden>
     <button type="button" role="menuitem" id="menuHelp" data-i18n="menu.help">使い方</button>
+    <a role="menuitem" id="menuGuide" href="/chordtransposer/ja/guide/" data-i18n="menu.guide" data-i18n-attr="href:guide.url">ガイド・記事</a>
     <button type="button" role="menuitem" id="menuPrivacy" data-i18n="menu.privacy">プライバシー</button>
     <button type="button" role="menuitem" id="menuAbout" data-i18n="menu.about">このアプリについて</button>
   </div>
@@ -862,6 +867,9 @@
           "menu.help": "How to use",
           "menu.privacy": "Privacy",
           "menu.about": "About",
+          "menu.guide": "Guides & articles",
+          "help.more": "Read the full guide →",
+          "guide.url": "/chordtransposer/guide/",
           "help.body": "<li><b>Open a file</b> – Tap the folder button and choose a chord chart (text, PDF, or image). Text files and text-based PDFs work best. Text from images or scanned PDFs may not be read correctly.</li>\n        <li><b>Or enter chords</b> – Paste or type a chord chart in the Input area. Output updates as you edit.</li>\n        <li><b>Transpose</b> – Choose the key shift. Chords in Output are converted.</li>\n        <li><b>#/♭</b> – Switch between # and b.</li>\n        <li><b>Size</b> – Change the text size.</li>\n        <li><b>Preview</b> – See the whole input or output at once. On phones and tablets, pinch to zoom and tap the printer button to print (on iPhone and iPad, choose Print in the share menu).</li>\n        <li><b>Save</b> – Save the input or output as a text file.</li>",
           "privacy.body": "<li><b>Your files stay on your device</b> – Chord charts you open or type are processed only in your browser. They are never uploaded to a server. This app has no accounts, cookies, ads, or analytics.</li>\n        <li><b>Libraries from a CDN</b> – When you open a PDF or an image, the PDF.js and Tesseract.js libraries and OCR language data are downloaded from jsDelivr (cdn.jsdelivr.net). As with any website, jsDelivr receives your IP address and browser information. Your file is not sent.</li>\n        <li><b>Data saved in your browser</b> – To work offline, the app and the OCR language data are saved in your browser's storage. The chord chart you were working on and your settings are also saved there, so you can pick up where you left off next time. You can delete them by clearing this site's data in your browser settings.</li>\n        <li><b>Server logs</b> – This site is hosted on Cloudflare. Standard access logs (such as IP address, time, and the requested page) are kept for operation and security.</li>\n        <li><b>Contact</b> – Questions and feedback: <a href=\"https://github.com/ktkwmr/ChordTransposer/issues\" target=\"_blank\" rel=\"noopener\">GitHub Issues</a>.</li>",
           "about.license": "© 2026 ktkwmr · Licensed under the <a href=\"https://github.com/ktkwmr/ChordTransposer/blob/main/LICENSE\" target=\"_blank\" rel=\"noopener\">MIT License</a>",
@@ -916,6 +924,9 @@
           "menu.help": "使い方",
           "menu.privacy": "プライバシー",
           "menu.about": "このアプリについて",
+          "menu.guide": "ガイド・記事",
+          "help.more": "詳しい使い方ガイドを見る →",
+          "guide.url": "/chordtransposer/ja/guide/",
           "help.body": "<li><b>ファイルを開く</b> – フォルダのボタンをタップして、コード譜（テキスト・PDF・画像）を選びます。テキストファイルとテキスト形式の PDF が最も正確です。画像やスキャンした PDF は、正しく読み取れない場合があります。</li>\n<li><b>コードを入力する</b> – 入力欄にコード譜を貼り付けるか、直接入力します。編集すると出力がすぐに更新されます。</li>\n<li><b>移調</b> – 移調する幅を選ぶと、出力のコードが変換されます。</li>\n<li><b>#/♭</b> – # と b の表記を切り替えます。</li>\n<li><b>文字サイズ</b> – 文字の大きさを変えます。</li>\n<li><b>プレビュー</b> – 入力または出力の全体をまとめて表示します。スマホ・タブレットでは、ピンチで拡大・縮小でき、プリンターのボタンで印刷できます（iPhone・iPad では、表示される共有メニューで「プリント」を選びます）。</li>\n<li><b>保存</b> – 入力または出力をテキストファイルに保存します。</li>",
           "privacy.body": "<li><b>ファイルは端末の外に出ません</b> – 開いたコード譜や入力した内容は、ブラウザ内だけで処理されます。サーバーに送信されることはありません。アカウント登録・Cookie・広告・アクセス解析もありません。</li>\n<li><b>CDN から読み込むライブラリ</b> – PDF や画像を開いたときだけ、PDF.js・Tesseract.js と OCR 用の言語データを jsDelivr（cdn.jsdelivr.net）から読み込みます。一般的な Web サイトと同様に、jsDelivr には IP アドレスやブラウザの情報が送られますが、ファイルの内容は送られません。</li>\n<li><b>ブラウザに保存するデータ</b> – オフラインで使えるよう、アプリ本体と OCR 用の言語データをブラウザ内に保存します。次に開いたときに続きから使えるよう、編集中のコード譜と設定も保存します。ブラウザの設定でこのサイトのデータを削除すると消えます。</li>\n<li><b>サーバーのログ</b> – このサイトは Cloudflare で配信しています。運用とセキュリティのため、標準的なアクセスログ（IP アドレス、日時、アクセスしたページなど）が記録されます。</li>\n<li><b>お問い合わせ</b> – ご質問やご意見は <a href=\"https://github.com/ktkwmr/ChordTransposer/issues\" target=\"_blank\" rel=\"noopener\">GitHub Issues</a> へどうぞ。</li>",
           "about.license": "© 2026 ktkwmr · <a href=\"https://github.com/ktkwmr/ChordTransposer/blob/main/LICENSE\" target=\"_blank\" rel=\"noopener\">MIT ライセンス</a>で公開しています",
@@ -2087,7 +2098,7 @@
       const helpDlg = document.getElementById("helpDlg");
       const privacyDlg = document.getElementById("privacyDlg");
 
-      // 設定（歯車）メニュー: How to use / Privacy / About
+      // 設定（歯車）メニュー: How to use / Guides & articles（ガイドページへのリンク）/ Privacy / About
       const settingsBtn = document.getElementById("settingsBtn");
       const settingsMenu = document.getElementById("settingsMenu");
       const aboutDlg = document.getElementById("aboutDlg");
@@ -2117,7 +2128,7 @@
         if (e.key === "Escape") { closeMenu(true); return; }
         if (e.key === "ArrowDown" || e.key === "ArrowUp") {
           e.preventDefault();
-          const items = Array.prototype.slice.call(settingsMenu.querySelectorAll("button"));
+          const items = Array.prototype.slice.call(settingsMenu.querySelectorAll('[role="menuitem"]'));
           const i = items.indexOf(document.activeElement);
           const next = e.key === "ArrowDown" ? (i + 1) % items.length : (i - 1 + items.length) % items.length;
           items[next].focus();
