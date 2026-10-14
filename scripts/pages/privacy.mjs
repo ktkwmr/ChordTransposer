@@ -12,13 +12,13 @@ const CLOUDFLARE = "https://www.cloudflare.com/privacypolicy/";
 export default {
   slug: "privacy",
   schemaType: "WebPage",
-  modified: "2026-10-12",
+  modified: "2026-10-14",
   en: {
     title: "Privacy Policy",
     heading: "Privacy policy",
     nav: "Privacy policy",
     description:
-      "How Chord Transposer handles information: files stay on your device, data saved in your browser, external services (jsDelivr, Cloudflare, Google AdSense), cookies, and how to opt out of personalized ads.",
+      "How Chord Transposer handles information: files stay on your device, data saved in your browser, external services (jsDelivr, Cloudflare, Google AdSense), analytics, cookies, and how to opt out of personalized ads.",
     body: () => `
 <p class="lead">This policy explains how Chord Transposer (https://ktkwmr.com/chordtransposer/, "this site") handles information. In short: the chord charts you work with never leave your device.</p>
 
@@ -52,6 +52,7 @@ export default {
     <thead><tr><th scope="col">Service (operator)</th><th scope="col">When</th><th scope="col">Information sent</th><th scope="col">Purpose</th></tr></thead>
     <tbody>
       <tr><th scope="row"><a href="${CLOUDFLARE}" rel="noopener">Cloudflare</a> (Cloudflare, Inc.)</th><td data-label="When:">Every page and file request</td><td data-label="Information sent:">IP address, browser information (user agent), requested URL, date and time</td><td data-label="Purpose:">Hosting this site, security, and access logs for operation</td></tr>
+      <tr><th scope="row"><a href="${CLOUDFLARE}" rel="noopener">Cloudflare Web Analytics</a> (Cloudflare, Inc.)</th><td data-label="When:">Every page view</td><td data-label="Information sent:">IP address, browser information (user agent), the URL of the page, referrer, page load time. No cookies are used.</td><td data-label="Purpose:">Counting page views (see "Analytics" below)</td></tr>
       <tr><th scope="row"><a href="${JSDELIVR}" rel="noopener">jsDelivr</a> (cdn.jsdelivr.net)</th><td data-label="When:">When you open a PDF or an image</td><td data-label="Information sent:">IP address, browser information, requested URL, date and time. <b>Your file is not sent.</b></td><td data-label="Purpose:">Downloading the PDF.js and Tesseract.js libraries and the OCR language data</td></tr>
       <tr><th scope="row"><a href="${GOOGLE_ADS}" rel="noopener">Google AdSense</a> (Google LLC)</th><td data-label="When:">When a page shows ads</td><td data-label="Information sent:">IP address, browser information, the URL of the page, cookie and advertising identifiers</td><td data-label="Purpose:">Showing ads, measuring them, and preventing fraud (see the next section)</td></tr>
     </tbody>
@@ -69,7 +70,7 @@ export default {
 <p>Even if you opt out of personalized ads, you may still see ads; they are just not based on your interests.</p>
 
 <h2 id="analytics">5. Analytics</h2>
-<p>This site does not use access analytics tools such as Google Analytics. We only use the standard access logs described above.</p>
+<p>To see how many people use this site, we use <b>Cloudflare Web Analytics</b>. It counts page views without cookies and without identifying or tracking individual visitors across sites. We do not use Google Analytics.</p>
 
 <h2 id="third-party">6. Sharing with third parties</h2>
 <p>We do not collect personal information that identifies you, and we do not sell or provide it to third parties, except where required by law.</p>
@@ -79,7 +80,7 @@ export default {
 
 <h2 id="changes">8. Changes to this policy</h2>
 <p>We may update this policy when the site changes, for example when we add or remove a service. The updated policy applies from the time it is posted on this page.</p>
-<p>Effective: October 12, 2026</p>
+<p>Effective: October 12, 2026 (last updated: October 14, 2026)</p>
 `,
   },
   ja: {
@@ -87,7 +88,7 @@ export default {
     heading: "プライバシーポリシー",
     nav: "プライバシーポリシー",
     description:
-      "Chord Transposer のプライバシーポリシー。ファイルが端末の外に出ないこと、ブラウザに保存するデータ、外部への送信（jsDelivr・Cloudflare・Google AdSense）、Cookie と広告、パーソナライズ広告の無効化について。",
+      "Chord Transposer のプライバシーポリシー。ファイルが端末の外に出ないこと、ブラウザに保存するデータ、外部への送信（jsDelivr・Cloudflare・Google AdSense）、アクセス解析、Cookie と広告、パーソナライズ広告の無効化について。",
     body: () => `
 <p class="lead">Chord Transposer（https://ktkwmr.com/chordtransposer/、以下「本サイト」）での情報の取り扱いについて説明します。要点は、扱うコード譜が端末の外に出ないことです。</p>
 
@@ -121,6 +122,7 @@ export default {
     <thead><tr><th scope="col">送信先（事業者）</th><th scope="col">送信のタイミング</th><th scope="col">送信される情報</th><th scope="col">利用目的</th></tr></thead>
     <tbody>
       <tr><th scope="row"><a href="${CLOUDFLARE}" rel="noopener">Cloudflare</a>（Cloudflare, Inc.）</th><td data-label="タイミング：">すべてのページ・ファイルの読み込み時</td><td data-label="送信される情報：">IP アドレス、ブラウザの情報（ユーザーエージェント）、アクセスした URL、日時</td><td data-label="利用目的：">本サイトの配信、セキュリティの確保、運用のためのアクセスログ</td></tr>
+      <tr><th scope="row"><a href="${CLOUDFLARE}" rel="noopener">Cloudflare Web Analytics</a>（Cloudflare, Inc.）</th><td data-label="タイミング：">ページを開いたとき</td><td data-label="送信される情報：">IP アドレス、ブラウザの情報（ユーザーエージェント）、閲覧したページの URL、参照元、ページの表示速度。Cookie は使いません。</td><td data-label="利用目的：">ページの閲覧数の集計（「アクセス解析」の項目を参照）</td></tr>
       <tr><th scope="row"><a href="${JSDELIVR}" rel="noopener">jsDelivr</a>（cdn.jsdelivr.net）</th><td data-label="タイミング：">PDF や画像を開いたとき</td><td data-label="送信される情報：">IP アドレス、ブラウザの情報、アクセスした URL、日時。<b>ファイルの内容は送られません。</b></td><td data-label="利用目的：">PDF.js・Tesseract.js のライブラリと OCR 用の言語データのダウンロード</td></tr>
       <tr><th scope="row"><a href="${GOOGLE_ADS}" rel="noopener">Google AdSense</a>（Google LLC）</th><td data-label="タイミング：">広告を表示するページを開いたとき</td><td data-label="送信される情報：">IP アドレス、ブラウザの情報、閲覧したページの URL、Cookie や広告識別子</td><td data-label="利用目的：">広告の配信・効果測定・不正防止（次の項目を参照）</td></tr>
     </tbody>
@@ -138,7 +140,7 @@ export default {
 <p>パーソナライズ広告を無効にしても広告は表示されますが、興味・関心に基づかない広告になります。</p>
 
 <h2 id="analytics">5. アクセス解析</h2>
-<p>本サイトでは、Google アナリティクスなどのアクセス解析ツールは使用していません。利用しているのは、上記の標準的なアクセスログだけです。</p>
+<p>本サイトの利用状況を知るため、<b>Cloudflare Web Analytics</b> を使用しています。Cookie を使わずにページの閲覧数を集計するもので、個人を特定したり、ほかのサイトをまたいで追跡したりはしません。Google アナリティクスは使用していません。</p>
 
 <h2 id="third-party">6. 第三者への提供</h2>
 <p>本サイトは、個人を特定できる情報を収集していません。法令に基づく場合を除き、個人情報を第三者に販売・提供することはありません。</p>
@@ -148,7 +150,7 @@ export default {
 
 <h2 id="changes">8. 改定</h2>
 <p>サービスの追加・終了など本サイトの変更に合わせて、本ポリシーを改定することがあります。改定後のポリシーは、このページに掲載した時点から適用されます。</p>
-<p>制定日：2026 年 10 月 12 日</p>
+<p>制定日：2026 年 10 月 12 日（最終改定日：2026 年 10 月 14 日）</p>
 `,
   },
 };

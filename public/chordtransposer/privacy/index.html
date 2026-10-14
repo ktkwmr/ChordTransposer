@@ -8,7 +8,7 @@
   <link rel="icon" type="image/svg+xml" href="/chordtransposer/icons/icon.svg" />
   <link rel="apple-touch-icon" href="/chordtransposer/icons/apple-touch-icon.png" />
   <title>Privacy Policy | Chord Transposer</title>
-  <meta name="description" content="How Chord Transposer handles information: files stay on your device, data saved in your browser, external services (jsDelivr, Cloudflare, Google AdSense), cookies, and how to opt out of personalized ads." />
+  <meta name="description" content="How Chord Transposer handles information: files stay on your device, data saved in your browser, external services (jsDelivr, Cloudflare, Google AdSense), analytics, cookies, and how to opt out of personalized ads." />
   <link rel="canonical" href="https://ktkwmr.com/chordtransposer/privacy/" />
   <link rel="alternate" hreflang="en" href="https://ktkwmr.com/chordtransposer/privacy/" />
   <link rel="alternate" hreflang="ja" href="https://ktkwmr.com/chordtransposer/ja/privacy/" />
@@ -16,7 +16,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Chord Transposer" />
   <meta property="og:title" content="Privacy Policy" />
-  <meta property="og:description" content="How Chord Transposer handles information: files stay on your device, data saved in your browser, external services (jsDelivr, Cloudflare, Google AdSense), cookies, and how to opt out of personalized ads." />
+  <meta property="og:description" content="How Chord Transposer handles information: files stay on your device, data saved in your browser, external services (jsDelivr, Cloudflare, Google AdSense), analytics, cookies, and how to opt out of personalized ads." />
   <meta property="og:locale" content="en_US" />
   <meta property="og:locale:alternate" content="ja_JP" />
   <meta property="og:url" content="https://ktkwmr.com/chordtransposer/privacy/" />
@@ -29,10 +29,10 @@
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "Privacy policy",
-    "description": "How Chord Transposer handles information: files stay on your device, data saved in your browser, external services (jsDelivr, Cloudflare, Google AdSense), cookies, and how to opt out of personalized ads.",
+    "description": "How Chord Transposer handles information: files stay on your device, data saved in your browser, external services (jsDelivr, Cloudflare, Google AdSense), analytics, cookies, and how to opt out of personalized ads.",
     "url": "https://ktkwmr.com/chordtransposer/privacy/",
     "inLanguage": "en",
-    "dateModified": "2026-10-12",
+    "dateModified": "2026-10-14",
     "isPartOf": {
       "@type": "WebSite",
       "name": "Chord Transposer",
@@ -202,6 +202,7 @@
     <thead><tr><th scope="col">Service (operator)</th><th scope="col">When</th><th scope="col">Information sent</th><th scope="col">Purpose</th></tr></thead>
     <tbody>
       <tr><th scope="row"><a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">Cloudflare</a> (Cloudflare, Inc.)</th><td data-label="When:">Every page and file request</td><td data-label="Information sent:">IP address, browser information (user agent), requested URL, date and time</td><td data-label="Purpose:">Hosting this site, security, and access logs for operation</td></tr>
+      <tr><th scope="row"><a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">Cloudflare Web Analytics</a> (Cloudflare, Inc.)</th><td data-label="When:">Every page view</td><td data-label="Information sent:">IP address, browser information (user agent), the URL of the page, referrer, page load time. No cookies are used.</td><td data-label="Purpose:">Counting page views (see "Analytics" below)</td></tr>
       <tr><th scope="row"><a href="https://www.jsdelivr.com/terms" rel="noopener">jsDelivr</a> (cdn.jsdelivr.net)</th><td data-label="When:">When you open a PDF or an image</td><td data-label="Information sent:">IP address, browser information, requested URL, date and time. <b>Your file is not sent.</b></td><td data-label="Purpose:">Downloading the PDF.js and Tesseract.js libraries and the OCR language data</td></tr>
       <tr><th scope="row"><a href="https://policies.google.com/technologies/ads" rel="noopener">Google AdSense</a> (Google LLC)</th><td data-label="When:">When a page shows ads</td><td data-label="Information sent:">IP address, browser information, the URL of the page, cookie and advertising identifiers</td><td data-label="Purpose:">Showing ads, measuring them, and preventing fraud (see the next section)</td></tr>
     </tbody>
@@ -219,7 +220,7 @@
 <p>Even if you opt out of personalized ads, you may still see ads; they are just not based on your interests.</p>
 
 <h2 id="analytics">5. Analytics</h2>
-<p>This site does not use access analytics tools such as Google Analytics. We only use the standard access logs described above.</p>
+<p>To see how many people use this site, we use <b>Cloudflare Web Analytics</b>. It counts page views without cookies and without identifying or tracking individual visitors across sites. We do not use Google Analytics.</p>
 
 <h2 id="third-party">6. Sharing with third parties</h2>
 <p>We do not collect personal information that identifies you, and we do not sell or provide it to third parties, except where required by law.</p>
@@ -229,7 +230,7 @@
 
 <h2 id="changes">8. Changes to this policy</h2>
 <p>We may update this policy when the site changes, for example when we add or remove a service. The updated policy applies from the time it is posted on this page.</p>
-<p>Effective: October 12, 2026</p>
+<p>Effective: October 12, 2026 (last updated: October 14, 2026)</p>
     </article>
     <aside class="cta">
       <h2>Transpose your chord chart now</h2>
@@ -260,5 +261,7 @@
       </p>
     </div>
   </footer>
+  <!-- Cloudflare Web Analytics (page views; no cookies) -->
+  <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "5c53079cb9a64d819d1ca53e8533ca63"}'></script>
 </body>
 </html>
