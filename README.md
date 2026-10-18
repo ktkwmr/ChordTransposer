@@ -63,7 +63,6 @@ scripts/
   og-image.html                 # source of og-image.png
   render-og-image.mjs           # renders og-image.html to og-image.png (Playwright)
 wrangler.jsonc                  # Cloudflare Workers (static assets)
-docs/WEBAPP_BASELINE.md         # checklist of common work for any new web app (this app is the reference)
 CLAUDE.md                       # instructions for Claude Code
 ```
 
