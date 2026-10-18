@@ -63,6 +63,7 @@ scripts/
   og-image.html                 # source of og-image.png
   render-og-image.mjs           # renders og-image.html to og-image.png (Playwright)
 wrangler.jsonc                  # Cloudflare Workers (static assets)
+CLAUDE.md                       # instructions for Claude Code
 ```
 
 The files in `public/` are served as they are. The generated files are `public/chordtransposer/ja/index.html`, the guide pages, and `public/sitemap.xml` (see below).
