@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://ktkwmr.com/sitemap.xml
+Sitemap: https://ktkwmr.com/guitarchordfinder/sitemap.xml
