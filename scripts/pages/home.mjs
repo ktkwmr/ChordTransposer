@@ -111,7 +111,6 @@ const APPS = [
 ];
 
 const appPath = (lang, slug) => `/${slug}/${lang === "ja" ? "ja/" : ""}`;
-const GUIDE_COUNT = APPS.reduce((n, a) => n + (a.en.guides || []).length, 0);
 
 const UI = {
   en: {
@@ -122,8 +121,6 @@ const UI = {
     heading: "Web apps of musicians,<br />by musicians,<br />for musicians.",
     lead: "Tools a player actually wanted, made one at a time. They open instantly in your browser, work offline, and never ask you to sign up.",
     cta: "See the apps",
-    spec: "At a glance",
-    specRows: [["Apps", String(APPS.length)], ["Guides", String(GUIDE_COUNT)], ["Price", "Free"], ["Sign-up", "None"], ["Offline", "Yes (PWA)"], ["Language", "EN / JA"]],
     appsTitle: "Apps",
     open: "Open app",
     guidesLabel: "Guides",
@@ -147,8 +144,6 @@ const UI = {
     heading: "ミュージシャンの<br />ミュージシャンによる<br />ミュージシャンのための<br />Web アプリ",
     lead: "弾く人が本当に欲しかった道具を、ひとつずつ作っています。ブラウザですぐ開けて、オフラインでも動き、登録は必要ありません。",
     cta: "アプリを見る",
-    spec: "概要",
-    specRows: [["アプリ", String(APPS.length)], ["ガイド記事", String(GUIDE_COUNT)], ["料金", "無料"], ["登録", "不要"], ["オフライン", "対応"], ["言語", "日本語 / 英語"]],
     appsTitle: "アプリ",
     open: "アプリを開く",
     guidesLabel: "ガイド",
@@ -194,7 +189,7 @@ const CSS = `
     .head-links a:hover { background: var(--hover-fill); color: var(--ink); }
 
     /* Hero */
-    .hero { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 48px; align-items: end; padding: 64px 0 56px; }
+    .hero { padding: 64px 0 48px; }
     h1 { margin: 0 0 20px; text-wrap: balance; font-size: clamp(34px, 5.2vw, 56px); line-height: 1.12; letter-spacing: -0.03em; font-weight: 700; }
     html[lang="ja"] h1 { line-height: 1.32; letter-spacing: 0; font-size: clamp(28px, 4.2vw, 46px); }
     .lead { max-width: 600px; text-wrap: pretty; margin: 0 0 28px; color: var(--muted); font-size: 17px; line-height: 1.75; }
@@ -207,15 +202,8 @@ const CSS = `
     .btn:active { transform: scale(.96); }
     .btn svg { width: 16px; height: 16px; }
 
-    /* Spec sheet panel */
-    .spec { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--paper-shadow); overflow: hidden; }
     .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line); font-size: 14px; font-weight: 600; }
     .panel-head .path { font-family: var(--mono); font-size: 12px; font-weight: 400; color: var(--subtle); }
-    .spec dl { margin: 0; padding: 4px 16px; }
-    .spec .row { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; border-bottom: 1px dashed var(--line); font-size: 14px; }
-    .spec .row:last-child { border-bottom: 0; }
-    .spec dt { color: var(--muted); }
-    .spec dd { margin: 0; font-family: var(--mono); font-weight: 700; }
 
     /* App cards */
     .section-head { display: flex; align-items: baseline; gap: 12px; margin: 0 0 16px; }
@@ -294,9 +282,7 @@ const CSS = `
     .site-foot nav a:hover { color: var(--ink); text-decoration: underline; }
 
     @media (max-width: 960px) {
-      .hero { grid-template-columns: 1fr; gap: 32px; padding: 48px 0 40px; }
-      .spec dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 20px; }
-      .spec .row:nth-last-child(-n+3) { border-bottom: 0; }
+      .hero { padding: 48px 0 36px; }
       .why ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .why li:nth-child(3) { border-left: 0; }
       .why li:nth-child(n+3) { border-top: 1px solid var(--line); }
@@ -305,8 +291,6 @@ const CSS = `
       body { font-size: 15px; }
       .hero { padding-top: 36px; }
       .lead { font-size: 16px; }
-      .spec dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .spec .row:nth-last-child(3) { border-bottom: 1px dashed var(--line); }
       .why ul { grid-template-columns: 1fr; }
       .why li { border-left: 0; border-top: 1px solid var(--line); }
       .why li:first-child { border-top: 0; }
@@ -428,19 +412,11 @@ ${JSON.stringify(jsonLd, null, 2).replace(/</g, "\\u003c").replace(/^/gm, "  ")}
   </header>
   <main class="wrap">
     <section class="hero">
-      <div>
-        <h1>${ui.heading}</h1>
-        <p class="lead">${ui.lead}</p>
-        <div class="hero-actions">
-          <a class="btn" href="#apps">${ui.cta}<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M4 9l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-        </div>
+      <h1>${ui.heading}</h1>
+      <p class="lead">${ui.lead}</p>
+      <div class="hero-actions">
+        <a class="btn" href="#apps">${ui.cta}<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M4 9l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
-      <aside class="spec" aria-label="${ui.spec}">
-        <div class="panel-head"><span>${ui.spec}</span><span class="path">ktkwmr.com</span></div>
-        <dl>
-${ui.specRows.map(([k, v]) => `          <div class="row"><dt>${k}</dt><dd>${v}</dd></div>`).join("\n")}
-        </dl>
-      </aside>
     </section>
 
     <section aria-labelledby="apps">
