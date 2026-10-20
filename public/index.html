@@ -118,25 +118,41 @@
     /* Hero */
     .hero { display: grid; grid-template-columns: minmax(0, 1fr) 440px; gap: 56px; align-items: center; padding: 64px 0 48px; }
 
-    /* Lead sheet decoration: a white paper with another one peeking out behind it */
-    .sheet { position: relative; padding: 20px 22px 18px; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--paper-shadow); font-family: var(--mono); }
-    .sheet::before { content: ""; position: absolute; inset: 14px 14px -12px 14px; z-index: -1; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--paper-shadow); }
-    .sheet-head { display: flex; align-items: baseline; gap: 14px; padding-bottom: 14px; margin-bottom: 6px; border-bottom: 1px solid var(--line); font-size: 12px; color: var(--muted); }
-    .sheet-title { margin-right: auto; font-family: var(--sans); font-size: 15px; font-weight: 700; color: var(--ink); }
-    .bar-row { display: grid; grid-template-columns: 22px repeat(4, minmax(0, 1fr)); align-items: center; height: 54px; border-bottom: 1px dashed var(--line); }
-    .bar-row .no { font-size: 10px; color: var(--subtle); }
-    .bar { display: flex; align-items: center; height: 30px; padding-left: 10px; border-left: 1.5px solid var(--ink); font-size: 15px; font-weight: 700; white-space: nowrap; }
-    .bar:last-child { border-right: 1.5px solid var(--ink); }
-    .bar-row:last-child .bar:last-child { border-right: 4px double var(--ink); }
-    .sheet-foot { display: flex; align-items: center; justify-content: space-between; padding-top: 14px; font-size: 12px; color: var(--muted); }
-    .beats { display: flex; gap: 6px; }
-    .beats i { width: 10px; height: 10px; border: 1.5px solid var(--ink); border-radius: 50%; animation: beat 2s steps(1) infinite; }
+    /* Devices: laptop at the back, tablet front-left, phone front-right */
+    .devices { position: relative; height: 360px; margin: 0; }
+    .devices figcaption { position: absolute; left: 0; right: 0; bottom: -6px; text-align: center; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--subtle); }
+    .laptop { position: absolute; top: 0; right: 26px; width: 380px; filter: drop-shadow(0 10px 24px rgba(0,0,0,.12)); }
+    .laptop .screen { aspect-ratio: 16 / 10; border: 9px solid #111; border-bottom-width: 12px; border-radius: 14px 14px 0 0; background: var(--canvas); overflow: hidden; }
+    .laptop .base { position: relative; height: 12px; margin: 0 -26px; background: linear-gradient(#e5e5e5, #c4c4c4); border-radius: 2px 2px 12px 12px; }
+    .laptop .base::before { content: ""; position: absolute; left: 50%; top: 0; width: 60px; height: 5px; margin-left: -30px; background: #a3a3a3; border-radius: 0 0 6px 6px; }
+    .ui-bar { display: flex; align-items: center; gap: 4px; height: 18px; padding: 0 7px; background: var(--paper); border-bottom: 1px solid var(--line); }
+    .ui-logo { width: 9px; height: 9px; margin-right: 4px; border-radius: 2.5px; background: var(--ink); }
+    .ui-pill { width: 22px; height: 8px; border: 1px solid var(--line-strong); border-radius: 3px; }
+    .ui-pill.on { background: var(--ink); border-color: var(--ink); }
+    .ui-split { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; padding: 8px; height: calc(100% - 18px); }
+    .ui-panel { display: flex; flex-direction: column; gap: 4px; padding: 0 8px 8px; background: var(--paper); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+    .ui-panel b { display: flex; justify-content: space-between; margin: 0 -8px 4px; padding: 4px 8px; border-bottom: 1px solid var(--line); font-family: var(--sans); font-size: 8px; }
+    .ui-panel b span { padding: 0 4px; background: var(--ink); color: var(--paper); border-radius: 3px; font-family: var(--mono); }
+    .ui-panel code { font-family: var(--mono); font-size: 9px; font-weight: 700; line-height: 1.2; white-space: nowrap; }
+    .ui-panel code.lyric { height: 4px; margin-bottom: 4px; width: 88%; background: var(--line); border-radius: 2px; }
+    .ui-panel code.lyric.short { width: 62%; }
+    .tablet { position: absolute; left: 0; bottom: 22px; width: 156px; height: 206px; border: 8px solid #111; border-radius: 16px; background: var(--paper); overflow: hidden; box-shadow: 0 14px 30px rgba(0,0,0,.18); }
+    .tab-body { padding: 10px 12px; }
+    .tab-chips { display: flex; gap: 4px; margin-bottom: 10px; }
+    .tab-chips i { padding: 2px 5px; border: 1px solid var(--line-strong); border-radius: 3px; font-family: var(--mono); font-size: 8px; font-style: normal; font-weight: 700; }
+    .tab-chips i.on { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+    .tablet svg { display: block; width: 100%; }
+    .phone { position: absolute; right: 6px; bottom: 22px; width: 96px; height: 190px; padding: 6px; border-radius: 20px; background: #111; box-shadow: 0 14px 30px rgba(0,0,0,.22); }
+    .phone::before { content: ""; position: absolute; top: 10px; left: 50%; width: 26px; height: 6px; margin-left: -13px; border-radius: 4px; background: #111; z-index: 1; }
+    .ph-body { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; height: 100%; background: var(--paper); border-radius: 15px; }
+    .ph-bpm { font-family: var(--mono); font-size: 28px; font-weight: 700; line-height: 1; }
+    .ph-tempo { font-size: 8px; font-style: italic; font-weight: 600; }
+    .ph-start { display: grid; place-items: center; width: 62px; height: 18px; margin-top: 6px; border-radius: 4px; background: var(--ink); color: var(--paper); font-size: 8px; }
+    .beats { display: flex; gap: 4px; }
+    .beats i { width: 9px; height: 9px; border: 1.5px solid var(--ink); border-radius: 50%; animation: beat 2s steps(1) infinite; }
     .beats i:nth-child(2) { animation-delay: -1.5s; }
     .beats i:nth-child(3) { animation-delay: -1s; }
     .beats i:nth-child(4) { animation-delay: -.5s; }
-    .shift b { padding: 1px 6px; border: 1px solid var(--line-strong); border-radius: 4px; color: var(--ink); }
-    .shift b.on { background: var(--ink); border-color: var(--ink); color: var(--paper); }
-    .shift em { font-style: normal; margin-left: 4px; }
     h1 { margin: 0 0 20px; text-wrap: balance; font-size: clamp(34px, 5.2vw, 56px); line-height: 1.12; letter-spacing: -0.03em; font-weight: 700; }
     html[lang="ja"] h1 { line-height: 1.32; letter-spacing: 0; font-size: clamp(28px, 4.2vw, 46px); }
     .lead { max-width: 600px; text-wrap: pretty; margin: 0 0 28px; color: var(--muted); font-size: 17px; line-height: 1.75; }
@@ -230,7 +246,7 @@
 
     @media (max-width: 960px) {
       .hero { display: block; padding: 48px 0 36px; }
-      .sheet { display: none; }
+      .devices { display: none; }
       .why ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .why li:nth-child(3) { border-left: 0; }
       .why li:nth-child(n+3) { border-top: 1px solid var(--line); }
@@ -272,16 +288,34 @@
         <a class="btn" href="#apps">See the apps<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M4 9l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
       </div>
-      <div class="sheet" aria-hidden="true">
-        <div class="sheet-head"><span class="sheet-title">Song No.1</span><span>Key C</span><span>♩ = 120</span><span>4/4</span></div>
-        <div class="bars">
-          <div class="bar-row"><span class="no">01</span><span class="bar">C</span><span class="bar">Am7</span><span class="bar">Dm7</span><span class="bar">G7</span></div>
-          <div class="bar-row"><span class="no">05</span><span class="bar">Em7</span><span class="bar">A7</span><span class="bar">Dm7</span><span class="bar">G7</span></div>
-          <div class="bar-row"><span class="no">09</span><span class="bar">Fmaj7</span><span class="bar">G/F</span><span class="bar">Em7</span><span class="bar">Am7</span></div>
-          <div class="bar-row"><span class="no">13</span><span class="bar">Dm7</span><span class="bar">G7sus4</span><span class="bar">C</span><span class="bar">%</span></div>
+      <figure class="devices" aria-hidden="true">
+        <div class="laptop">
+          <div class="screen">
+            <div class="ui-bar"><i class="ui-logo"></i><i class="ui-pill on"></i><i class="ui-pill"></i><i class="ui-pill"></i></div>
+            <div class="ui-split">
+              <div class="ui-panel"><b>Input</b><code>C&nbsp;&nbsp;&nbsp;Am7&nbsp;&nbsp;F/G</code><code class="lyric"></code><code>F&nbsp;&nbsp;&nbsp;G7&nbsp;&nbsp;&nbsp;C</code><code class="lyric short"></code><code>Dm7&nbsp;G&nbsp;&nbsp;&nbsp;&nbsp;Em</code><code class="lyric"></code></div>
+              <div class="ui-panel"><b>Output <span>+2</span></b><code>D&nbsp;&nbsp;&nbsp;Bm7&nbsp;&nbsp;G/A</code><code class="lyric"></code><code>G&nbsp;&nbsp;&nbsp;A7&nbsp;&nbsp;&nbsp;D</code><code class="lyric short"></code><code>Em7&nbsp;A&nbsp;&nbsp;&nbsp;&nbsp;F#m</code><code class="lyric"></code></div>
+            </div>
+          </div>
+          <div class="base"></div>
         </div>
-        <div class="sheet-foot"><span class="beats"><i></i><i></i><i></i><i></i></span><span class="shift">Key <b>C</b> → <b class="on">D</b> <em>+2</em></span></div>
-      </div>
+        <div class="tablet">
+          <div class="ui-bar"><i class="ui-logo"></i><i class="ui-pill"></i></div>
+          <div class="tab-body">
+            <div class="tab-chips"><i class="on">DADGAD</i><i>Open G</i></div>
+            <svg viewBox="0 0 100 92"><g stroke="#000" stroke-width="1"><path d="M15 16v66M29 16v66M43 16v66M57 16v66M71 16v66M85 16v66M15 32h70M15 49h70M15 66h70M15 82h70"/></g><path d="M14 16h72" stroke="#000" stroke-width="3.5"/><circle cx="29" cy="57" r="6" fill="#000"/><circle cx="43" cy="40" r="6" fill="#fff" stroke="#000"/><circle cx="71" cy="24" r="6" fill="#fff" stroke="#000"/><g fill="none" stroke="#000"><circle cx="57" cy="8" r="3.5"/><circle cx="85" cy="8" r="3.5"/><path d="M12 5l6 6M18 5l-6 6"/></g></svg>
+          </div>
+        </div>
+        <div class="phone">
+          <div class="ph-body">
+            <span class="ph-bpm">120</span>
+            <span class="ph-tempo">Allegro</span>
+            <span class="beats"><i></i><i></i><i></i><i></i></span>
+            <span class="ph-start">▶</span>
+          </div>
+        </div>
+        <figcaption>Works on PC, tablet, and phone</figcaption>
+      </figure>
     </section>
 
     <section aria-labelledby="apps">
