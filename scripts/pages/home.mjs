@@ -1,9 +1,13 @@
 // The domain's top page (https://ktkwmr.com/ and /ja/): a list of all the apps on ktkwmr.com.
 // Used by scripts/build-pages.mjs, which writes public/index.html and public/ja/index.html.
 //
-// Setlist Metronome and Guitar Chord Finder live in their own repositories (ktkwmr/SetlistMetronome,
-// ktkwmr/GuitarChordFinder), so their names, descriptions, and guide lists are copied here by hand.
-// When an app adds or renames a guide page, or a new app is added, update APPS below.
+// The page is written for a growing number of apps: nothing outside APPS names an app or says how
+// many there are (counts are computed). The other apps live in their own repositories, so their
+// names, descriptions, and guide lists are copied here by hand.
+//
+// To add an app: add its icon to ICON (the same paths as its icons/icon.svg) and an entry to APPS
+// (cards are shown in that order). PREVIEW (a small picture of its main screen) and guides are
+// optional: without a preview the card shows the app icon; without guides the list is left out.
 
 import { ORIGIN, escapeHtml } from "./layout.mjs";
 
@@ -27,6 +31,7 @@ const MARK =
   '<svg class="mark" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#000"/><g fill="#fff"><rect x="7" y="7" width="6" height="6" rx="1.5"/><rect x="15" y="7" width="6" height="6" rx="1.5"/><rect x="7" y="15" width="6" height="6" rx="1.5"/></g><rect x="15.75" y="15.75" width="4.5" height="4.5" rx="1.2" fill="none" stroke="#fff" stroke-width="1.5"/></svg>';
 
 // Small, static previews of each app's main screen (decorative)
+// Optional per app; without one, the card shows the app icon large
 const PREVIEW = {
   chordtransposer: `
             <div class="pv-transpose" aria-hidden="true">
@@ -106,17 +111,16 @@ const APPS = [
 ];
 
 const appPath = (lang, slug) => `/${slug}/${lang === "ja" ? "ja/" : ""}`;
-const GUIDE_COUNT = APPS.reduce((n, a) => n + a.en.guides.length, 0);
+const GUIDE_COUNT = APPS.reduce((n, a) => n + (a.en.guides || []).length, 0);
 
 const UI = {
   en: {
     locale: "en_US",
-    title: "ktkwmr – Free web apps for musicians",
-    description: "Free browser tools for musicians: transpose chord charts, keep a metronome setting for every song in your setlist, and find guitar chord shapes in alternate tunings. No sign-up, works offline.",
+    title: "ktkwmr – Web apps of musicians, by musicians, for musicians",
+    description: "Free web apps for musicians, made by a musician: tools for chord charts, tempo, guitar chords, and more. They run in your browser, need no sign-up, and work offline.",
     other: { lang: "ja", label: "日本語", href: "/ja/" },
-    eyebrow: "Web apps for musicians",
-    heading: "Small tools for<br />practice and the stage.",
-    lead: "Three focused apps for transposing charts, keeping time, and finding chord shapes. They open instantly in your browser, work offline, and never ask you to sign up.",
+    heading: "Web apps of musicians,<br />by musicians,<br />for musicians.",
+    lead: "Tools a player actually wanted, made one at a time. They open instantly in your browser, work offline, and never ask you to sign up.",
     cta: "See the apps",
     spec: "At a glance",
     specRows: [["Apps", String(APPS.length)], ["Guides", String(GUIDE_COUNT)], ["Price", "Free"], ["Sign-up", "None"], ["Offline", "Yes (PWA)"], ["Language", "EN / JA"]],
@@ -137,12 +141,11 @@ const UI = {
   },
   ja: {
     locale: "ja_JP",
-    title: "ktkwmr – 音楽をする人のための無料 Web アプリ",
-    description: "コード譜の移調、セットリストの曲ごとのメトロノーム設定、変則チューニングのコード探しができる無料の Web アプリ。登録不要で、オフラインでも使えます。",
+    title: "ktkwmr – ミュージシャンの、ミュージシャンによる、ミュージシャンのための Web アプリ",
+    description: "ミュージシャンが作った、ミュージシャンのための無料 Web アプリ。コード譜・テンポ・ギターのコードなど、演奏に役立つ道具をブラウザだけで。登録不要で、オフラインでも使えます。",
     other: { lang: "en", label: "English", href: "/?lang=en" },
-    eyebrow: "音楽をする人のための Web アプリ",
-    heading: "練習にも、本番にも。<br />小さくて頼れる道具。",
-    lead: "移調、テンポ、コードの押さえ方。それぞれ 1 つのことに絞った 3 つのアプリです。ブラウザですぐ開けて、オフラインでも動き、登録は必要ありません。",
+    heading: "ミュージシャンの<br />ミュージシャンによる<br />ミュージシャンのための<br />Web アプリ",
+    lead: "弾く人が本当に欲しかった道具を、ひとつずつ作っています。ブラウザですぐ開けて、オフラインでも動き、登録は必要ありません。",
     cta: "アプリを見る",
     spec: "概要",
     specRows: [["アプリ", String(APPS.length)], ["ガイド記事", String(GUIDE_COUNT)], ["料金", "無料"], ["登録", "不要"], ["オフライン", "対応"], ["言語", "日本語 / 英語"]],
@@ -189,22 +192,13 @@ const CSS = `
     .head-links { display: flex; align-items: center; gap: 4px; margin-left: auto; font-size: 14px; }
     .head-links a { display: inline-flex; align-items: center; height: 34px; padding: 0 12px; border-radius: var(--radius); text-decoration: none; color: var(--muted); }
     .head-links a:hover { background: var(--hover-fill); color: var(--ink); }
-    .head-links .apps-menu { display: flex; gap: 2px; margin-right: 8px; padding-right: 12px; border-right: 1px solid var(--line); }
-    .head-links .apps-menu a { gap: 8px; padding: 0 10px; color: var(--ink); font-weight: 600; }
-    .head-links .apps-menu svg { width: 20px; height: 20px; }
 
     /* Hero */
-    .hero { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 48px; align-items: end; padding: 72px 0 56px; }
-    .eyebrow { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 20px; font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-    .eyebrow::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--ink); }
+    .hero { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 48px; align-items: end; padding: 64px 0 56px; }
     h1 { margin: 0 0 20px; text-wrap: balance; font-size: clamp(34px, 5.2vw, 56px); line-height: 1.12; letter-spacing: -0.03em; font-weight: 700; }
-    html[lang="ja"] h1 { line-height: 1.3; letter-spacing: -0.01em; font-size: clamp(30px, 4.6vw, 48px); }
+    html[lang="ja"] h1 { line-height: 1.32; letter-spacing: 0; font-size: clamp(28px, 4.2vw, 46px); }
     .lead { max-width: 600px; text-wrap: pretty; margin: 0 0 28px; color: var(--muted); font-size: 17px; line-height: 1.75; }
     .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-    .app-dots { display: flex; gap: 6px; }
-    .app-dots a { display: block; border-radius: 9px; transition: transform .15s; }
-    .app-dots a:hover { transform: translateY(-2px); }
-    .app-dots svg { display: block; width: 42px; height: 42px; }
 
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 42px; padding: 0 20px; border-radius: var(--radius); border: 1px solid var(--ink); background: var(--ink); color: var(--paper); font-size: 14px; font-weight: 600; text-decoration: none; white-space: nowrap; transition: background .15s, transform .1s; }
     .btn:hover { background: var(--press-hover); }
@@ -227,7 +221,8 @@ const CSS = `
     .section-head { display: flex; align-items: baseline; gap: 12px; margin: 0 0 16px; }
     h2 { margin: 0; font-size: 22px; letter-spacing: -0.01em; }
     .section-head .count { font-family: var(--mono); font-size: 13px; color: var(--subtle); }
-    .apps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin: 0 0 72px; padding: 0; list-style: none; }
+    /* Any number of cards: as many columns as fit */
+    .apps { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 20px; margin: 0 0 72px; padding: 0; list-style: none; }
     .card { display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--paper-shadow); overflow: hidden; transition: box-shadow .2s, transform .2s; }
     .card:hover { transform: translateY(-3px); box-shadow: 0 2px 6px rgba(0,0,0,.08), 0 16px 36px rgba(0,0,0,.10); }
     .card .panel-head { justify-content: flex-start; }
@@ -277,6 +272,7 @@ const CSS = `
     .pv-diagram { width: 128px; height: auto; }
     .pv-finder svg text { fill: currentColor; }
     .pv-tunings { display: grid; gap: 6px; }
+    .pv-icon { width: 72px; height: 72px; }
 
     /* Shared promises */
     .why { margin: 0 0 72px; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--paper-shadow); }
@@ -301,13 +297,9 @@ const CSS = `
       .hero { grid-template-columns: 1fr; gap: 32px; padding: 48px 0 40px; }
       .spec dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 20px; }
       .spec .row:nth-last-child(-n+3) { border-bottom: 0; }
-      .apps { grid-template-columns: 1fr; max-width: 560px; }
       .why ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .why li:nth-child(3) { border-left: 0; }
       .why li:nth-child(n+3) { border-top: 1px solid var(--line); }
-    }
-    @media (max-width: 720px) {
-      .head-links .apps-menu { display: none; }
     }
     @media (max-width: 560px) {
       body { font-size: 15px; }
@@ -323,7 +315,7 @@ const CSS = `
     @media (prefers-reduced-motion: reduce) {
       .pv-beats span { animation: none; }
       .pv-beats span:first-child { background: var(--ink); color: var(--paper); }
-      .card, .card:hover, .app-dots a:hover { transform: none; }
+      .card, .card:hover { transform: none; }
       .btn:active { transform: none; background: var(--press); }
     }`;
 
@@ -331,12 +323,12 @@ function card(lang, app) {
   const t = app[lang];
   const ui = UI[lang];
   const href = appPath(lang, app.slug);
-  const guides = t.guides
+  const guides = (t.guides = t.guides || [])
     .map(([slug, label]) => `                <li><a href="${href}${slug}/">${escapeHtml(label)}</a></li>`)
     .join("\n");
   return `        <li class="card">
           <div class="panel-head">${icon(app.slug)}<span>${app.name}</span><span class="tag">${escapeHtml(t.tag)}</span></div>
-          <a class="preview" href="${href}" tabindex="-1" aria-hidden="true">${PREVIEW[app.slug]}
+          <a class="preview" href="${href}" tabindex="-1" aria-hidden="true">${PREVIEW[app.slug] || icon(app.slug, "pv-icon")}
           </a>
           <div class="card-body">
             <h3><a href="${href}">${app.name}</a></h3>
@@ -345,13 +337,17 @@ function card(lang, app) {
 ${t.points.map((p) => `              <li>${escapeHtml(p)}</li>`).join("\n")}
             </ul>
             <a class="btn" href="${href}" aria-label="${escapeHtml(`${ui.open}: ${app.name}`)}">${ui.open}<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-            <details class="guides">
+${
+  t.guides.length
+    ? `            <details class="guides">
               <summary>${ui.guidesLabel} <span class="n">${t.guides.length}</span></summary>
               <ul>
 ${guides}
               </ul>
             </details>
-          </div>
+`
+    : ""
+}          </div>
         </li>`;
 }
 
@@ -376,8 +372,6 @@ export function renderHome(lang) {
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
     })),
   };
-  const appsMenu = APPS.map((a) => `<a href="${appPath(lang, a.slug)}">${icon(a.slug, "")}<span>${a.name}</span></a>`).join("");
-  const dots = APPS.map((a) => `<a href="${appPath(lang, a.slug)}" title="${a.name}">${icon(a.slug, "")}<span class="sr">${a.name}</span></a>`).join("");
 
   return `<!DOCTYPE html>
 <!-- Generated by scripts/build-pages.mjs from scripts/pages/home.mjs. Do not edit. -->
@@ -421,7 +415,6 @@ ${JSON.stringify(jsonLd, null, 2).replace(/</g, "\\u003c").replace(/^/gm, "  ")}
       : ""
   }
   <style>${CSS}
-    .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -429,7 +422,6 @@ ${JSON.stringify(jsonLd, null, 2).replace(/</g, "\\u003c").replace(/^/gm, "  ")}
     <div class="wrap">
       <a class="brand" href="${HOME_PATH[lang]}">${MARK}<span>ktkwmr</span></a>
       <nav class="head-links" aria-label="${ui.nav}">
-        <span class="apps-menu">${appsMenu}</span>
         <a href="${ui.other.href}" hreflang="${ui.other.lang}" lang="${ui.other.lang}">${ui.other.label}</a>
       </nav>
     </div>
@@ -437,12 +429,10 @@ ${JSON.stringify(jsonLd, null, 2).replace(/</g, "\\u003c").replace(/^/gm, "  ")}
   <main class="wrap">
     <section class="hero">
       <div>
-        <p class="eyebrow">${ui.eyebrow}</p>
         <h1>${ui.heading}</h1>
         <p class="lead">${ui.lead}</p>
         <div class="hero-actions">
           <a class="btn" href="#apps">${ui.cta}<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M4 9l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-          <span class="app-dots">${dots}</span>
         </div>
       </div>
       <aside class="spec" aria-label="${ui.spec}">
@@ -472,7 +462,6 @@ ${ui.why.map(([h, p], i) => `        <li><span class="num">${String(i + 1).padSt
       <a class="brand" href="${HOME_PATH[lang]}">${MARK}<span>ktkwmr</span></a>
       <span>${ui.footer}</span>
       <nav aria-label="${ui.nav}">
-${APPS.map((a) => `        <a href="${appPath(lang, a.slug)}">${a.name}</a>`).join("\n")}
         <a href="https://github.com/ktkwmr" rel="noopener">${ui.source}</a>
         <a href="https://github.com/ktkwmr/ChordTransposer/issues" rel="noopener">${ui.feedback}</a>
       </nav>

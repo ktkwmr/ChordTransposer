@@ -165,6 +165,6 @@ node scripts/update-third-party-licenses.mjs --check  # exit 1 if something is m
 
 ## Top page / トップページ
 
-This Worker also serves the domain root. `https://ktkwmr.com/` (Japanese: `/ja/`) lists every app on ktkwmr.com, and is generated from `scripts/pages/home.mjs` by `node scripts/build-pages.mjs`. Setlist Metronome and Guitar Chord Finder are in other repositories, so when an app is added or a guide page is added or renamed, update `APPS` in `scripts/pages/home.mjs`. A browser whose first language is Japanese is sent from `/` to `/ja/` (`?lang=en` keeps English).
+This Worker also serves the domain root. `https://ktkwmr.com/` (Japanese: `/ja/`) lists every app on ktkwmr.com, and is generated from `scripts/pages/home.mjs` by `node scripts/build-pages.mjs`. The page assumes more apps will be added: only `APPS` names the apps, and the counts are computed. The other apps are in their own repositories, so when an app is added or a guide page is added or renamed, update `ICON` and `APPS` in `scripts/pages/home.mjs` (a preview picture and guides are optional). A browser whose first language is Japanese is sent from `/` to `/ja/` (`?lang=en` keeps English).
 
-ドメイン直下 `https://ktkwmr.com/`（日本語: `/ja/`）は ktkwmr.com の全アプリの一覧ページで、`scripts/pages/home.mjs` から `node scripts/build-pages.mjs` で生成します。他のアプリは別リポジトリなので、アプリやガイド記事を追加・改名したら `home.mjs` の `APPS` も直してください。ブラウザの第一言語が日本語なら `/` から `/ja/` に移動します（`?lang=en` で英語のまま）。
+ドメイン直下 `https://ktkwmr.com/`（日本語: `/ja/`）は ktkwmr.com の全アプリの一覧ページで、`scripts/pages/home.mjs` から `node scripts/build-pages.mjs` で生成します。アプリが増えることを前提に、アプリ名は `APPS` にだけ書き、数は自動で数えます。他のアプリは別リポジトリなので、アプリやガイド記事を追加・改名したら `home.mjs` の `ICON` と `APPS` を直してください（プレビュー図とガイドは省略可）。ブラウザの第一言語が日本語なら `/` から `/ja/` に移動します（`?lang=en` で英語のまま）。
