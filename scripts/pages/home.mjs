@@ -31,6 +31,23 @@ const MARK =
   '<svg class="mark" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="7" fill="#000"/><g fill="#fff"><rect x="7" y="7" width="6" height="6" rx="1.5"/><rect x="15" y="7" width="6" height="6" rx="1.5"/><rect x="7" y="15" width="6" height="6" rx="1.5"/></g><rect x="15.75" y="15.75" width="4.5" height="4.5" rx="1.2" fill="none" stroke="#fff" stroke-width="1.5"/></svg>';
 
 // Small, static previews of each app's main screen (decorative)
+// Decoration on the right of the hero (wide screens only): a chord chart like a lead sheet.
+// It names no app, so it stays valid as apps are added. The progression is generic (not from a song).
+const SHEET_ROWS = [
+  ["C", "Am7", "Dm7", "G7"],
+  ["Em7", "A7", "Dm7", "G7"],
+  ["Fmaj7", "G/F", "Em7", "Am7"],
+  ["Dm7", "G7sus4", "C", "%"],
+];
+const SHEET = `
+      <div class="sheet" aria-hidden="true">
+        <div class="sheet-head"><span class="sheet-title">Song No.1</span><span>Key C</span><span>♩ = 120</span><span>4/4</span></div>
+        <div class="bars">
+${SHEET_ROWS.map((row, i) => `          <div class="bar-row"><span class="no">${String(i * 4 + 1).padStart(2, "0")}</span>${row.map((c) => `<span class="bar">${c}</span>`).join("")}</div>`).join("\n")}
+        </div>
+        <div class="sheet-foot"><span class="beats"><i></i><i></i><i></i><i></i></span><span class="shift">Key <b>C</b> → <b class="on">D</b> <em>+2</em></span></div>
+      </div>`;
+
 // Optional per app; without one, the card shows the app icon large
 const PREVIEW = {
   chordtransposer: `
@@ -189,7 +206,27 @@ const CSS = `
     .head-links a:hover { background: var(--hover-fill); color: var(--ink); }
 
     /* Hero */
-    .hero { padding: 64px 0 48px; }
+    .hero { display: grid; grid-template-columns: minmax(0, 1fr) 440px; gap: 56px; align-items: center; padding: 64px 0 48px; }
+
+    /* Lead sheet decoration: a white paper with another one peeking out behind it */
+    .sheet { position: relative; padding: 20px 22px 18px; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--paper-shadow); font-family: var(--mono); }
+    .sheet::before { content: ""; position: absolute; inset: 14px 14px -12px 14px; z-index: -1; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--paper-shadow); }
+    .sheet-head { display: flex; align-items: baseline; gap: 14px; padding-bottom: 14px; margin-bottom: 6px; border-bottom: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+    .sheet-title { margin-right: auto; font-family: var(--sans); font-size: 15px; font-weight: 700; color: var(--ink); }
+    .bar-row { display: grid; grid-template-columns: 22px repeat(4, minmax(0, 1fr)); align-items: center; height: 54px; border-bottom: 1px dashed var(--line); }
+    .bar-row .no { font-size: 10px; color: var(--subtle); }
+    .bar { display: flex; align-items: center; height: 30px; padding-left: 10px; border-left: 1.5px solid var(--ink); font-size: 15px; font-weight: 700; white-space: nowrap; }
+    .bar:last-child { border-right: 1.5px solid var(--ink); }
+    .bar-row:last-child .bar:last-child { border-right: 4px double var(--ink); }
+    .sheet-foot { display: flex; align-items: center; justify-content: space-between; padding-top: 14px; font-size: 12px; color: var(--muted); }
+    .beats { display: flex; gap: 6px; }
+    .beats i { width: 10px; height: 10px; border: 1.5px solid var(--ink); border-radius: 50%; animation: beat 2s steps(1) infinite; }
+    .beats i:nth-child(2) { animation-delay: -1.5s; }
+    .beats i:nth-child(3) { animation-delay: -1s; }
+    .beats i:nth-child(4) { animation-delay: -.5s; }
+    .shift b { padding: 1px 6px; border: 1px solid var(--line-strong); border-radius: 4px; color: var(--ink); }
+    .shift b.on { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+    .shift em { font-style: normal; margin-left: 4px; }
     h1 { margin: 0 0 20px; text-wrap: balance; font-size: clamp(34px, 5.2vw, 56px); line-height: 1.12; letter-spacing: -0.03em; font-weight: 700; }
     html[lang="ja"] h1 { line-height: 1.32; letter-spacing: 0; font-size: clamp(28px, 4.2vw, 46px); }
     .lead { max-width: 600px; text-wrap: pretty; margin: 0 0 28px; color: var(--muted); font-size: 17px; line-height: 1.75; }
@@ -282,7 +319,8 @@ const CSS = `
     .site-foot nav a:hover { color: var(--ink); text-decoration: underline; }
 
     @media (max-width: 960px) {
-      .hero { padding: 48px 0 36px; }
+      .hero { display: block; padding: 48px 0 36px; }
+      .sheet { display: none; }
       .why ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .why li:nth-child(3) { border-left: 0; }
       .why li:nth-child(n+3) { border-top: 1px solid var(--line); }
@@ -299,6 +337,8 @@ const CSS = `
     @media (prefers-reduced-motion: reduce) {
       .pv-beats span { animation: none; }
       .pv-beats span:first-child { background: var(--ink); color: var(--paper); }
+      .beats i { animation: none; }
+      .beats i:first-child { background: var(--ink); }
       .card, .card:hover { transform: none; }
       .btn:active { transform: none; background: var(--press); }
     }`;
@@ -412,11 +452,13 @@ ${JSON.stringify(jsonLd, null, 2).replace(/</g, "\\u003c").replace(/^/gm, "  ")}
   </header>
   <main class="wrap">
     <section class="hero">
+      <div>
       <h1>${ui.heading}</h1>
       <p class="lead">${ui.lead}</p>
       <div class="hero-actions">
         <a class="btn" href="#apps">${ui.cta}<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M4 9l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
+      </div>${SHEET}
     </section>
 
     <section aria-labelledby="apps">

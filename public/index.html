@@ -116,7 +116,27 @@
     .head-links a:hover { background: var(--hover-fill); color: var(--ink); }
 
     /* Hero */
-    .hero { padding: 64px 0 48px; }
+    .hero { display: grid; grid-template-columns: minmax(0, 1fr) 440px; gap: 56px; align-items: center; padding: 64px 0 48px; }
+
+    /* Lead sheet decoration: a white paper with another one peeking out behind it */
+    .sheet { position: relative; padding: 20px 22px 18px; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--paper-shadow); font-family: var(--mono); }
+    .sheet::before { content: ""; position: absolute; inset: 14px 14px -12px 14px; z-index: -1; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--paper-shadow); }
+    .sheet-head { display: flex; align-items: baseline; gap: 14px; padding-bottom: 14px; margin-bottom: 6px; border-bottom: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+    .sheet-title { margin-right: auto; font-family: var(--sans); font-size: 15px; font-weight: 700; color: var(--ink); }
+    .bar-row { display: grid; grid-template-columns: 22px repeat(4, minmax(0, 1fr)); align-items: center; height: 54px; border-bottom: 1px dashed var(--line); }
+    .bar-row .no { font-size: 10px; color: var(--subtle); }
+    .bar { display: flex; align-items: center; height: 30px; padding-left: 10px; border-left: 1.5px solid var(--ink); font-size: 15px; font-weight: 700; white-space: nowrap; }
+    .bar:last-child { border-right: 1.5px solid var(--ink); }
+    .bar-row:last-child .bar:last-child { border-right: 4px double var(--ink); }
+    .sheet-foot { display: flex; align-items: center; justify-content: space-between; padding-top: 14px; font-size: 12px; color: var(--muted); }
+    .beats { display: flex; gap: 6px; }
+    .beats i { width: 10px; height: 10px; border: 1.5px solid var(--ink); border-radius: 50%; animation: beat 2s steps(1) infinite; }
+    .beats i:nth-child(2) { animation-delay: -1.5s; }
+    .beats i:nth-child(3) { animation-delay: -1s; }
+    .beats i:nth-child(4) { animation-delay: -.5s; }
+    .shift b { padding: 1px 6px; border: 1px solid var(--line-strong); border-radius: 4px; color: var(--ink); }
+    .shift b.on { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+    .shift em { font-style: normal; margin-left: 4px; }
     h1 { margin: 0 0 20px; text-wrap: balance; font-size: clamp(34px, 5.2vw, 56px); line-height: 1.12; letter-spacing: -0.03em; font-weight: 700; }
     html[lang="ja"] h1 { line-height: 1.32; letter-spacing: 0; font-size: clamp(28px, 4.2vw, 46px); }
     .lead { max-width: 600px; text-wrap: pretty; margin: 0 0 28px; color: var(--muted); font-size: 17px; line-height: 1.75; }
@@ -209,7 +229,8 @@
     .site-foot nav a:hover { color: var(--ink); text-decoration: underline; }
 
     @media (max-width: 960px) {
-      .hero { padding: 48px 0 36px; }
+      .hero { display: block; padding: 48px 0 36px; }
+      .sheet { display: none; }
       .why ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .why li:nth-child(3) { border-left: 0; }
       .why li:nth-child(n+3) { border-top: 1px solid var(--line); }
@@ -226,6 +247,8 @@
     @media (prefers-reduced-motion: reduce) {
       .pv-beats span { animation: none; }
       .pv-beats span:first-child { background: var(--ink); color: var(--paper); }
+      .beats i { animation: none; }
+      .beats i:first-child { background: var(--ink); }
       .card, .card:hover { transform: none; }
       .btn:active { transform: none; background: var(--press); }
     }
@@ -242,10 +265,22 @@
   </header>
   <main class="wrap">
     <section class="hero">
+      <div>
       <h1>Web apps of musicians,<br />by musicians,<br />for musicians.</h1>
       <p class="lead">Tools a player actually wanted, made one at a time. They open instantly in your browser, work offline, and never ask you to sign up.</p>
       <div class="hero-actions">
         <a class="btn" href="#apps">See the apps<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M4 9l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+      </div>
+      <div class="sheet" aria-hidden="true">
+        <div class="sheet-head"><span class="sheet-title">Song No.1</span><span>Key C</span><span>♩ = 120</span><span>4/4</span></div>
+        <div class="bars">
+          <div class="bar-row"><span class="no">01</span><span class="bar">C</span><span class="bar">Am7</span><span class="bar">Dm7</span><span class="bar">G7</span></div>
+          <div class="bar-row"><span class="no">05</span><span class="bar">Em7</span><span class="bar">A7</span><span class="bar">Dm7</span><span class="bar">G7</span></div>
+          <div class="bar-row"><span class="no">09</span><span class="bar">Fmaj7</span><span class="bar">G/F</span><span class="bar">Em7</span><span class="bar">Am7</span></div>
+          <div class="bar-row"><span class="no">13</span><span class="bar">Dm7</span><span class="bar">G7sus4</span><span class="bar">C</span><span class="bar">%</span></div>
+        </div>
+        <div class="sheet-foot"><span class="beats"><i></i><i></i><i></i><i></i></span><span class="shift">Key <b>C</b> → <b class="on">D</b> <em>+2</em></span></div>
       </div>
     </section>
 
