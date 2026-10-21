@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Renders scripts/og-image.html to public/chordtransposer/og-image.png (1200x630).
+// Renders scripts/og-image.html to public/chordtransposer/og-image.png (1200x630),
+// and scripts/og-image-home.html to public/og-image.png (the top page https://ktkwmr.com/).
 // Requires Playwright (once):
 //   npm install --no-save playwright && npx playwright install chromium
 // Then:
@@ -7,12 +8,17 @@
 import { chromium } from "playwright";
 import { fileURLToPath } from "node:url";
 
-const src = new URL("og-image.html", import.meta.url).href;
-const out = fileURLToPath(new URL("../public/chordtransposer/og-image.png", import.meta.url));
+const IMAGES = [
+  ["og-image.html", "../public/chordtransposer/og-image.png"],
+  ["og-image-home.html", "../public/og-image.png"],
+];
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1200, height: 630 } });
-await page.goto(src);
-await page.screenshot({ path: out });
+for (const [src, dest] of IMAGES) {
+  const out = fileURLToPath(new URL(dest, import.meta.url));
+  await page.goto(new URL(src, import.meta.url).href);
+  await page.screenshot({ path: out });
+  console.log("Wrote " + out);
+}
 await browser.close();
-console.log("Wrote " + out);

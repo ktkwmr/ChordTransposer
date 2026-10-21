@@ -38,7 +38,10 @@ The same notice is shown in the app under ⚙ → **Privacy**. The full privacy 
 
 ```
 public/
-  _redirects                    # / → /chordtransposer/
+  index.html                    # top page of ktkwmr.com (list of all apps), generated (do not edit)
+  ja/index.html                 # its Japanese version, generated (do not edit)
+  og-image.png, icon.svg        # image and icon for the top page
+  _redirects                    # favicon / apple-touch-icon at the root → app icons
   _headers                      # security headers (CSP etc.)
   404.html                      # page for unknown URLs (status 404)
   robots.txt
@@ -56,11 +59,12 @@ public/
     THIRD_PARTY_LICENSES.md     # third-party notices (shown in About)
 scripts/
   build-ja.mjs                  # generates ja/index.html from index.html
-  build-pages.mjs               # generates the guide pages and sitemap.xml from scripts/pages/
+  build-pages.mjs               # generates the top page, the guide pages, and sitemap.xml from scripts/pages/
   pages/                        # guide page content (one file per page, English and Japanese)
   render-guide-images.mjs       # takes the app screenshots for the guide (Playwright)
   update-third-party-licenses.mjs
   og-image.html                 # source of og-image.png
+  og-image-home.html            # source of the top page's public/og-image.png
   render-og-image.mjs           # renders og-image.html to og-image.png (Playwright)
 wrangler.jsonc                  # Cloudflare Workers (static assets)
 CLAUDE.md                       # instructions for Claude Code
@@ -158,3 +162,9 @@ node scripts/update-third-party-licenses.mjs --check  # exit 1 if something is m
 ## License / ライセンス
 
 [MIT License](LICENSE) © 2026 ktkwmr
+
+## Top page / トップページ
+
+This Worker also serves the domain root. `https://ktkwmr.com/` (Japanese: `/ja/`) lists every app on ktkwmr.com, and is generated from `scripts/pages/home.mjs` by `node scripts/build-pages.mjs`. The page assumes more apps will be added: only `APPS` names the apps, and the counts are computed. The other apps are in their own repositories, so when an app is added or a guide page is added or renamed, update `ICON` and `APPS` in `scripts/pages/home.mjs` (a preview picture and guides are optional). A browser whose first language is Japanese is sent from `/` to `/ja/` (`?lang=en` keeps English).
+
+ドメイン直下 `https://ktkwmr.com/`（日本語: `/ja/`）は ktkwmr.com の全アプリの一覧ページで、`scripts/pages/home.mjs` から `node scripts/build-pages.mjs` で生成します。アプリが増えることを前提に、アプリ名は `APPS` にだけ書き、数は自動で数えます。他のアプリは別リポジトリなので、アプリやガイド記事を追加・改名したら `home.mjs` の `ICON` と `APPS` を直してください（プレビュー図とガイドは省略可）。ブラウザの第一言語が日本語なら `/` から `/ja/` に移動します（`?lang=en` で英語のまま）。

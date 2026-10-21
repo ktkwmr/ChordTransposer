@@ -2,6 +2,7 @@
 // Generates the guide pages and the sitemap:
 //   public/chordtransposer/<slug>/index.html     (English)
 //   public/chordtransposer/ja/<slug>/index.html  (Japanese)
+//   public/index.html, public/ja/index.html  (the domain's top page: a list of all apps)
 //   public/sitemap.xml
 //
 // Each page is written in scripts/pages/<slug>.mjs, with separate English and
@@ -21,6 +22,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderPage, ORIGIN, APP_PATH, PUBLISHED, pagePath } from "./pages/layout.mjs";
+import { renderHome, HOME_PATH } from "./pages/home.mjs";
 
 // Footer order
 const PAGES = ["guide", "transposition-basics", "capo-chart", "key-chart", "sharps-and-flats", "chordpro", "faq"];
@@ -100,6 +102,9 @@ for (const page of [...pages, ...infoPages]) {
   }
 }
 
+// ---------- top page (https://ktkwmr.com/ and /ja/) ----------
+for (const lang of ["en", "ja"]) outputs.set(PUBLIC + HOME_PATH[lang].slice(1) + "index.html", renderHome(lang));
+
 // ---------- sitemap.xml ----------
 const alternates = (enPath, jaPath) =>
   [
@@ -107,7 +112,7 @@ const alternates = (enPath, jaPath) =>
     `    <xhtml:link rel="alternate" hreflang="ja" href="${ORIGIN}${jaPath}" />`,
     `    <xhtml:link rel="alternate" hreflang="x-default" href="${ORIGIN}${enPath}" />`,
   ].join("\n");
-const urlEntries = [[APP_PATH.en, APP_PATH.ja], ...[...pages, ...infoPages].map((p) => [pagePath("en", p.slug), pagePath("ja", p.slug)])]
+const urlEntries = [[HOME_PATH.en, HOME_PATH.ja], [APP_PATH.en, APP_PATH.ja], ...[...pages, ...infoPages].map((p) => [pagePath("en", p.slug), pagePath("ja", p.slug)])]
   .flatMap(([enPath, jaPath]) =>
     [enPath, jaPath].map((loc) => `  <url>\n    <loc>${ORIGIN}${loc}</loc>\n${alternates(enPath, jaPath)}\n  </url>`)
   )
@@ -144,4 +149,4 @@ if (CHECK && stale) {
   console.error("Run: node scripts/build-pages.mjs");
   process.exit(1);
 }
-if (!stale) console.log(`Guide pages and sitemap.xml are up to date (${outputs.size} files).`);
+if (!stale) console.log(`Top page, guide pages, and sitemap.xml are up to date (${outputs.size} files).`);
