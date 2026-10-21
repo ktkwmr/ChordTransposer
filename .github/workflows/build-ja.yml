@@ -13,6 +13,7 @@ on:
       - "scripts/build-pages.mjs"
       - "scripts/pages/**"
       - "public/sitemap.xml"
+      - "public/chordtransposer/sitemap.xml"
       - "public/index.html"
       - "public/ja/index.html"
   workflow_dispatch:

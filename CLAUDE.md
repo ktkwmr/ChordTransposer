@@ -15,7 +15,7 @@
 - ホスティング: Cloudflare Workers 静的アセット（`main` への push で自動デプロイ、PR ブランチはプレビュービルド）
 
 ## ルール
-- 手で編集するのはアプリ本体 `public/chordtransposer/index.html` と `scripts/`。生成ファイル（`public/chordtransposer/ja/index.html`、記事ページ、トップページ `public/index.html`・`public/ja/index.html`、`public/sitemap.xml`）は編集せず、`node scripts/build-ja.mjs` と `node scripts/build-pages.mjs` で作り直す（`--check` で確認）。
+- 手で編集するのはアプリ本体 `public/chordtransposer/index.html` と `scripts/`。生成ファイル（`public/chordtransposer/ja/index.html`、記事ページ、トップページ `public/index.html`・`public/ja/index.html`、`public/chordtransposer/sitemap.xml`・`public/sitemap.xml`）は編集せず、`node scripts/build-ja.mjs` と `node scripts/build-pages.mjs` で作り直す（`--check` で確認）。
 - 外部ホストを足したら `public/_headers` の CSP と、プライバシーの説明（`scripts/pages/privacy.mjs`、アプリ内の `privacy.body`、README）を同じ PR で直す。
 - 例に使うコード譜はオリジナルか著作権切れの曲だけ。
 - 作業はブランチ → PR → Cloudflare のプレビュービルド確認 → squash マージ。
