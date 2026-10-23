@@ -2,9 +2,8 @@
 // Generates the guide pages and the sitemaps:
 //   public/chordtransposer/<slug>/index.html     (English)
 //   public/chordtransposer/ja/<slug>/index.html  (Japanese)
-//   public/index.html, public/ja/index.html  (the domain's top page: a list of all apps)
-//   public/chordtransposer/sitemap.xml  (Chord Transposer's pages, like the other apps' /<slug>/sitemap.xml)
-//   public/sitemap.xml                  (the top page only; each app's sitemap is listed in public/robots.txt)
+//   public/chordtransposer/sitemap.xml  (Chord Transposer's pages; listed in the domain's robots.txt,
+//                                        which is in the ktkwmr/ktkwmr.com repository)
 //
 // Each page is written in scripts/pages/<slug>.mjs, with separate English and
 // Japanese text (the articles are written for each language, not translated
@@ -23,7 +22,6 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderPage, ORIGIN, APP_PATH, PUBLISHED, pagePath } from "./pages/layout.mjs";
-import { renderHome, HOME_PATH } from "./pages/home.mjs";
 
 // Footer order
 const PAGES = ["guide", "transposition-basics", "capo-chart", "key-chart", "sharps-and-flats", "chordpro", "faq"];
@@ -103,9 +101,6 @@ for (const page of [...pages, ...infoPages]) {
   }
 }
 
-// ---------- top page (https://ktkwmr.com/ and /ja/) ----------
-for (const lang of ["en", "ja"]) outputs.set(PUBLIC + HOME_PATH[lang].slice(1) + "index.html", renderHome(lang));
-
 // ---------- sitemap.xml ----------
 const alternates = (enPath, jaPath) =>
   [
@@ -125,7 +120,6 @@ ${pairs
   .join("\n")}
 </urlset>
 `;
-outputs.set(PUBLIC + "sitemap.xml", sitemap([[HOME_PATH.en, HOME_PATH.ja]]));
 outputs.set(
   PUBLIC + APP_PATH.en.slice(1) + "sitemap.xml",
   sitemap([[APP_PATH.en, APP_PATH.ja], ...[...pages, ...infoPages].map((p) => [pagePath("en", p.slug), pagePath("ja", p.slug)])])
@@ -152,4 +146,4 @@ if (CHECK && stale) {
   console.error("Run: node scripts/build-pages.mjs");
   process.exit(1);
 }
-if (!stale) console.log(`Top page, guide pages, and sitemaps are up to date (${outputs.size} files).`);
+if (!stale) console.log(`Guide pages and sitemap are up to date (${outputs.size} files).`);

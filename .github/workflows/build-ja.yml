@@ -2,7 +2,7 @@ name: Build generated pages
 
 # Regenerates public/chordtransposer/ja/index.html from
 # public/chordtransposer/index.html, and the guide pages and sitemap.xml from
-# scripts/pages/ (including the top page public/index.html and public/ja/index.html), then commits the changes.
+# scripts/pages/, then commits the changes.
 on:
   push:
     branches: [main]
@@ -12,10 +12,7 @@ on:
       - "scripts/build-ja.mjs"
       - "scripts/build-pages.mjs"
       - "scripts/pages/**"
-      - "public/sitemap.xml"
       - "public/chordtransposer/sitemap.xml"
-      - "public/index.html"
-      - "public/ja/index.html"
   workflow_dispatch:
 
 permissions:
@@ -49,6 +46,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/chordtransposer public/sitemap.xml public/index.html public/ja
-          git commit -m "生成ページ（ja/index.html・トップページ・ガイドページ・sitemap.xml）を再生成"
+          git add public/chordtransposer
+          git commit -m "生成ページ（ja/index.html・ガイドページ・sitemap.xml）を再生成"
           git push
