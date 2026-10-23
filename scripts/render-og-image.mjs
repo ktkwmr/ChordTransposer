@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-// Renders scripts/og-image.html to public/chordtransposer/og-image.png (1200x630),
-// and scripts/og-image-home.html to public/og-image.png (the top page https://ktkwmr.com/).
+// Renders scripts/og-image.html to public/chordtransposer/og-image.png (1200x630).
 // Requires Playwright (once):
 //   npm install --no-save playwright && npx playwright install chromium
 // Then:
@@ -10,7 +9,6 @@ import { fileURLToPath } from "node:url";
 
 const IMAGES = [
   ["og-image.html", "../public/chordtransposer/og-image.png"],
-  ["og-image-home.html", "../public/og-image.png"],
 ];
 
 const browser = await chromium.launch();
