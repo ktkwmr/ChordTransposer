@@ -32,8 +32,8 @@ const BASE_URL = "https://ktkwmr.com/chordtransposer/";
 const JA_URL = BASE_URL + "ja/";
 
 // Japanese text for search results and social media shares
-const TITLE = "Chord Transposer – コード譜をブラウザで転調・移調できる無料Webアプリ";
-const DESCRIPTION = "コード譜をブラウザで転調（移調）できる無料Webアプリ。テキストを貼り付けるか、TXT・PDF・画像ファイル（OCR）を開いて、キーを変えて保存できます。登録不要で、オフラインでも使えます。";
+const TITLE = "コード譜の移調ツール｜キー変換・転調が無料 – Chord Transposer";
+const DESCRIPTION = "コード譜を移調（転調・キー変換）できる無料Webツール。テキストを貼り付けるか、TXT・PDF・画像ファイル（OCR）を開いて、半音単位でキーを変えて保存できます。登録不要で、オフラインでも使えます。";
 const OG_DESCRIPTION = "コード譜をブラウザで転調（移調）。テキストの貼り付けや、TXT・PDF・画像ファイルの読み込みに対応。無料・登録不要・オフライン対応。";
 const OG_IMAGE_ALT = "Chord Transposer：C、Am7、F/G を +2 転調して D、Bm7、G/A に";
 const LD_DESCRIPTION = "コード譜をブラウザで転調（移調）できるWebアプリ。テキストの貼り付けや、TXT・PDF・画像ファイルの読み込みに対応。";

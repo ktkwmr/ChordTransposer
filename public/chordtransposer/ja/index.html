@@ -12,15 +12,15 @@
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
-  <title>Chord Transposer – コード譜をブラウザで転調・移調できる無料Webアプリ</title>
-  <meta name="description" content="コード譜をブラウザで転調（移調）できる無料Webアプリ。テキストを貼り付けるか、TXT・PDF・画像ファイル（OCR）を開いて、キーを変えて保存できます。登録不要で、オフラインでも使えます。" />
+  <title>コード譜の移調ツール｜キー変換・転調が無料 – Chord Transposer</title>
+  <meta name="description" content="コード譜を移調（転調・キー変換）できる無料Webツール。テキストを貼り付けるか、TXT・PDF・画像ファイル（OCR）を開いて、半音単位でキーを変えて保存できます。登録不要で、オフラインでも使えます。" />
   <link rel="canonical" href="https://ktkwmr.com/chordtransposer/ja/" />
   <link rel="alternate" hreflang="en" href="https://ktkwmr.com/chordtransposer/" />
   <link rel="alternate" hreflang="ja" href="https://ktkwmr.com/chordtransposer/ja/" />
   <link rel="alternate" hreflang="x-default" href="https://ktkwmr.com/chordtransposer/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Chord Transposer" />
-  <meta property="og:title" content="Chord Transposer – コード譜をブラウザで転調・移調できる無料Webアプリ" />
+  <meta property="og:title" content="コード譜の移調ツール｜キー変換・転調が無料 – Chord Transposer" />
   <meta property="og:description" content="コード譜をブラウザで転調（移調）。テキストの貼り付けや、TXT・PDF・画像ファイルの読み込みに対応。無料・登録不要・オフライン対応。" />
   <meta property="og:locale" content="ja_JP" />
   <meta property="og:locale:alternate" content="en_US" />
@@ -290,6 +290,8 @@
       background: var(--canvas);
     }
     .tabs { display: none; }
+    /* 端まで読んだあと、ページ全体（下の説明）までスクロールしないようにする */
+    textarea { overscroll-behavior: contain; }
 
     .panel {
       --focus: var(--ink);
@@ -495,6 +497,20 @@
       padding: 0 env(safe-area-inset-right, 0px) var(--pb) env(safe-area-inset-left, 0px);
     }
 
+    /* ---------- アプリの下の説明 ---------- */
+    .intro {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 40px var(--pr) calc(48px + var(--pb)) var(--pl);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+    .intro h1 { margin: 0 0 16px; font-size: 22px; line-height: 1.4; }
+    .intro h2 { margin: 28px 0 6px; font-size: 16px; line-height: 1.5; }
+    .intro p { margin: 0 0 12px; }
+    .intro ul { margin: 0; padding-left: 1.4em; }
+    .intro a { color: inherit; }
+
     /* プレビューの印刷: プレビュー画面の内容（#printArea）だけを印刷する */
     #printArea { display: none; }
     @page { margin: 10mm; }
@@ -516,8 +532,7 @@
       .panel-head { height: 48px; }
       .panel-actions button { width: 40px; height: 38px; }
       .panel-actions .btn-ico { width: 20px; height: 20px; }
-      html, body { overflow: hidden; }   /* ページ全体はスクロールさせない */
-      .app { position: fixed; inset: 0; height: auto; }   /* 実際の表示領域に合わせる */
+      /* .app は実際の表示領域の高さ（--app-h）。その下の説明までページをスクロールできる */
     }
 
     /* ---------- Tablet portrait / narrow window: 上部を2段にする（入力・出力はタブ。下の Phone portrait / tablet portrait を参照） ---------- */
@@ -768,6 +783,28 @@
 
   </div>
 
+  <!-- アプリの下の説明。生成される ja/index.html では日本語になり、検索エンジンが読む本文にもなる -->
+  <section class="intro" aria-labelledby="introTitle">
+    <h1 id="introTitle" data-i18n="intro.title">コード譜を移調・キー変換できる無料ツール</h1>
+    <div class="intro-body" data-i18n-html="intro.body"><p>Chord Transposer は、ギター・ウクレレ・ピアノのコード譜を別のキーに移調（転調）できる無料の Web ツールです。コード譜を貼り付けるか、テキスト・PDF・画像ファイルを開いて、上げ下げする半音の数を選ぶだけで、すべてのコードが新しいキーに変換されます。歌詞はそのままで、コードは同じ歌詞の上に残ります。</p>
+<h2>半音いくつ上げると、どう変わる？</h2>
+<p>移調は半音単位で数えます。+2（半音 2 つ上げる）にすると、C は D、Am7 は Bm7、F/G は G/A になります。−3 にすると、C は A になります。キーが高くて歌いにくいときは下げ、低いときは上げてください。12 半音で 1 オクターブなので、+5 と −7 はオクターブが違うだけで同じキーになります。</p>
+<h2>カポとの関係</h2>
+<p>カポを 1 フレット上に付けるごとに、音は半音 1 つ上がります。たとえば原曲のキーが E♭ なら、カポを 3 フレットに付けて C のコードフォームで弾けます。このとき弾くコードは、コード譜を −3 に移調すると分かります。キーごとのカポの位置は<a href="/chordtransposer/ja/capo-chart/">カポ位置の早見表</a>にまとめています。</p>
+<h2># と ♭、プライバシー</h2>
+<p>「# を優先」「b を優先」で、シャープとフラットの表記を切り替えられます。ファイルはブラウザ内だけで処理され、サーバーには送信されません。登録は不要で、一度開けばオフラインでも使えます。</p>
+<h2>ガイド・記事</h2>
+<ul>
+<li><a href="/chordtransposer/ja/guide/">Chord Transposer の使い方</a></li>
+<li><a href="/chordtransposer/ja/transposition-basics/">コードの移調のやり方：移調・転調の基礎</a></li>
+<li><a href="/chordtransposer/ja/key-chart/">キー別のコード表（移調表）</a></li>
+<li><a href="/chordtransposer/ja/capo-chart/">カポ位置の早見表</a></li>
+<li><a href="/chordtransposer/ja/sharps-and-flats/"># と ♭ の使い分け</a></li>
+<li><a href="/chordtransposer/ja/chordpro/">ChordPro 形式の解説：書き方と移調の方法</a></li>
+<li><a href="/chordtransposer/ja/faq/">よくある質問</a></li>
+</ul></div>
+  </section>
+
   <dialog class="msg" id="msgDlg">
     <h2 id="msgTitle">Error</h2>
     <p id="msgBody"></p>
@@ -871,6 +908,8 @@
           "menu.guide": "Guides & articles",
           "help.more": "Read the full guide →",
           "guide.url": "/chordtransposer/guide/",
+          "intro.title": "Transpose chord charts online for free",
+          "intro.body": "<p>Chord Transposer is a free web tool that changes the key of guitar, ukulele, and piano chord charts. Paste a chart or open a text, PDF, or image file, choose how many semitones to shift, and every chord is converted to the new key. Lyrics stay as they are, and each chord stays above the same word.</p>\n<h2>How semitones work</h2>\n<p>Transposing counts in semitones (half steps). At +2, C becomes D, Am7 becomes Bm7, and F/G becomes G/A. At −3, C becomes A. If a song is too high to sing, shift it down; if it is too low, shift it up. Twelve semitones make an octave, so +5 and −7 give the same key, an octave apart.</p>\n<h2>Transposing with a capo</h2>\n<p>Each fret you move the capo up raises the pitch by one semitone. For a song in E♭, you can put the capo on fret 3 and play C shapes. Transpose the chart by −3 to see which chords to play. The <a href=\"/chordtransposer/capo-chart/\">capo chart</a> lists the fret for every key.</p>\n<h2>Sharps, flats, and privacy</h2>\n<p>Choose “Prefer #” or “Prefer b” to switch between sharps and flats. Files are processed only in your browser and are never uploaded. No sign-up is needed, and the app works offline after your first visit.</p>\n<h2>Guides</h2>\n<ul>\n  <li><a href=\"/chordtransposer/guide/\">How to use Chord Transposer</a></li>\n  <li><a href=\"/chordtransposer/transposition-basics/\">How to transpose chords: a beginner's guide</a></li>\n  <li><a href=\"/chordtransposer/key-chart/\">Chords in every key: transposition chart</a></li>\n  <li><a href=\"/chordtransposer/capo-chart/\">Capo chart: which fret to use for every key</a></li>\n  <li><a href=\"/chordtransposer/sharps-and-flats/\">Sharps or flats? Choosing # and b in chord charts</a></li>\n  <li><a href=\"/chordtransposer/chordpro/\">The ChordPro format explained</a></li>\n  <li><a href=\"/chordtransposer/faq/\">Frequently asked questions</a></li>\n</ul>",
           "help.body": "<li><b>Open a file</b> – Tap the folder button and choose a chord chart (text, PDF, or image). Text files and text-based PDFs work best. Text from images or scanned PDFs may not be read correctly.</li>\n        <li><b>Or enter chords</b> – Paste or type a chord chart in the Input area. Output updates as you edit.</li>\n        <li><b>Transpose</b> – Choose the key shift. Chords in Output are converted.</li>\n        <li><b>#/♭</b> – Switch between # and b.</li>\n        <li><b>Size</b> – Change the text size.</li>\n        <li><b>Preview</b> – See the whole input or output at once. On phones and tablets, pinch to zoom and tap the printer button to print (on iPhone and iPad, choose Print in the share menu).</li>\n        <li><b>Save</b> – Save the input or output as a text file.</li>",
           "privacy.body": "<li><b>Your files stay on your device</b> – Chord charts you open or type are processed only in your browser. They are never uploaded to a server. This app has no accounts, cookies, or ads.</li>\n        <li><b>Libraries from a CDN</b> – When you open a PDF or an image, the PDF.js and Tesseract.js libraries and OCR language data are downloaded from jsDelivr (cdn.jsdelivr.net). As with any website, jsDelivr receives your IP address and browser information. Your file is not sent.</li>\n        <li><b>Data saved in your browser</b> – To work offline, the app and the OCR language data are saved in your browser's storage. The chord chart you were working on and your settings are also saved there, so you can pick up where you left off next time. You can delete them by clearing this site's data in your browser settings.</li>\n        <li><b>Server logs and page views</b> – This site is hosted on Cloudflare. Standard access logs (such as IP address, time, and the requested page) are kept for operation and security. Cloudflare Web Analytics counts page views without cookies (the page URL, referrer, browser information, and page load time).</li>\n        <li><b>Contact</b> – Questions and feedback: <a href=\"https://github.com/ktkwmr/ChordTransposer/issues\" target=\"_blank\" rel=\"noopener\">GitHub Issues</a>.</li>\n        <li><b>Full policy</b> – See the <a href=\"/chordtransposer/privacy/\">privacy policy</a> and <a href=\"/chordtransposer/about/\">about this site</a>.</li>",
           "about.license": "© 2026 ktkwmr · Licensed under the <a href=\"https://github.com/ktkwmr/ChordTransposer/blob/main/LICENSE\" target=\"_blank\" rel=\"noopener\">MIT License</a> · <a href=\"/chordtransposer/about/\">About this site</a>",
@@ -928,6 +967,8 @@
           "menu.guide": "ガイド・記事",
           "help.more": "詳しい使い方ガイドを見る →",
           "guide.url": "/chordtransposer/ja/guide/",
+          "intro.title": "コード譜を移調・キー変換できる無料ツール",
+          "intro.body": "<p>Chord Transposer は、ギター・ウクレレ・ピアノのコード譜を別のキーに移調（転調）できる無料の Web ツールです。コード譜を貼り付けるか、テキスト・PDF・画像ファイルを開いて、上げ下げする半音の数を選ぶだけで、すべてのコードが新しいキーに変換されます。歌詞はそのままで、コードは同じ歌詞の上に残ります。</p>\n<h2>半音いくつ上げると、どう変わる？</h2>\n<p>移調は半音単位で数えます。+2（半音 2 つ上げる）にすると、C は D、Am7 は Bm7、F/G は G/A になります。−3 にすると、C は A になります。キーが高くて歌いにくいときは下げ、低いときは上げてください。12 半音で 1 オクターブなので、+5 と −7 はオクターブが違うだけで同じキーになります。</p>\n<h2>カポとの関係</h2>\n<p>カポを 1 フレット上に付けるごとに、音は半音 1 つ上がります。たとえば原曲のキーが E♭ なら、カポを 3 フレットに付けて C のコードフォームで弾けます。このとき弾くコードは、コード譜を −3 に移調すると分かります。キーごとのカポの位置は<a href=\"/chordtransposer/ja/capo-chart/\">カポ位置の早見表</a>にまとめています。</p>\n<h2># と ♭、プライバシー</h2>\n<p>「# を優先」「b を優先」で、シャープとフラットの表記を切り替えられます。ファイルはブラウザ内だけで処理され、サーバーには送信されません。登録は不要で、一度開けばオフラインでも使えます。</p>\n<h2>ガイド・記事</h2>\n<ul>\n<li><a href=\"/chordtransposer/ja/guide/\">Chord Transposer の使い方</a></li>\n<li><a href=\"/chordtransposer/ja/transposition-basics/\">コードの移調のやり方：移調・転調の基礎</a></li>\n<li><a href=\"/chordtransposer/ja/key-chart/\">キー別のコード表（移調表）</a></li>\n<li><a href=\"/chordtransposer/ja/capo-chart/\">カポ位置の早見表</a></li>\n<li><a href=\"/chordtransposer/ja/sharps-and-flats/\"># と ♭ の使い分け</a></li>\n<li><a href=\"/chordtransposer/ja/chordpro/\">ChordPro 形式の解説：書き方と移調の方法</a></li>\n<li><a href=\"/chordtransposer/ja/faq/\">よくある質問</a></li>\n</ul>",
           "help.body": "<li><b>ファイルを開く</b> – フォルダのボタンをタップして、コード譜（テキスト・PDF・画像）を選びます。テキストファイルとテキスト形式の PDF が最も正確です。画像やスキャンした PDF は、正しく読み取れない場合があります。</li>\n<li><b>コードを入力する</b> – 入力欄にコード譜を貼り付けるか、直接入力します。編集すると出力がすぐに更新されます。</li>\n<li><b>移調</b> – 移調する幅を選ぶと、出力のコードが変換されます。</li>\n<li><b>#/♭</b> – # と b の表記を切り替えます。</li>\n<li><b>文字サイズ</b> – 文字の大きさを変えます。</li>\n<li><b>プレビュー</b> – 入力または出力の全体をまとめて表示します。スマホ・タブレットでは、ピンチで拡大・縮小でき、プリンターのボタンで印刷できます（iPhone・iPad では、表示される共有メニューで「プリント」を選びます）。</li>\n<li><b>保存</b> – 入力または出力をテキストファイルに保存します。</li>",
           "privacy.body": "<li><b>ファイルは端末の外に出ません</b> – 開いたコード譜や入力した内容は、ブラウザ内だけで処理されます。サーバーに送信されることはありません。アカウント登録・Cookie・広告もありません。</li>\n<li><b>CDN から読み込むライブラリ</b> – PDF や画像を開いたときだけ、PDF.js・Tesseract.js と OCR 用の言語データを jsDelivr（cdn.jsdelivr.net）から読み込みます。一般的な Web サイトと同様に、jsDelivr には IP アドレスやブラウザの情報が送られますが、ファイルの内容は送られません。</li>\n<li><b>ブラウザに保存するデータ</b> – オフラインで使えるよう、アプリ本体と OCR 用の言語データをブラウザ内に保存します。次に開いたときに続きから使えるよう、編集中のコード譜と設定も保存します。ブラウザの設定でこのサイトのデータを削除すると消えます。</li>\n<li><b>サーバーのログと閲覧数</b> – このサイトは Cloudflare で配信しています。運用とセキュリティのため、標準的なアクセスログ（IP アドレス、日時、アクセスしたページなど）が記録されます。また、Cloudflare Web Analytics で、Cookie を使わずにページの閲覧数を集計しています（閲覧したページの URL、参照元、ブラウザの情報、ページの表示速度）。</li>\n<li><b>お問い合わせ</b> – ご質問やご意見は <a href=\"https://github.com/ktkwmr/ChordTransposer/issues\" target=\"_blank\" rel=\"noopener\">GitHub Issues</a> へどうぞ。</li>\n<li><b>詳しくは</b> – <a href=\"/chordtransposer/ja/privacy/\">プライバシーポリシー</a>と<a href=\"/chordtransposer/ja/about/\">運営者情報</a>をご覧ください。</li>",
           "about.license": "© 2026 ktkwmr · <a href=\"https://github.com/ktkwmr/ChordTransposer/blob/main/LICENSE\" target=\"_blank\" rel=\"noopener\">MIT ライセンス</a>で公開しています · <a href=\"/chordtransposer/ja/about/\">運営者情報</a>",
