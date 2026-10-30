@@ -87,31 +87,21 @@
       overscroll-behavior: none;
     }
 
-    .app {
-      height: 100vh;
-      height: 100dvh;
-      height: var(--app-h, 100dvh);
-      min-height: 280px;
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr);
-    }
-
-    /* ---------- Toolbar ---------- */
+    /* ---------- Header（ほかのアプリと同じ: 左にアイコンと名前、右に設定） ---------- */
     /* Sticky with an opaque background: iOS 26 Safari (and home-screen apps) blurs whatever is under the status
        bar, unless a full-width fixed / sticky element with a background sits at the top edge; then it uses that
        element's colour instead of the blur */
-    header {
+    .topbar {
       position: sticky;
       top: 0;
       z-index: 900;
-      padding: calc(12px + env(safe-area-inset-top, 0px)) var(--pr) 12px var(--pl);
+      padding: calc(10px + env(safe-area-inset-top, 0px)) var(--pr) 10px var(--pl);
       border-bottom: 1px solid var(--line);
       background: var(--paper);
     }
 
     .toolbar {
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
       gap: 12px 20px;
     }
@@ -120,28 +110,23 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      margin: 0;
       font-size: 14px;
       font-weight: 700;
       letter-spacing: 0.01em;
       white-space: nowrap;
     }
     .mark { width: 28px; height: 28px; flex: none; }
+    .toolbar .end { margin-left: auto; display: flex; align-items: center; }
 
-    .group {
+    /* ---------- 開く・移調・#/♭・文字サイズ（入力・出力の上） ---------- */
+    .app { background: var(--canvas); }
+    .controls {
       display: flex;
       align-items: center;
       flex-wrap: wrap;
       gap: 8px 16px;
-    }
-    .group + .group {
-      padding-left: 20px;
-      border-left: 1px solid var(--line);
-    }
-    .group.end {
-      margin-left: auto;
-      padding-left: 0;
-      border-left: 0;
-      gap: 8px;
+      padding: 16px var(--pr) 0 var(--pl);
     }
 
     /* 移調・#/♭・文字サイズ: アイコン（または短いラベル）と選択中の値を表示し、
@@ -246,7 +231,7 @@
     #openBtn .ico { flex: none; width: 22px; height: 22px; }
     .sep { flex: none; width: 1px; height: 24px; background: var(--line); }
 
-    #settingsBtn { width: var(--ctl-h); padding: 0; border-radius: 50%; border-color: transparent; display: inline-flex; align-items: center; justify-content: center; }
+    #settingsBtn { width: 34px; height: 34px; padding: 0; border-radius: 50%; border-color: transparent; display: inline-flex; align-items: center; justify-content: center; }
     @media (hover: hover) { #settingsBtn:hover { border-color: transparent; } }
     #settingsBtn svg { flex: none; width: 28px; height: 28px; }   /* ♯マークと同じ大きさ */
 
@@ -289,13 +274,9 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
-      min-height: 0;
       padding: 16px var(--pr) calc(16px + var(--pb)) var(--pl);
-      background: var(--canvas);
     }
     .tabs { display: none; }
-    /* 端まで読んだあと、ページ全体（下の説明）までスクロールしないようにする */
-    textarea { overscroll-behavior: contain; }
 
     .panel {
       --focus: var(--ink);
@@ -346,10 +327,13 @@
     .btn-ico { display: block; flex: none; width: 18px; height: 18px; }
 
 
+    /* 入力・出力は縦にスクロールさせず、JS（fitEditors）で内容の高さまで伸ばす。
+       ページ全体（下の説明まで）をスクロールしやすくするため。長い行は横にスクロールする */
     textarea {
-      flex: 1;
+      flex: 1 0 auto;
       width: 100%;
-      min-height: 0;
+      min-height: 50vh;
+      min-height: max(240px, 50svh);
       margin: 0;
       border: 0;
       border-radius: 0;
@@ -365,7 +349,9 @@
       outline: none;
       tab-size: 4;
       white-space: pre;
-      overflow: auto;
+      overflow-x: auto;
+      overflow-y: hidden;
+      overscroll-behavior-x: contain;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: thin;
       scrollbar-color: #c4c4c4 transparent;
@@ -536,31 +522,17 @@
       .panel-head { height: 48px; }
       .panel-actions button { width: 40px; height: 38px; }
       .panel-actions .btn-ico { width: 20px; height: 20px; }
-      /* .app は実際の表示領域の高さ（--app-h）。その下の説明までページをスクロールできる */
     }
 
-    /* ---------- Tablet portrait / narrow window: 上部を2段にする（入力・出力はタブ。下の Phone portrait / tablet portrait を参照） ---------- */
+    /* ---------- Tablet portrait / narrow window（入力・出力はタブ。下の Phone portrait / tablet portrait を参照） ---------- */
     @media (max-width: 900px) {
       :root { --pad-x: 14px; }
-    }
-    @media (max-width: 900px) and (min-height: 521px) {
-      .group + .group { padding-left: 0; border-left: 0; }
-      /* 1段目: タイトル と 右端に設定、2段目: 「開く」と移調などの設定 */
-      .toolbar { display: grid; grid-template-columns: auto minmax(0, 1fr); }
-      .brand { grid-area: 1 / 1; }
-      .group.end { grid-area: 1 / 2; justify-self: end; margin-left: 0; }
-      .group.settings { grid-area: 2 / 1 / 3 / 3; }
-      .sep { display: none; }
     }
 
     /* ---------- Phone landscape: keep panes side by side, compact chrome ---------- */
     @media (max-height: 500px) and (orientation: landscape) {
       :root { --pad-x: 12px; --ctl-h: 34px; }
-      header { padding-top: 6px; padding-bottom: 6px; }
-      .toolbar { gap: 6px 12px; }
-      .brand span { display: none; }
-      .group + .group { padding-left: 12px; }
-      .group { gap: 6px 12px; }
+      .controls { gap: 6px 12px; padding-top: 10px; }
       main { gap: 10px; padding-top: 10px; padding-bottom: calc(10px + var(--pb)); }
       .panel-head { height: 36px; }
       .panel-actions button { width: 32px; height: 28px; }
@@ -578,10 +550,9 @@
       main {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
-        grid-template-rows: auto minmax(0, 1fr);
+        grid-template-rows: auto auto;
         gap: 10px 8px;
         padding: 10px var(--pr) calc(10px + max(var(--pb), 8px)) var(--pl);   /* 角丸・ホームバーに掛からないよう余白を確保 */
-        border-top: 1px solid var(--line);
       }
       .tabs {
         grid-area: 1 / 1;
@@ -629,7 +600,6 @@
       .panel.out textarea,
       .panel.out textarea:focus {
         grid-area: 2 / 1 / 3 / 3;
-        min-height: 0;
         border-color: transparent;
         box-shadow: var(--paper-shadow);
       }
@@ -641,46 +611,16 @@
     }
 
     /* ---------- Phone portrait ----------
-       上: タイトルと設定 / 中: 入力・出力（タブで切り替え） */
+       ヘッダーの下: 「開く」と移調などを 1 行に / その下: 入力・出力（タブで切り替え） */
     @media (max-width: 600px) {
       :root { --pad-x: 14px; }
 
-      .app {
-        min-height: 0;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-template-rows: auto auto minmax(0, 1fr);
-        column-gap: 8px;
-      }
-
-      /* ヘッダー内の要素を .app のグリッドに直接配置する。header は sticky と白の背景を残すため
-         display: contents にせず、.app の 1〜2 行目を subgrid で受け持つ（iOS 26 のステータスバーのにじみ対策） */
-      header {
-        display: grid;
-        grid-column: 1 / -1;
-        grid-row: 1 / 3;
-        grid-template-columns: subgrid;
-        grid-template-rows: subgrid;
-        padding: 0;
-        border-bottom: 0;
-      }
-      .toolbar, .group.end { display: contents; }
-      .sep { display: none; }
-
-      .brand {
-        grid-column: 1 / -1;
-        grid-row: 1;
-        padding: calc(10px + env(safe-area-inset-top, 0px)) var(--pr) 0 var(--pl);
-      }
-
-      .group.settings {
-        grid-column: 1 / -1;
-        grid-row: 2;
-        display: flex;
+      .controls {
         flex-wrap: nowrap;
         gap: 5px;
-        padding: 10px var(--pr) 10px var(--pl);
-        border-left: 0;
+        padding-top: 10px;
       }
+      .sep { display: none; }
       /* 幅は中身に合わせ、余った分を均等に分ける（320px 幅でも値が切れないように） */
       label.ctl { flex: 1 1 auto; width: auto; height: 44px; gap: 4px; padding: 0 20px 0 6px; background-position: right 7px center; }
       label.ctl .ctl-ico { width: 22px; height: 22px; }
@@ -688,23 +628,9 @@
       label.acc .ctl-ico { width: 24px; height: 24px; }
       label.ctl .val { font-size: 16px; }
 
-      main {
-        grid-column: 1 / -1;
-        grid-row: 3;
-      }
-
-      /* Open は左上（移調の左） */
+      /* Open は左（移調の左） */
       #openBtn { flex: none; width: 44px; height: 44px; }
       #openBtn .ico { width: 24px; height: 24px; }
-      #settingsBtn {
-        grid-row: 1;
-        grid-column: 2;
-        justify-self: end;
-        align-self: start;
-        width: 36px;
-        height: 36px;
-        margin: calc(6px + env(safe-area-inset-top, 0px)) var(--pr) 0 0;
-      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -713,60 +639,59 @@
   </style>
 </head>
 <body>
-  <div class="app" data-view="in">
-    <header>
-      <div class="toolbar">
-        <div class="brand">
-          <svg class="mark" viewBox="0 0 28 28" aria-hidden="true">
-            <rect width="28" height="28" rx="7" fill="#000" />
-            <g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round">
-              <path d="M11 7v14M17 7v14" />
-              <path d="M8 12.5l12-2.5M8 18.5l12-2.5" />
-            </g>
-          </svg>
-          <span>Chord Transposer</span>
-        </div>
-
-        <div class="group settings">
-          <button class="primary" id="openBtn" type="button" aria-label="Open" title="Open" data-i18n-attr="aria-label:open;title:open"><svg class="ico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6.5V15a1.5 1.5 0 0 0 1.5 1.5h12a1.5 1.5 0 0 0 1.5-1.5V8.5A1.5 1.5 0 0 0 16 7H9.5L8 5H4a1.5 1.5 0 0 0-1.5 1.5z"/></svg></button>
-          <input id="fileInput" type="file" tabindex="-1" aria-hidden="true" accept="image/*,text/*,application/pdf,.pdf,.txt,.text,.md,.markdown,.csv,.tsv,.json,.xml,.html,.htm,.css,.js,.ts,.log,.lrc,.cho,.crd,.chord,.chp,.tab,.ascii,.ini,.yaml,.yml,.toml,.lt,.chopro,.pro,.enc" />
-          <span class="sep" aria-hidden="true"></span>
-          <label class="ctl key"><svg class="ctl-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5v7M3.5 6L6 3.5 8.5 6M6 13.5v7M3.5 18L6 20.5 8.5 18"/><path d="M17.5 16.5V4.5c0 2.2 3 3 3 5.5"/><circle cx="15" cy="16.5" r="2.5" fill="currentColor"/></svg><span class="ctl-txt" data-i18n="ctl.transpose">Transpose</span><span class="val" aria-hidden="true"></span>
-            <select id="semitones" aria-label="Semitones to transpose" data-i18n-attr="aria-label:aria.semitones"></select>
-          </label>
-          <label class="ctl acc"><svg class="ctl-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="ico-sharp" d="M5 4.5v15M8.8 3.5v15M2.6 9.6l8.6-1.8M2.6 15.4l8.6-1.8"/><path class="ico-flat" d="M14.5 3v17c3.6-1.4 6.8-3.6 6.8-6 0-2.4-2.8-3-6.8 0"/></svg>
-            <select id="accidental" aria-label="Sharp or flat preference" data-i18n-attr="aria-label:aria.accidental">
-              <option value="auto" data-i18n="acc.auto">Original</option>
-              <option value="sharp" data-i18n="acc.sharp">Prefer #</option>
-              <option value="flat" data-i18n="acc.flat">Prefer b</option>
-            </select>
-          </label>
-          <label class="ctl size"><svg class="ctl-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 19L8 5l5.5 14M4.6 14h6.8"/><path d="M14.5 19l3.5-8.5 3.5 8.5M15.6 16.3h4.8"/></svg><span class="ctl-txt" data-i18n="ctl.size">Size</span><span class="val" aria-hidden="true"></span>
-            <select id="fontSize" aria-label="Text size" data-i18n-attr="aria-label:aria.size">
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-            <option value="9">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="14" selected>14</option>
-            <option value="16">16</option>
-            <option value="18">18</option>
-            <option value="20">20</option>
-            <option value="24">24</option>
-            <option value="28">28</option>
-          </select>
-          </label>
-        </div>
-
-        <div class="group end">
-          <button class="ghost" id="settingsBtn" type="button" aria-label="Settings" data-i18n-attr="aria-label:settings" aria-haspopup="menu" aria-expanded="false" aria-controls="settingsMenu">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.89 5.11 L10.33 2.55 L13.67 2.55 L14.11 5.11 A7.2 7.2 0 0 1 15.38 5.64 L17.51 4.14 L19.86 6.49 L18.36 8.62 A7.2 7.2 0 0 1 18.89 9.89 L21.45 10.33 L21.45 13.67 L18.89 14.11 A7.2 7.2 0 0 1 18.36 15.38 L19.86 17.51 L17.51 19.86 L15.38 18.36 A7.2 7.2 0 0 1 14.11 18.89 L13.67 21.45 L10.33 21.45 L9.89 18.89 A7.2 7.2 0 0 1 8.62 18.36 L6.49 19.86 L4.14 17.51 L5.64 15.38 A7.2 7.2 0 0 1 5.11 14.11 L2.55 13.67 L2.55 10.33 L5.11 9.89 A7.2 7.2 0 0 1 5.64 8.62 L4.14 6.49 L6.49 4.14 L8.62 5.64 A7.2 7.2 0 0 1 9.89 5.11 Z"/><circle cx="12" cy="12" r="3"/></svg>
-          </button>
-        </div>
+  <header class="topbar">
+    <div class="toolbar">
+      <div class="brand">
+        <svg class="mark" viewBox="0 0 28 28" aria-hidden="true">
+          <rect width="28" height="28" rx="7" fill="#000" />
+          <g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round">
+            <path d="M11 7v14M17 7v14" />
+            <path d="M8 12.5l12-2.5M8 18.5l12-2.5" />
+          </g>
+        </svg>
+        <span>Chord Transposer</span>
       </div>
-    </header>
+      <div class="end">
+        <button class="ghost" id="settingsBtn" type="button" aria-label="Settings" data-i18n-attr="aria-label:settings" aria-haspopup="menu" aria-expanded="false" aria-controls="settingsMenu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.89 5.11 L10.33 2.55 L13.67 2.55 L14.11 5.11 A7.2 7.2 0 0 1 15.38 5.64 L17.51 4.14 L19.86 6.49 L18.36 8.62 A7.2 7.2 0 0 1 18.89 9.89 L21.45 10.33 L21.45 13.67 L18.89 14.11 A7.2 7.2 0 0 1 18.36 15.38 L19.86 17.51 L17.51 19.86 L15.38 18.36 A7.2 7.2 0 0 1 14.11 18.89 L13.67 21.45 L10.33 21.45 L9.89 18.89 A7.2 7.2 0 0 1 8.62 18.36 L6.49 19.86 L4.14 17.51 L5.64 15.38 A7.2 7.2 0 0 1 5.11 14.11 L2.55 13.67 L2.55 10.33 L5.11 9.89 A7.2 7.2 0 0 1 5.64 8.62 L4.14 6.49 L6.49 4.14 L8.62 5.64 A7.2 7.2 0 0 1 9.89 5.11 Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="app" data-view="in">
+    <div class="controls">
+      <button class="primary" id="openBtn" type="button" aria-label="Open" title="Open" data-i18n-attr="aria-label:open;title:open"><svg class="ico" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 6.5V15a1.5 1.5 0 0 0 1.5 1.5h12a1.5 1.5 0 0 0 1.5-1.5V8.5A1.5 1.5 0 0 0 16 7H9.5L8 5H4a1.5 1.5 0 0 0-1.5 1.5z"/></svg></button>
+      <input id="fileInput" type="file" tabindex="-1" aria-hidden="true" accept="image/*,text/*,application/pdf,.pdf,.txt,.text,.md,.markdown,.csv,.tsv,.json,.xml,.html,.htm,.css,.js,.ts,.log,.lrc,.cho,.crd,.chord,.chp,.tab,.ascii,.ini,.yaml,.yml,.toml,.lt,.chopro,.pro,.enc" />
+      <span class="sep" aria-hidden="true"></span>
+      <label class="ctl key"><svg class="ctl-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5v7M3.5 6L6 3.5 8.5 6M6 13.5v7M3.5 18L6 20.5 8.5 18"/><path d="M17.5 16.5V4.5c0 2.2 3 3 3 5.5"/><circle cx="15" cy="16.5" r="2.5" fill="currentColor"/></svg><span class="ctl-txt" data-i18n="ctl.transpose">Transpose</span><span class="val" aria-hidden="true"></span>
+        <select id="semitones" aria-label="Semitones to transpose" data-i18n-attr="aria-label:aria.semitones"></select>
+      </label>
+      <label class="ctl acc"><svg class="ctl-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="ico-sharp" d="M5 4.5v15M8.8 3.5v15M2.6 9.6l8.6-1.8M2.6 15.4l8.6-1.8"/><path class="ico-flat" d="M14.5 3v17c3.6-1.4 6.8-3.6 6.8-6 0-2.4-2.8-3-6.8 0"/></svg>
+        <select id="accidental" aria-label="Sharp or flat preference" data-i18n-attr="aria-label:aria.accidental">
+          <option value="auto" data-i18n="acc.auto">Original</option>
+          <option value="sharp" data-i18n="acc.sharp">Prefer #</option>
+          <option value="flat" data-i18n="acc.flat">Prefer b</option>
+        </select>
+      </label>
+      <label class="ctl size"><svg class="ctl-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 19L8 5l5.5 14M4.6 14h6.8"/><path d="M14.5 19l3.5-8.5 3.5 8.5M15.6 16.3h4.8"/></svg><span class="ctl-txt" data-i18n="ctl.size">Size</span><span class="val" aria-hidden="true"></span>
+        <select id="fontSize" aria-label="Text size" data-i18n-attr="aria-label:aria.size">
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="14" selected>14</option>
+        <option value="16">16</option>
+        <option value="18">18</option>
+        <option value="20">20</option>
+        <option value="24">24</option>
+        <option value="28">28</option>
+      </select>
+      </label>
+    </div>
 
     <main>
       <div class="tabs" role="tablist" aria-label="Text" data-i18n-attr="aria-label:tabs">
@@ -1655,10 +1580,29 @@
         const source = inputEl.value;
         const result = transposeText(source, semitones, mode);
         outputEl.value = result.text;
+        fitEditors();
       }
 
       function applyFontSize() {
         document.documentElement.style.setProperty("--editor-size", fontSizeEl.value + "px");
+        fitEditors();
+      }
+
+      // 入力・出力のテキスト欄は縦にスクロールさせず、内容の高さまで伸ばす（横はスクロール）。
+      // 欄の中のスクロールにページのスクロールを取られず、下の説明まで続けてスクロールできるように
+      function fitEditor(el) {
+        if (!el.offsetParent) return;   // タブで隠れているとき（表示したときに合わせ直す）
+        el.style.flex = "none";   // 隣の欄の高さに引き伸ばされた分を測らないように
+        el.style.height = "auto";
+        el.style.height = (el.scrollHeight + el.offsetHeight - el.clientHeight) + "px";   // 枠線と横スクロールバーの分を足す
+        el.style.flex = "";
+      }
+      function fitEditors() {
+        // 測る間にページが短くなってスクロール位置がずれないよう、高さを保つ
+        appEl.style.minHeight = appEl.offsetHeight + "px";
+        fitEditor(inputEl);
+        fitEditor(outputEl);
+        appEl.style.minHeight = "";
       }
 
       // 印刷するときの紙の大きさ（CSS px、縦向き。横向きは幅と高さを入れ替える）。
@@ -2094,6 +2038,7 @@
         viewTabs.forEach(function (tab) {
           tab.setAttribute("aria-selected", String(tab.dataset.view === view));
         });
+        fitEditors();
         saveStateSoon();
       }
 
@@ -2154,6 +2099,8 @@
       }
       fitHeight();
       window.addEventListener("resize", fitHeight);
+      window.addEventListener("resize", fitEditors);   // 横スクロールバーの有無・欄の最小の高さが変わる
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitEditors);
       window.addEventListener("orientationchange", fitHeight);
 
       // 使い方（How to use）ダイアログ
