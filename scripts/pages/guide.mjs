@@ -66,10 +66,10 @@ export default {
   <li><b>Size</b>: the text size of Input and Output.</li>
   <li><b>Preview</b>: show the whole chart at once, ready to print. Input and Output each have their own Preview button.</li>
   <li><b>Save</b>: save Input or Output as a text file.</li>
-  <li><b>Settings</b> (gear button): a menu with How to use, Guides &amp; articles, Privacy, and About (license information).</li>
+  <li><b>Settings</b> (gear button): a menu with How to use, Guides &amp; articles, Privacy, About (license information), and More apps (other free tools by the same author). Guides and More apps open in a new tab, so your chart stays as it is.</li>
 </ol>
 <figure class="shot menu">
-  ${img("en", "menu", "The settings menu opened from the gear button, with How to use, Guides &amp; articles, Privacy, and About.", { half: true })}
+  ${img("en", "menu", "The settings menu opened from the gear button, with How to use, Guides &amp; articles, Privacy, About, and More apps.", { half: true })}
   <figcaption>The settings menu.</figcaption>
 </figure>
 
@@ -180,10 +180,10 @@ export default {
   <li><b>文字サイズ</b>：入力欄と出力欄の文字の大きさです。</li>
   <li><b>プレビュー</b>：コード譜全体をまとめて表示し、印刷できます。入力と出力のそれぞれにボタンがあります。</li>
   <li><b>保存</b>：入力または出力をテキストファイルに保存します。</li>
-  <li><b>設定</b>（歯車のボタン）：「使い方」「ガイド・記事」「プライバシー」「このアプリについて」（ライセンス）のメニューを開きます。</li>
+  <li><b>設定</b>（歯車のボタン）：「使い方」「ガイド・記事」「プライバシー」「このアプリについて」（ライセンス）「ほかのアプリ」（同じ作者の無料ツール）のメニューを開きます。「ガイド・記事」と「ほかのアプリ」は新しいタブで開くので、作業中のコード譜はそのまま残ります。</li>
 </ol>
 <figure class="shot menu">
-  ${img("ja", "menu", "歯車のボタンから開いた設定メニュー。「使い方」「ガイド・記事」「プライバシー」「このアプリについて」の 4 項目がある。", { half: true })}
+  ${img("ja", "menu", "歯車のボタンから開いた設定メニュー。「使い方」「ガイド・記事」「プライバシー」「このアプリについて」「ほかのアプリ」の 5 項目がある。", { half: true })}
   <figcaption>設定メニュー</figcaption>
 </figure>
 
