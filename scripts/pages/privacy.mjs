@@ -8,11 +8,12 @@ const ADS_SETTINGS = "https://adssettings.google.com/";
 const ABOUTADS = "https://www.aboutads.info/choices/";
 const JSDELIVR = "https://www.jsdelivr.com/terms";
 const CLOUDFLARE = "https://www.cloudflare.com/privacypolicy/";
+const GOOGLE = "https://policies.google.com/privacy";
 
 export default {
   slug: "privacy",
   schemaType: "WebPage",
-  modified: "2026-10-14",
+  modified: "2026-11-28",
   en: {
     title: "Privacy Policy",
     heading: "Privacy policy",
@@ -53,6 +54,8 @@ export default {
     <tbody>
       <tr><th scope="row"><a href="${CLOUDFLARE}" rel="noopener">Cloudflare</a> (Cloudflare, Inc.)</th><td data-label="When:">Every page and file request</td><td data-label="Information sent:">IP address, browser information (user agent), requested URL, date and time</td><td data-label="Purpose:">Hosting this site, security, and access logs for operation</td></tr>
       <tr><th scope="row"><a href="${CLOUDFLARE}" rel="noopener">Cloudflare Web Analytics</a> (Cloudflare, Inc.)</th><td data-label="When:">Every page view</td><td data-label="Information sent:">IP address, browser information (user agent), the URL of the page, referrer, page load time. No cookies are used.</td><td data-label="Purpose:">Counting page views (see "Analytics" below)</td></tr>
+      <tr><th scope="row"><a href="${CLOUDFLARE}" rel="noopener">Cloudflare Zaraz</a> (Cloudflare, Inc.)</th><td data-label="When:">Every page view, and when you use the app (such as tapping a button)</td><td data-label="Information sent:">IP address, browser information (user agent), the URL of the page, referrer, and the usage events listed in "Analytics" below</td><td data-label="Purpose:">Showing the cookie banner, and passing usage events on to Google Analytics only if you agree</td></tr>
+      <tr><th scope="row"><a href="${GOOGLE}" rel="noopener">Google Analytics</a> (Google LLC)</th><td data-label="When:">Only if you choose “Accept all” in the cookie banner: every page view, and when you use the app. Sent from Cloudflare's servers, not from your browser</td><td data-label="Information sent:">A random ID for your browser, the URL of the page, referrer, browser information, approximate location from a shortened IP address, and the usage events listed in "Analytics" below</td><td data-label="Purpose:">Understanding how the site is used, to improve it (see "Analytics" below)</td></tr>
       <tr><th scope="row"><a href="${JSDELIVR}" rel="noopener">jsDelivr</a> (cdn.jsdelivr.net)</th><td data-label="When:">When you open a PDF or an image</td><td data-label="Information sent:">IP address, browser information, requested URL, date and time. <b>Your file is not sent.</b></td><td data-label="Purpose:">Downloading the PDF.js and Tesseract.js libraries and the OCR language data</td></tr>
       <tr><th scope="row"><a href="${GOOGLE_ADS}" rel="noopener">Google AdSense</a> (Google LLC)</th><td data-label="When:">When a page shows ads</td><td data-label="Information sent:">IP address, browser information, the URL of the page, cookie and advertising identifiers</td><td data-label="Purpose:">Showing ads, measuring them, and preventing fraud (see the next section)</td></tr>
     </tbody>
@@ -60,7 +63,8 @@ export default {
 </div>
 
 <h2 id="ads">4. Advertising and cookies</h2>
-<p>This site itself does not set cookies. To keep the app free, this site may show ads from <b>Google AdSense</b>, a third-party advertising service. When ads are shown:</p>
+<p>This site uses cookies for analytics only if you agree (see "Analytics" below): <b>your choice in the cookie banner</b> (set by Cloudflare Zaraz when you choose; it applies to all apps on ktkwmr.com), and, only if you choose “Accept all”, <b>a random ID for Google Analytics</b> to count returning visits. You can change your choice at any time from “Cookie settings” at the bottom of each page.</p>
+<p>To keep the app free, this site may show ads from <b>Google AdSense</b>, a third-party advertising service. When ads are shown:</p>
 <ul>
   <li>Third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to this website or other websites.</li>
   <li>Google's use of advertising cookies enables it and its partners to serve ads to users based on their visits to this site and/or other sites on the Internet. For details, see <a href="${GOOGLE_ADS}" rel="noopener">how Google uses cookies in advertising</a> and <a href="${GOOGLE_PARTNERS}" rel="noopener">how Google uses information from sites that use its services</a>.</li>
@@ -70,7 +74,15 @@ export default {
 <p>Even if you opt out of personalized ads, you may still see ads; they are just not based on your interests.</p>
 
 <h2 id="analytics">5. Analytics</h2>
-<p>To see how many people use this site, we use <b>Cloudflare Web Analytics</b>. It counts page views without cookies and without identifying or tracking individual visitors across sites. We do not use Google Analytics.</p>
+<p>To see how many people use this site, we use <b>Cloudflare Web Analytics</b>. It counts page views without cookies and without identifying or tracking individual visitors across sites.</p>
+<p>To learn how the app and the guides are used, so we can improve them, we also use <b>Google Analytics</b> through <b>Cloudflare Zaraz</b>, <b>only if you agree</b> in the cookie banner. It records:</p>
+<ul>
+  <li>the pages viewed, how long they were open, and where you came from (referrer);</li>
+  <li>the buttons and links tapped, and the settings changed (by name, and for settings their value, such as “Transpose: +2”);</li>
+  <li>the kind and result of the files opened (such as “PDF, opened in 3 seconds”, or the kind of error), and whether a chord chart was pasted, previewed, printed, or saved;</li>
+</ul>
+<p>File names and the chord charts you open, paste, or type are never sent. The data is sent to Google from Cloudflare's servers (your browser does not connect to Google), with the end of your IP address removed. Google signals and advertising features are turned off, and the data is kept for 14 months. See <a href="${GOOGLE_PARTNERS}" rel="noopener">how Google uses information from sites that use its services</a>.</p>
+<p>If you choose “Reject all”, or do not choose, nothing is sent to Google Analytics.</p>
 
 <h2 id="third-party">6. Sharing with third parties</h2>
 <p>We do not collect personal information that identifies you, and we do not sell or provide it to third parties, except where required by law.</p>
@@ -80,7 +92,7 @@ export default {
 
 <h2 id="changes">8. Changes to this policy</h2>
 <p>We may update this policy when the site changes, for example when we add or remove a service. The updated policy applies from the time it is posted on this page.</p>
-<p>Effective: October 12, 2026 (last updated: October 14, 2026)</p>
+<p>Effective: October 12, 2026 (last updated: November 28, 2026)</p>
 `,
   },
   ja: {
@@ -123,6 +135,8 @@ export default {
     <tbody>
       <tr><th scope="row"><a href="${CLOUDFLARE}" rel="noopener">Cloudflare</a>（Cloudflare, Inc.）</th><td data-label="タイミング：">すべてのページ・ファイルの読み込み時</td><td data-label="送信される情報：">IP アドレス、ブラウザの情報（ユーザーエージェント）、アクセスした URL、日時</td><td data-label="利用目的：">本サイトの配信、セキュリティの確保、運用のためのアクセスログ</td></tr>
       <tr><th scope="row"><a href="${CLOUDFLARE}" rel="noopener">Cloudflare Web Analytics</a>（Cloudflare, Inc.）</th><td data-label="タイミング：">ページを開いたとき</td><td data-label="送信される情報：">IP アドレス、ブラウザの情報（ユーザーエージェント）、閲覧したページの URL、参照元、ページの表示速度。Cookie は使いません。</td><td data-label="利用目的：">ページの閲覧数の集計（「アクセス解析」の項目を参照）</td></tr>
+      <tr><th scope="row"><a href="${CLOUDFLARE}" rel="noopener">Cloudflare Zaraz</a>（Cloudflare, Inc.）</th><td data-label="タイミング：">ページを開いたとき、アプリを操作したとき（ボタンを押したときなど）</td><td data-label="送信される情報：">IP アドレス、ブラウザの情報（ユーザーエージェント）、閲覧したページの URL、参照元、「アクセス解析」の項目に書いた操作の情報</td><td data-label="利用目的：">Cookie のバナーの表示と、同意した場合に限り Google アナリティクスへ操作の情報を渡すこと</td></tr>
+      <tr><th scope="row"><a href="${GOOGLE}" rel="noopener">Google アナリティクス</a>（Google LLC）</th><td data-label="タイミング：">Cookie のバナーで「すべて同意」を選んだ場合のみ。ページを開いたとき、アプリを操作したとき。お使いのブラウザからではなく Cloudflare のサーバーから送信</td><td data-label="送信される情報：">ブラウザごとのランダムな ID、閲覧したページの URL、参照元、ブラウザの情報、末尾を削った IP アドレスから推定するおおよその地域、「アクセス解析」の項目に書いた操作の情報</td><td data-label="利用目的：">サイトの使われ方を知り、改善すること（「アクセス解析」の項目を参照）</td></tr>
       <tr><th scope="row"><a href="${JSDELIVR}" rel="noopener">jsDelivr</a>（cdn.jsdelivr.net）</th><td data-label="タイミング：">PDF や画像を開いたとき</td><td data-label="送信される情報：">IP アドレス、ブラウザの情報、アクセスした URL、日時。<b>ファイルの内容は送られません。</b></td><td data-label="利用目的：">PDF.js・Tesseract.js のライブラリと OCR 用の言語データのダウンロード</td></tr>
       <tr><th scope="row"><a href="${GOOGLE_ADS}" rel="noopener">Google AdSense</a>（Google LLC）</th><td data-label="タイミング：">広告を表示するページを開いたとき</td><td data-label="送信される情報：">IP アドレス、ブラウザの情報、閲覧したページの URL、Cookie や広告識別子</td><td data-label="利用目的：">広告の配信・効果測定・不正防止（次の項目を参照）</td></tr>
     </tbody>
@@ -130,7 +144,8 @@ export default {
 </div>
 
 <h2 id="ads">4. 広告と Cookie</h2>
-<p>本サイト自体は Cookie を設定しません。アプリを無料で提供し続けるため、本サイトでは第三者配信の広告サービス「<b>Google AdSense</b>」の広告を表示する場合があります。広告を表示する場合、次のとおりです。</p>
+<p>本サイトは、同意した場合のアクセス解析のために Cookie を使います（「アクセス解析」の項目を参照）。<b>Cookie のバナーでの選択</b>（選んだときに Cloudflare Zaraz が保存。ktkwmr.com のすべてのアプリに共通）と、「すべて同意」を選んだ場合のみ、再訪を数えるための <b>Google アナリティクス用のランダムな ID</b> です。選択は、各ページの下にある「Cookie の設定」からいつでも変えられます。</p>
+<p>アプリを無料で提供し続けるため、本サイトでは第三者配信の広告サービス「<b>Google AdSense</b>」の広告を表示する場合があります。広告を表示する場合、次のとおりです。</p>
 <ul>
   <li>Google などの第三者配信事業者は Cookie を使用して、ユーザーが本サイトやほかのサイトに過去にアクセスした際の情報に基づいて広告を配信します。</li>
   <li>Google は広告 Cookie を使用することにより、ユーザーが本サイトやほかのサイトにアクセスした際の情報に基づいて、Google やそのパートナーが適切な広告を表示できます。詳しくは「<a href="${GOOGLE_ADS}" rel="noopener">Google の広告における Cookie の使用</a>」と「<a href="${GOOGLE_PARTNERS}" rel="noopener">Google のサービスを使用するサイトやアプリから収集した情報の Google による使用</a>」をご覧ください。</li>
@@ -140,7 +155,15 @@ export default {
 <p>パーソナライズ広告を無効にしても広告は表示されますが、興味・関心に基づかない広告になります。</p>
 
 <h2 id="analytics">5. アクセス解析</h2>
-<p>本サイトの利用状況を知るため、<b>Cloudflare Web Analytics</b> を使用しています。Cookie を使わずにページの閲覧数を集計するもので、個人を特定したり、ほかのサイトをまたいで追跡したりはしません。Google アナリティクスは使用していません。</p>
+<p>本サイトの利用状況を知るため、<b>Cloudflare Web Analytics</b> を使用しています。Cookie を使わずにページの閲覧数を集計するもので、個人を特定したり、ほかのサイトをまたいで追跡したりはしません。</p>
+<p>また、アプリと記事の使われ方を知って改善するため、Cookie のバナーで<b>同意した場合に限り</b>、<b>Cloudflare Zaraz</b> を通じて <b>Google アナリティクス</b>を使用します。記録するのは次の情報です。</p>
+<ul>
+  <li>見たページ、開いていた時間、どこから来たか（参照元）</li>
+  <li>押したボタンやリンク、変えた設定（名前と、設定はその値。「転調：+2」など）</li>
+  <li>開いたファイルの種類と結果（「PDF を 3 秒で読み込み」、エラーの種類など）と、コード譜を貼り付けた・プレビューした・印刷した・保存したこと</li>
+</ul>
+<p>ファイル名と、開いた・貼り付けた・入力したコード譜の内容は送りません。データは Cloudflare のサーバーから IP アドレスの末尾を削って Google に送り、お使いのブラウザが Google に直接つながることはありません。Google シグナルと広告の機能は使わず、データの保持期間は 14 か月です。Google によるデータの使われ方は<a href="${GOOGLE_PARTNERS}" rel="noopener">Google のサービスを使用するサイトやアプリから収集した情報の Google による使用</a>をご覧ください。</p>
+<p>「すべて拒否」を選んだ場合や、選ばなかった場合は、Google アナリティクスには何も送られません。</p>
 
 <h2 id="third-party">6. 第三者への提供</h2>
 <p>本サイトは、個人を特定できる情報を収集していません。法令に基づく場合を除き、個人情報を第三者に販売・提供することはありません。</p>
@@ -150,7 +173,7 @@ export default {
 
 <h2 id="changes">8. 改定</h2>
 <p>サービスの追加・終了など本サイトの変更に合わせて、本ポリシーを改定することがあります。改定後のポリシーは、このページに掲載した時点から適用されます。</p>
-<p>制定日：2026 年 10 月 12 日（最終改定日：2026 年 10 月 14 日）</p>
+<p>制定日：2026 年 10 月 12 日（最終改定日：2026 年 11 月 28 日）</p>
 `,
   },
 };
