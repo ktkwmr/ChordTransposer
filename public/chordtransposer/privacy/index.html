@@ -32,7 +32,7 @@
     "description": "How Chord Transposer handles information: files stay on your device, data saved in your browser, external services (jsDelivr, Cloudflare, Google AdSense), analytics, cookies, and how to opt out of personalized ads.",
     "url": "https://ktkwmr.com/chordtransposer/privacy/",
     "inLanguage": "en",
-    "dateModified": "2026-10-14",
+    "dateModified": "2026-11-28",
     "isPartOf": {
       "@type": "WebSite",
       "name": "Chord Transposer",
@@ -156,6 +156,9 @@
       .site-head, .site-foot, .cta { display: none; }
     }
   </style>
+  <!-- Usage analytics: Cloudflare Zaraz → Google Analytics 4, only after consent (see usage-events.js) -->
+  <script src="/cdn-cgi/zaraz/i.js" referrerpolicy="origin"></script>
+  <script src="/chordtransposer/usage-events.js"></script>
 </head>
 <body>
   <header class="site-head">
@@ -203,6 +206,8 @@
     <tbody>
       <tr><th scope="row"><a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">Cloudflare</a> (Cloudflare, Inc.)</th><td data-label="When:">Every page and file request</td><td data-label="Information sent:">IP address, browser information (user agent), requested URL, date and time</td><td data-label="Purpose:">Hosting this site, security, and access logs for operation</td></tr>
       <tr><th scope="row"><a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">Cloudflare Web Analytics</a> (Cloudflare, Inc.)</th><td data-label="When:">Every page view</td><td data-label="Information sent:">IP address, browser information (user agent), the URL of the page, referrer, page load time. No cookies are used.</td><td data-label="Purpose:">Counting page views (see "Analytics" below)</td></tr>
+      <tr><th scope="row"><a href="https://www.cloudflare.com/privacypolicy/" rel="noopener">Cloudflare Zaraz</a> (Cloudflare, Inc.)</th><td data-label="When:">Every page view, and when you use the app (such as tapping a button)</td><td data-label="Information sent:">IP address, browser information (user agent), the URL of the page, referrer, and the usage events listed in "Analytics" below</td><td data-label="Purpose:">Showing the cookie banner, and passing usage events on to Google Analytics only if you agree</td></tr>
+      <tr><th scope="row"><a href="https://policies.google.com/privacy" rel="noopener">Google Analytics</a> (Google LLC)</th><td data-label="When:">Only if you choose “Accept all” in the cookie banner: every page view, and when you use the app. Sent from Cloudflare's servers, not from your browser</td><td data-label="Information sent:">A random ID for your browser, the URL of the page, referrer, browser information, approximate location from a shortened IP address, and the usage events listed in "Analytics" below</td><td data-label="Purpose:">Understanding how the site is used, to improve it (see "Analytics" below)</td></tr>
       <tr><th scope="row"><a href="https://www.jsdelivr.com/terms" rel="noopener">jsDelivr</a> (cdn.jsdelivr.net)</th><td data-label="When:">When you open a PDF or an image</td><td data-label="Information sent:">IP address, browser information, requested URL, date and time. <b>Your file is not sent.</b></td><td data-label="Purpose:">Downloading the PDF.js and Tesseract.js libraries and the OCR language data</td></tr>
       <tr><th scope="row"><a href="https://policies.google.com/technologies/ads" rel="noopener">Google AdSense</a> (Google LLC)</th><td data-label="When:">When a page shows ads</td><td data-label="Information sent:">IP address, browser information, the URL of the page, cookie and advertising identifiers</td><td data-label="Purpose:">Showing ads, measuring them, and preventing fraud (see the next section)</td></tr>
     </tbody>
@@ -210,7 +215,8 @@
 </div>
 
 <h2 id="ads">4. Advertising and cookies</h2>
-<p>This site itself does not set cookies. To keep the app free, this site may show ads from <b>Google AdSense</b>, a third-party advertising service. When ads are shown:</p>
+<p>This site uses cookies for analytics only if you agree (see "Analytics" below): <b>your choice in the cookie banner</b> (set by Cloudflare Zaraz when you choose; it applies to all apps on ktkwmr.com), and, only if you choose “Accept all”, <b>a random ID for Google Analytics</b> to count returning visits. You can change your choice at any time from “Cookie settings” at the bottom of each page.</p>
+<p>To keep the app free, this site may show ads from <b>Google AdSense</b>, a third-party advertising service. When ads are shown:</p>
 <ul>
   <li>Third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to this website or other websites.</li>
   <li>Google's use of advertising cookies enables it and its partners to serve ads to users based on their visits to this site and/or other sites on the Internet. For details, see <a href="https://policies.google.com/technologies/ads" rel="noopener">how Google uses cookies in advertising</a> and <a href="https://policies.google.com/technologies/partner-sites" rel="noopener">how Google uses information from sites that use its services</a>.</li>
@@ -220,7 +226,15 @@
 <p>Even if you opt out of personalized ads, you may still see ads; they are just not based on your interests.</p>
 
 <h2 id="analytics">5. Analytics</h2>
-<p>To see how many people use this site, we use <b>Cloudflare Web Analytics</b>. It counts page views without cookies and without identifying or tracking individual visitors across sites. We do not use Google Analytics.</p>
+<p>To see how many people use this site, we use <b>Cloudflare Web Analytics</b>. It counts page views without cookies and without identifying or tracking individual visitors across sites.</p>
+<p>To learn how the app and the guides are used, so we can improve them, we also use <b>Google Analytics</b> through <b>Cloudflare Zaraz</b>, <b>only if you agree</b> in the cookie banner. It records:</p>
+<ul>
+  <li>the pages viewed, how long they were open, and where you came from (referrer);</li>
+  <li>the buttons and links tapped, and the settings changed (by name, and for settings their value, such as “Transpose: +2”);</li>
+  <li>the kind and result of the files opened (such as “PDF, opened in 3 seconds”, or the kind of error), and whether a chord chart was pasted, previewed, printed, or saved;</li>
+</ul>
+<p>File names and the chord charts you open, paste, or type are never sent. The data is sent to Google from Cloudflare's servers (your browser does not connect to Google), with the end of your IP address removed. Google signals and advertising features are turned off, and the data is kept for 14 months. See <a href="https://policies.google.com/technologies/partner-sites" rel="noopener">how Google uses information from sites that use its services</a>.</p>
+<p>If you choose “Reject all”, or do not choose, nothing is sent to Google Analytics.</p>
 
 <h2 id="third-party">6. Sharing with third parties</h2>
 <p>We do not collect personal information that identifies you, and we do not sell or provide it to third parties, except where required by law.</p>
@@ -230,7 +244,7 @@
 
 <h2 id="changes">8. Changes to this policy</h2>
 <p>We may update this policy when the site changes, for example when we add or remove a service. The updated policy applies from the time it is posted on this page.</p>
-<p>Effective: October 12, 2026 (last updated: October 14, 2026)</p>
+<p>Effective: October 12, 2026 (last updated: November 28, 2026)</p>
     </article>
     <aside class="cta">
       <h2>Transpose your chord chart now</h2>
@@ -256,6 +270,7 @@
         <span>Chord Transposer · © 2026 ktkwmr</span>
         <a href="/chordtransposer/about/">About this site</a>
         <a href="/chordtransposer/privacy/" aria-current="page">Privacy policy</a>
+        <a href="#" class="cookie-settings">Cookie settings</a>
         <a href="https://github.com/ktkwmr/ChordTransposer" rel="noopener">Source code on GitHub</a>
         <a href="https://github.com/ktkwmr/ChordTransposer/issues" rel="noopener">Feedback</a>
         <a href="https://ktkwmr.com/">More apps by ktkwmr</a>

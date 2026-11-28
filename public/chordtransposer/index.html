@@ -655,6 +655,9 @@
     @media (hover: hover) { .related a:hover { border-color: var(--ink); background: var(--hover-fill); } }
     @media (prefers-reduced-motion: reduce) { .related a { transition: none; } .related a:active { transform: none; } }
   </style>
+  <!-- Usage analytics: Cloudflare Zaraz → Google Analytics 4, only after consent (see usage-events.js) -->
+  <script src="/cdn-cgi/zaraz/i.js" referrerpolicy="origin"></script>
+  <script src="/chordtransposer/usage-events.js"></script>
 </head>
 <body>
   <header class="topbar">
@@ -776,6 +779,7 @@
       <span>Chord Transposer · © 2026 ktkwmr</span>
       <a href="/chordtransposer/privacy/" target="_blank" rel="noopener">Privacy policy</a>
       <a href="/chordtransposer/about/" target="_blank" rel="noopener">About this site</a>
+      <a href="#" class="cookie-settings">Cookie settings</a>
       <a href="https://github.com/ktkwmr/ChordTransposer" target="_blank" rel="noopener">Source code on GitHub</a>
       <a href="https://github.com/ktkwmr/ChordTransposer/issues" target="_blank" rel="noopener">Feedback</a>
       <a href="https://ktkwmr.com/" target="_blank" rel="noopener">More apps by ktkwmr</a>
@@ -895,13 +899,13 @@
           "rel.2.text": "Save your live songs’ tempos in a setlist",
           "rel.2.href": "/setlistmetronome/",
           "home.url": "https://ktkwmr.com/",
-          "foot.meta": "<span>Chord Transposer · © 2026 ktkwmr</span>\n<a href=\"/chordtransposer/privacy/\" target=\"_blank\" rel=\"noopener\">Privacy policy</a>\n<a href=\"/chordtransposer/about/\" target=\"_blank\" rel=\"noopener\">About this site</a>\n<a href=\"https://github.com/ktkwmr/ChordTransposer\" target=\"_blank\" rel=\"noopener\">Source code on GitHub</a>\n<a href=\"https://github.com/ktkwmr/ChordTransposer/issues\" target=\"_blank\" rel=\"noopener\">Feedback</a>\n<a href=\"https://ktkwmr.com/\" target=\"_blank\" rel=\"noopener\">More apps by ktkwmr</a>",
+          "foot.meta": "<span>Chord Transposer · © 2026 ktkwmr</span>\n<a href=\"/chordtransposer/privacy/\" target=\"_blank\" rel=\"noopener\">Privacy policy</a>\n<a href=\"/chordtransposer/about/\" target=\"_blank\" rel=\"noopener\">About this site</a>\n<a href=\"#\" class=\"cookie-settings\">Cookie settings</a>\n<a href=\"https://github.com/ktkwmr/ChordTransposer\" target=\"_blank\" rel=\"noopener\">Source code on GitHub</a>\n<a href=\"https://github.com/ktkwmr/ChordTransposer/issues\" target=\"_blank\" rel=\"noopener\">Feedback</a>\n<a href=\"https://ktkwmr.com/\" target=\"_blank\" rel=\"noopener\">More apps by ktkwmr</a>",
           "help.more": "Read the full guide →",
           "guide.url": "/chordtransposer/guide/",
           "intro.title": "Transpose chord charts online for free",
           "intro.body": "<p>Chord Transposer is a free web tool that changes the key of guitar, ukulele, and piano chord charts. Paste a chart or open a text, PDF, or image file, choose how many semitones to shift, and every chord is converted to the new key. Lyrics stay as they are, and each chord stays above the same word.</p>\n<h2>How semitones work</h2>\n<p>Transposing counts in semitones (half steps). At +2, C becomes D, Am7 becomes Bm7, and F/G becomes G/A. At −3, C becomes A. If a song is too high to sing, shift it down; if it is too low, shift it up. Twelve semitones make an octave, so +5 and −7 give the same key, an octave apart.</p>\n<h2>Transposing with a capo</h2>\n<p>Each fret you move the capo up raises the pitch by one semitone. For a song in E♭, you can put the capo on fret 3 and play C shapes. Transpose the chart by −3 to see which chords to play. The <a href=\"/chordtransposer/capo-chart/\" target=\"_blank\" rel=\"noopener\">capo chart</a> lists the fret for every key.</p>\n<h2>Sharps, flats, and privacy</h2>\n<p>Choose “Prefer #” or “Prefer b” to switch between sharps and flats. Files are processed only in your browser and are never uploaded. No sign-up is needed, and the app works offline after your first visit.</p>\n<h2>Guides</h2>\n<ul>\n  <li><a href=\"/chordtransposer/guide/\" target=\"_blank\" rel=\"noopener\">How to use Chord Transposer</a></li>\n  <li><a href=\"/chordtransposer/transposition-basics/\" target=\"_blank\" rel=\"noopener\">How to transpose chords: a beginner's guide</a></li>\n  <li><a href=\"/chordtransposer/key-chart/\" target=\"_blank\" rel=\"noopener\">Chords in every key: transposition chart</a></li>\n  <li><a href=\"/chordtransposer/capo-chart/\" target=\"_blank\" rel=\"noopener\">Capo chart: which fret to use for every key</a></li>\n  <li><a href=\"/chordtransposer/sharps-and-flats/\" target=\"_blank\" rel=\"noopener\">Sharps or flats? Choosing # and b in chord charts</a></li>\n  <li><a href=\"/chordtransposer/chordpro/\" target=\"_blank\" rel=\"noopener\">The ChordPro format explained</a></li>\n  <li><a href=\"/chordtransposer/faq/\" target=\"_blank\" rel=\"noopener\">Frequently asked questions</a></li>\n</ul>",
           "help.body": "<li><b>Open a file</b> – Tap the folder button and choose a chord chart (text, PDF, or image). Text files and text-based PDFs work best. Text from images or scanned PDFs may not be read correctly.</li>\n        <li><b>Or enter chords</b> – Paste or type a chord chart in the Input area. Output updates as you edit.</li>\n        <li><b>Transpose</b> – Choose the key shift. Chords in Output are converted.</li>\n        <li><b>#/♭</b> – Switch between # and b.</li>\n        <li><b>Size</b> – Change the text size.</li>\n        <li><b>Preview</b> – See the whole input or output at once. On phones and tablets, pinch to zoom and tap the printer button to print (on iPhone and iPad, choose Print in the share menu).</li>\n        <li><b>Save</b> – Save the input or output as a text file.</li>",
-          "privacy.body": "<li><b>Your files stay on your device</b> – Chord charts you open or type are processed only in your browser. They are never uploaded to a server. This app has no accounts, cookies, or ads.</li>\n        <li><b>Libraries from a CDN</b> – When you open a PDF or an image, the PDF.js and Tesseract.js libraries and OCR language data are downloaded from jsDelivr (cdn.jsdelivr.net). As with any website, jsDelivr receives your IP address and browser information. Your file is not sent.</li>\n        <li><b>Data saved in your browser</b> – To work offline, the app and the OCR language data are saved in your browser's storage. The chord chart you were working on and your settings are also saved there, so you can pick up where you left off next time. You can delete them by clearing this site's data in your browser settings.</li>\n        <li><b>Server logs and page views</b> – This site is hosted on Cloudflare. Standard access logs (such as IP address, time, and the requested page) are kept for operation and security. Cloudflare Web Analytics counts page views without cookies (the page URL, referrer, browser information, and page load time).</li>\n        <li><b>Contact</b> – Questions and feedback: <a href=\"https://github.com/ktkwmr/ChordTransposer/issues\" target=\"_blank\" rel=\"noopener\">GitHub Issues</a>.</li>\n        <li><b>Full policy</b> – See the <a href=\"/chordtransposer/privacy/\" target=\"_blank\" rel=\"noopener\">privacy policy</a> and <a href=\"/chordtransposer/about/\" target=\"_blank\" rel=\"noopener\">about this site</a>.</li>",
+          "privacy.body": "<li><b>Your files stay on your device</b> – Chord charts you open or type are processed only in your browser. They are never uploaded to a server. This app has no accounts or ads.</li>\n        <li><b>Libraries from a CDN</b> – When you open a PDF or an image, the PDF.js and Tesseract.js libraries and OCR language data are downloaded from jsDelivr (cdn.jsdelivr.net). As with any website, jsDelivr receives your IP address and browser information. Your file is not sent.</li>\n        <li><b>Data saved in your browser</b> – To work offline, the app and the OCR language data are saved in your browser's storage. The chord chart you were working on and your settings are also saved there, so you can pick up where you left off next time. You can delete them by clearing this site's data in your browser settings.</li>\n        <li><b>Server logs and page views</b> – This site is hosted on Cloudflare. Standard access logs (such as IP address, time, and the requested page) are kept for operation and security. Cloudflare Web Analytics counts page views without cookies (the page URL, referrer, browser information, and page load time).</li>\n        <li><b>Google Analytics, only if you agree</b> – Only if you choose “Accept all” in the cookie banner, Google Analytics (through Cloudflare Zaraz, sent from Cloudflare's servers with a shortened IP address) records how the app is used: pages viewed and for how long, buttons tapped and settings changed, and the kind and result of the files opened. File names and your chord charts are never sent. Change your choice from “Cookie settings” at the bottom of the page.</li>\n        <li><b>Contact</b> – Questions and feedback: <a href=\"https://github.com/ktkwmr/ChordTransposer/issues\" target=\"_blank\" rel=\"noopener\">GitHub Issues</a>.</li>\n        <li><b>Full policy</b> – See the <a href=\"/chordtransposer/privacy/\" target=\"_blank\" rel=\"noopener\">privacy policy</a> and <a href=\"/chordtransposer/about/\" target=\"_blank\" rel=\"noopener\">about this site</a>.</li>",
           "about.license": "© 2026 ktkwmr · Licensed under the <a href=\"https://github.com/ktkwmr/ChordTransposer/blob/main/LICENSE\" target=\"_blank\" rel=\"noopener\">MIT License</a> · <a href=\"/chordtransposer/about/\" target=\"_blank\" rel=\"noopener\">About this site</a>",
           "working": "Working…",
           "loading": "Loading…",
@@ -962,13 +966,13 @@
           "rel.2.text": "ライブ曲のテンポをセットリストに登録",
           "rel.2.href": "/setlistmetronome/ja/",
           "home.url": "https://ktkwmr.com/ja/",
-          "foot.meta": "<span>Chord Transposer · © 2026 ktkwmr</span>\n<a href=\"/chordtransposer/ja/privacy/\" target=\"_blank\" rel=\"noopener\">プライバシーポリシー</a>\n<a href=\"/chordtransposer/ja/about/\" target=\"_blank\" rel=\"noopener\">運営者情報</a>\n<a href=\"https://github.com/ktkwmr/ChordTransposer\" target=\"_blank\" rel=\"noopener\">GitHub のソースコード</a>\n<a href=\"https://github.com/ktkwmr/ChordTransposer/issues\" target=\"_blank\" rel=\"noopener\">ご意見・ご質問</a>\n<a href=\"https://ktkwmr.com/ja/\" target=\"_blank\" rel=\"noopener\">ktkwmr のほかのアプリ</a>",
+          "foot.meta": "<span>Chord Transposer · © 2026 ktkwmr</span>\n<a href=\"/chordtransposer/ja/privacy/\" target=\"_blank\" rel=\"noopener\">プライバシーポリシー</a>\n<a href=\"/chordtransposer/ja/about/\" target=\"_blank\" rel=\"noopener\">運営者情報</a>\n<a href=\"#\" class=\"cookie-settings\">Cookie の設定</a>\n<a href=\"https://github.com/ktkwmr/ChordTransposer\" target=\"_blank\" rel=\"noopener\">GitHub のソースコード</a>\n<a href=\"https://github.com/ktkwmr/ChordTransposer/issues\" target=\"_blank\" rel=\"noopener\">ご意見・ご質問</a>\n<a href=\"https://ktkwmr.com/ja/\" target=\"_blank\" rel=\"noopener\">ktkwmr のほかのアプリ</a>",
           "help.more": "詳しい使い方ガイドを見る →",
           "guide.url": "/chordtransposer/ja/guide/",
           "intro.title": "コード譜を移調・キー変換できる無料ツール",
           "intro.body": "<p>Chord Transposer は、ギター・ウクレレ・ピアノのコード譜を別のキーに移調（転調）できる無料の Web ツールです。コード譜を貼り付けるか、テキスト・PDF・画像ファイルを開いて、上げ下げする半音の数を選ぶだけで、すべてのコードが新しいキーに変換されます。歌詞はそのままで、コードは同じ歌詞の上に残ります。</p>\n<h2>半音いくつ上げると、どう変わる？</h2>\n<p>移調は半音単位で数えます。+2（半音 2 つ上げる）にすると、C は D、Am7 は Bm7、F/G は G/A になります。−3 にすると、C は A になります。キーが高くて歌いにくいときは下げ、低いときは上げてください。12 半音で 1 オクターブなので、+5 と −7 はオクターブが違うだけで同じキーになります。</p>\n<h2>カポとの関係</h2>\n<p>カポを 1 フレット上に付けるごとに、音は半音 1 つ上がります。たとえば原曲のキーが E♭ なら、カポを 3 フレットに付けて C のコードフォームで弾けます。このとき弾くコードは、コード譜を −3 に移調すると分かります。キーごとのカポの位置は<a href=\"/chordtransposer/ja/capo-chart/\" target=\"_blank\" rel=\"noopener\">カポ位置の早見表</a>にまとめています。</p>\n<h2># と ♭、プライバシー</h2>\n<p>「# を優先」「b を優先」で、シャープとフラットの表記を切り替えられます。ファイルはブラウザ内だけで処理され、サーバーには送信されません。登録は不要で、一度開けばオフラインでも使えます。</p>\n<h2>ガイド・記事</h2>\n<ul>\n<li><a href=\"/chordtransposer/ja/guide/\" target=\"_blank\" rel=\"noopener\">Chord Transposer の使い方</a></li>\n<li><a href=\"/chordtransposer/ja/transposition-basics/\" target=\"_blank\" rel=\"noopener\">コードの移調のやり方：移調・転調の基礎</a></li>\n<li><a href=\"/chordtransposer/ja/key-chart/\" target=\"_blank\" rel=\"noopener\">キー別のコード表（移調表）</a></li>\n<li><a href=\"/chordtransposer/ja/capo-chart/\" target=\"_blank\" rel=\"noopener\">カポ位置の早見表</a></li>\n<li><a href=\"/chordtransposer/ja/sharps-and-flats/\" target=\"_blank\" rel=\"noopener\"># と ♭ の使い分け</a></li>\n<li><a href=\"/chordtransposer/ja/chordpro/\" target=\"_blank\" rel=\"noopener\">ChordPro 形式の解説：書き方と移調の方法</a></li>\n<li><a href=\"/chordtransposer/ja/faq/\" target=\"_blank\" rel=\"noopener\">よくある質問</a></li>\n</ul>",
           "help.body": "<li><b>ファイルを開く</b> – フォルダのボタンをタップして、コード譜（テキスト・PDF・画像）を選びます。テキストファイルとテキスト形式の PDF が最も正確です。画像やスキャンした PDF は、正しく読み取れない場合があります。</li>\n<li><b>コードを入力する</b> – 入力欄にコード譜を貼り付けるか、直接入力します。編集すると出力がすぐに更新されます。</li>\n<li><b>移調</b> – 移調する幅を選ぶと、出力のコードが変換されます。</li>\n<li><b>#/♭</b> – # と b の表記を切り替えます。</li>\n<li><b>文字サイズ</b> – 文字の大きさを変えます。</li>\n<li><b>プレビュー</b> – 入力または出力の全体をまとめて表示します。スマホ・タブレットでは、ピンチで拡大・縮小でき、プリンターのボタンで印刷できます（iPhone・iPad では、表示される共有メニューで「プリント」を選びます）。</li>\n<li><b>保存</b> – 入力または出力をテキストファイルに保存します。</li>",
-          "privacy.body": "<li><b>ファイルは端末の外に出ません</b> – 開いたコード譜や入力した内容は、ブラウザ内だけで処理されます。サーバーに送信されることはありません。アカウント登録・Cookie・広告もありません。</li>\n<li><b>CDN から読み込むライブラリ</b> – PDF や画像を開いたときだけ、PDF.js・Tesseract.js と OCR 用の言語データを jsDelivr（cdn.jsdelivr.net）から読み込みます。一般的な Web サイトと同様に、jsDelivr には IP アドレスやブラウザの情報が送られますが、ファイルの内容は送られません。</li>\n<li><b>ブラウザに保存するデータ</b> – オフラインで使えるよう、アプリ本体と OCR 用の言語データをブラウザ内に保存します。次に開いたときに続きから使えるよう、編集中のコード譜と設定も保存します。ブラウザの設定でこのサイトのデータを削除すると消えます。</li>\n<li><b>サーバーのログと閲覧数</b> – このサイトは Cloudflare で配信しています。運用とセキュリティのため、標準的なアクセスログ（IP アドレス、日時、アクセスしたページなど）が記録されます。また、Cloudflare Web Analytics で、Cookie を使わずにページの閲覧数を集計しています（閲覧したページの URL、参照元、ブラウザの情報、ページの表示速度）。</li>\n<li><b>お問い合わせ</b> – ご質問やご意見は <a href=\"https://github.com/ktkwmr/ChordTransposer/issues\" target=\"_blank\" rel=\"noopener\">GitHub Issues</a> へどうぞ。</li>\n<li><b>詳しくは</b> – <a href=\"/chordtransposer/ja/privacy/\" target=\"_blank\" rel=\"noopener\">プライバシーポリシー</a>と<a href=\"/chordtransposer/ja/about/\" target=\"_blank\" rel=\"noopener\">運営者情報</a>をご覧ください。</li>",
+          "privacy.body": "<li><b>ファイルは端末の外に出ません</b> – 開いたコード譜や入力した内容は、ブラウザ内だけで処理されます。サーバーに送信されることはありません。アカウント登録・広告もありません。</li>\n<li><b>CDN から読み込むライブラリ</b> – PDF や画像を開いたときだけ、PDF.js・Tesseract.js と OCR 用の言語データを jsDelivr（cdn.jsdelivr.net）から読み込みます。一般的な Web サイトと同様に、jsDelivr には IP アドレスやブラウザの情報が送られますが、ファイルの内容は送られません。</li>\n<li><b>ブラウザに保存するデータ</b> – オフラインで使えるよう、アプリ本体と OCR 用の言語データをブラウザ内に保存します。次に開いたときに続きから使えるよう、編集中のコード譜と設定も保存します。ブラウザの設定でこのサイトのデータを削除すると消えます。</li>\n<li><b>サーバーのログと閲覧数</b> – このサイトは Cloudflare で配信しています。運用とセキュリティのため、標準的なアクセスログ（IP アドレス、日時、アクセスしたページなど）が記録されます。また、Cloudflare Web Analytics で、Cookie を使わずにページの閲覧数を集計しています（閲覧したページの URL、参照元、ブラウザの情報、ページの表示速度）。</li>\n<li><b>同意した場合のみ Google アナリティクス</b> – Cookie のバナーで「すべて同意」を選んだ場合に限り、Google アナリティクス（Cloudflare Zaraz 経由。Cloudflare のサーバーから IP アドレスの末尾を削って送信）でアプリの使われ方（見たページと時間、押したボタンと変えた設定、開いたファイルの種類と結果）を記録します。ファイル名とコード譜の内容は送りません。選択はページ下の「Cookie の設定」から変えられます。</li>\n<li><b>お問い合わせ</b> – ご質問やご意見は <a href=\"https://github.com/ktkwmr/ChordTransposer/issues\" target=\"_blank\" rel=\"noopener\">GitHub Issues</a> へどうぞ。</li>\n<li><b>詳しくは</b> – <a href=\"/chordtransposer/ja/privacy/\" target=\"_blank\" rel=\"noopener\">プライバシーポリシー</a>と<a href=\"/chordtransposer/ja/about/\" target=\"_blank\" rel=\"noopener\">運営者情報</a>をご覧ください。</li>",
           "about.license": "© 2026 ktkwmr · <a href=\"https://github.com/ktkwmr/ChordTransposer/blob/main/LICENSE\" target=\"_blank\" rel=\"noopener\">MIT ライセンス</a>で公開しています · <a href=\"/chordtransposer/ja/about/\" target=\"_blank\" rel=\"noopener\">運営者情報</a>",
           "working": "処理中…",
           "loading": "読み込み中…",
@@ -998,6 +1002,9 @@
           "textFile": "テキストファイル"
         }
       };
+      // 利用状況の計測（usage-events.js、同意した人だけ GA4 へ）。ファイル名・コード譜の内容は送らない
+      function track(name, params) { try { if (window.usage) window.usage.track(name, params); } catch (e) {} }
+
       // 以前の切り替えメニューで保存した言語設定は使わないので消しておく
       try { localStorage.removeItem("chord-transposer-lang"); } catch (e) {}
 
@@ -1880,7 +1887,8 @@
         if (!win || typeof win.buildPrint !== "function") return;
         // iOS（特にホーム画面に追加したアプリ）は window.print() を「自動的な印刷」としてブロックするため、
         // 表示中の段組みを画像にして共有メニューを開き、「プリント」を選んでもらう（紙の向きも画像の縦横で決まる）
-        if (isIOS() && sharePreviewImage(win)) return;
+        if (isIOS() && sharePreviewImage(win)) { track("print", { via: "share" }); return; }
+        track("print", { via: "print" });
         const out = win.buildPrint();
         printArea.innerHTML = out.html;
         printPageStyle.textContent = out.pageCss;
@@ -1931,6 +1939,7 @@
           return;
         }
         const html = buildPreviewHtml(text);
+        track("preview", { view: view });
         // スマホ・タブレットでは別ウィンドウ（新しいタブ）ではなく、画面全体に重ねて表示する
         if (isTouchDevice()) {
           openPreviewOverlay(html);
@@ -1969,29 +1978,40 @@
         if (!file) return;
         sourceFileHandle = handle || null;
         sourceFileName = file.name || "";
+        const kind = isPdfFile(file) ? "pdf" : isImageFile(file) ? "image" : isTextFile(file) ? "text" : "other";
+        const started = performance.now();
+        const done = function (result) {
+          track("open", { kind: kind, result: result, seconds: Math.round((performance.now() - started) / 100) / 10 });
+        };
         try {
           if (isPdfFile(file)) {
             const text = await extractChartFromPdf(file);
             showLoadedText(text);
+            done("ok");
             return;
           }
           if (isImageFile(file)) {
             const text = await extractChartFromImage(file);
             showLoadedText(text);
+            done("ok");
             return;
           }
           if (isTextFile(file)) {
             const text = await file.text();
             showLoadedText(text);
+            done("ok");
             return;
           }
           showError(t("err.unsupportedTitle"), t("err.unsupportedBody", { name: file.name || t("none") }));
+          done("unsupported");
         } catch (err) {
           if (err && err.code === "not-chart") {
             showError(t("err.notChartTitle"), t("err.notChartBody"));
+            done("not-chart");
             return;
           }
           showError(t("err.load"), err && err.message ? err.message : String(err));
+          done("error");
         }
       }
 
@@ -2032,6 +2052,12 @@
       }
 
       async function saveText(view) {
+        const result = await saveTextTo(view);
+        track("save", { view: view, result: result });
+      }
+
+      // 戻り値: 保存の方法（picker / share / download）か cancel / error
+      async function saveTextTo(view) {
         const text = view === "in" ? inputEl.value : outputEl.value;
         const base = sourceFileName ? sourceFileName.replace(/\.[^.]+$/, "") : "";
         let suggested;
@@ -2056,10 +2082,11 @@
             await writable.write(text);
             await writable.close();
           } catch (err) {
-            if (err && err.name === "AbortError") return;
+            if (err && err.name === "AbortError") return "cancel";
             showError(t("err.save"), err && err.message ? err.message : String(err));
+            return "error";
           }
-          return;
+          return "picker";
         }
 
         // iPhone / iPad: 共有メニュー（「ファイルに保存」を選べる）
@@ -2068,18 +2095,20 @@
             const file = new File([text], suggested, { type: "text/plain" });
             if (navigator.canShare({ files: [file] })) {
               await navigator.share({ files: [file] });
-              return;
+              return "share";
             }
           }
         } catch (err) {
-          if (err && err.name === "AbortError") return;
+          if (err && err.name === "AbortError") return "cancel";
         }
 
         // Android Chrome など: ダウンロードとして保存
         try {
           downloadText(suggested, text);
+          return "download";
         } catch (err) {
           showError(t("err.save"), err && err.message ? err.message : String(err));
+          return "error";
         }
       }
 
@@ -2118,6 +2147,7 @@
 
       inputEl.addEventListener("input", render);
       inputEl.addEventListener("input", saveStateSoon);
+      inputEl.addEventListener("paste", function () { track("paste", {}); });
       [semitoneEl, accidentalEl, fontSizeEl].forEach(function (sel) { sel.addEventListener("change", saveState); });
       // 閉じる・別のアプリに切り替える直前に、待っている保存を済ませる
       window.addEventListener("pagehide", function () { if (saveTimer) saveState(); });

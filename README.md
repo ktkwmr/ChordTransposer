@@ -21,15 +21,17 @@ A web app that transposes chord charts. Paste a chord chart or open a text, PDF,
 
 ## Privacy / プライバシー
 
-- Files you open and text you enter are processed only in your browser and are never uploaded to a server. The app has no accounts, cookies, or ads.
+- Files you open and text you enter are processed only in your browser and are never uploaded to a server. The app has no accounts or ads.
 - When you open a PDF or an image, PDF.js, Tesseract.js, and the OCR language data are downloaded from the jsDelivr CDN. jsDelivr receives your IP address and browser information, but not your file.
 - For offline use, the app and the OCR language data are saved in your browser's storage. Clear this site's data to remove them.
 - The site is hosted on Cloudflare, which keeps standard access logs (IP address, time, requested page) for operation and security. Page views are counted with Cloudflare Web Analytics, which uses no cookies.
+- Only if you choose “Accept all” in the cookie banner, Google Analytics (through Cloudflare Zaraz, sent from Cloudflare's servers with a shortened IP address) records how the app is used: pages viewed and for how long, buttons tapped and settings changed, and the kind and result of the files opened. File names and your chord charts are never sent. Change your choice from “Cookie settings” at the bottom of the page. See [docs/analytics.md](docs/analytics.md).
 
-- 開いたファイルや入力した内容はブラウザ内だけで処理され、サーバーには送信されません。アカウント登録・Cookie・広告はありません。
+- 開いたファイルや入力した内容はブラウザ内だけで処理され、サーバーには送信されません。アカウント登録・広告はありません。
 - PDF や画像を開いたときのみ、PDF.js・Tesseract.js と OCR 用の言語データを jsDelivr CDN から読み込みます。jsDelivr には IP アドレスやブラウザ情報が送られますが、ファイルの内容は送られません。
 - オフラインで使えるよう、アプリ本体と OCR 用データをブラウザ内に保存します。サイトデータを削除すると消えます。
 - サイトは Cloudflare で配信しており、運用・セキュリティのために標準的なアクセスログ（IP アドレス、日時、アクセスしたページ）が記録されます。閲覧数は Cookie を使わない Cloudflare Web Analytics で集計しています。
+- Cookie のバナーで「すべて同意」を選んだ場合に限り、Google アナリティクス（Cloudflare Zaraz 経由。Cloudflare のサーバーから IP アドレスの末尾を削って送信）でアプリの使われ方（見たページと時間、押したボタンと変えた設定、開いたファイルの種類と結果）を記録します。ファイル名とコード譜の内容は送りません。選択はページ下の「Cookie の設定」から変えられます。
 
 The same notice is shown in the app under ⚙ → **Privacy**. The full privacy policy, including the notice for advertising (Google AdSense) and external transmission, is at `/chordtransposer/privacy/` (Japanese: `/chordtransposer/ja/privacy/`), and the operator information is at `/chordtransposer/about/`.
 アプリ内の ⚙ → **プライバシー** でも同じ内容を表示しています。広告（Google AdSense）や外部送信についての説明を含むプライバシーポリシーは `/chordtransposer/ja/privacy/`、運営者情報は `/chordtransposer/ja/about/` にあります。

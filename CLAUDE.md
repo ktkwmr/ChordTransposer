@@ -17,6 +17,7 @@
 
 ## ルール
 - 手で編集するのはアプリ本体 `public/chordtransposer/index.html` と `scripts/`。生成ファイル（`public/chordtransposer/ja/index.html`、記事ページ、`public/chordtransposer/sitemap.xml`）は編集せず、`node scripts/build-ja.mjs` と `node scripts/build-pages.mjs` で作り直す（`--check` で確認）。
+- 利用状況の計測（Cloudflare Zaraz → GA4、同意バナーで同意した人だけ。ベースライン §17）: `usage-events.js`（ベースラインの雛形のコピー。タップ `ct_tap`・設定の変更 `ct_change`・滞在時間 `ct_engaged`）と、主な機能の `track()`（`index.html` の `ingestFile()`・`saveText()`・`printPreview()`・`openPreview()` と貼り付け）。コード譜の内容（開いた・貼り付けた・入力したもの）とファイル名は送らない。イベントを足したら `docs/analytics.md` の表と GA4 のカスタム定義、送る内容を変えたらプライバシーの説明も直す。
 - 外部ホストを足したら `public/_headers` の CSP と、プライバシーの説明（`scripts/pages/privacy.mjs`、アプリ内の `privacy.body`、README）を同じ PR で直す。
 - 例に使うコード譜はオリジナルか著作権切れの曲だけ。
 - 作業はブランチ → PR → Cloudflare のプレビュービルド確認 → squash マージ。
